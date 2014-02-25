@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0px"
+    android:paddingTop="0px"
+    tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/button_goto3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:text="Button1" />
+    <Button
+        android:id="@+id/button_goto3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0px"
+        android:layout_marginBottom="0px"
+        android:layout_gravity="bottom"
+        android:text="Button2" />
+    <Button
+        android:id="@+id/button_goto3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="0px"
+        android:layout_marginBottom="0px"
+        android:layout_gravity="right|bottom"
+        android:text="Button3" />
+    <Button
+        android:id="@+id/button_goto3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="0px"
+        android:layout_marginTop="0px"
+        android:layout_gravity="top|right"
+        android:text="Button4" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Frame Layout" />
+
+</FrameLayout>

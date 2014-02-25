@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp"
+    tools:context=".MainActivity"
+    android:background="@android:color/black"
+    >
+
+    <LinearLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="0dp"
+        android:orientation="vertical" >
+        <include
+		   android:layout_width="fill_parent"
+		   android:layout_height="0dp"
+		   android:layout_weight=".15"
+		   android:layout_margin="0dp"
+		   layout="@layout/header" />
+        <include
+		   android:layout_width="fill_parent"
+		   android:layout_height="0dp"
+		   android:layout_weight=".15"
+		   android:layout_margin="0dp"
+		   layout="@layout/duration_seekbar" />
+        <include
+		   android:layout_width="fill_parent"
+		   android:layout_height="0dp"
+		   android:layout_weight=".40"
+		   android:layout_margin="0dp"
+		   layout="@layout/midle_song" />
+        <include
+		   android:layout_width="fill_parent"
+		   android:layout_height="0dp"
+		   android:layout_weight=".15"
+		   android:layout_margin="0dp"
+		   
+		   layout="@layout/prev_pause_next" />
+        <include
+		   android:layout_width="fill_parent"
+		   android:layout_height="0dp"
+		   android:layout_weight=".15"
+		   android:layout_margin="0dp"
+		   
+		   layout="@layout/volume_seekbar" />
+        
+    </LinearLayout>
+
+</RelativeLayout>
