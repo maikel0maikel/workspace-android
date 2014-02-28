@@ -1,4 +1,4 @@
-package com.example.hour12app_instagram;
+package com.bffmedia.hour15app;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,29 +9,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import com.example.hour12app_instagram.InstagramPhoto;
+import org.json.JSONException;
 
-import com.example.hour12app_instagram.R;
-import com.example.hour12app_instagram.R.id;
-import com.example.hour12app_instagram.R.layout;
-import com.example.hour12app_instagram.R.menu;
 
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -39,9 +34,13 @@ public class MainActivity extends Activity {
 	ProgressBar mProgressBar;
 	Tab mListTab;
 	Tab mGridTab;
-	ImageView img_view;
-	private ArrayList<InstagramPhoto> mPhotos = new ArrayList<InstagramPhoto>();
 	
+	private ArrayList<FlickrPhoto> mPhotos = new ArrayList<FlickrPhoto>();
+
+	public final static String API_KEY ="PUT_YOUR_API_KEY_HERE";
+	public final static String NUM_PHOTOS ="12";
+	private static final String TAG = MainActivity.class.getName();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,8 +51,7 @@ public class MainActivity extends Activity {
 		actionBar.addTab(mListTab);
 		mGridTab= actionBar.newTab().setText("Grid").setTabListener(new NavTabListener());
 		actionBar.addTab(mGridTab);
-		
-		mProgressBar = (ProgressBar) findViewById(R.id.progressBar_working);
+		mProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
 		if (isOnline()){
 			LoadPhotos task = new LoadPhotos();
 			task.execute();
@@ -61,48 +59,43 @@ public class MainActivity extends Activity {
 			mProgressBar.setVisibility(View.GONE);
 			Toast.makeText(MainActivity.this.getApplicationContext(), "Please connect to retrieve photos", Toast.LENGTH_SHORT).show();
 		}
+	
+		
 	}
 
-	public ArrayList<InstagramPhoto> getPhotos() {
+	public ArrayList<FlickrPhoto> getPhotos() {
 		return mPhotos;
 	}
 
-	public void setPhotos(ArrayList<InstagramPhoto> mPhotos) {
+	public void setPhotos(ArrayList<FlickrPhoto> mPhotos) {
 		this.mPhotos = mPhotos;
 	}
 	
 	public boolean isOnline() {
-	    /*ConnectivityManager connectivityManager = (ConnectivityManager) 
-	            getSystemService(MainActivity.CONNECTIVITY_SERVICE);
+	    ConnectivityManager connectivityManager = (ConnectivityManager) 
+	            getSystemService(this.CONNECTIVITY_SERVICE);
 	    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 	    return (networkInfo != null && networkInfo.isConnected());
-	    */
-		return true;
 	}  
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
-	}
-	public void Set_Image(String url) {
-		img_view=(ImageView)findViewById(R.id.imageView_current);
-		img_view.setTag(url);
-		new DownloadImageTask().execute(img_view);
 	}
 	
 	public void showList(){
 		PhotoListFragment photoListFragment = new PhotoListFragment();
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.linearLayout_result, photoListFragment);
+		ft.replace(R.id.layout_container, photoListFragment);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
 	}
 	public void showGrid(){
-		PhotoListFragment photoListFragment = new PhotoListFragment();
+		PhotoGridFragment photoGridFragment = new PhotoGridFragment();
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.linearLayout_result, photoListFragment);
+		ft.replace(R.id.layout_container, photoGridFragment);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
 	}
@@ -117,8 +110,7 @@ public class MainActivity extends Activity {
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			if (tab.equals(mListTab)){
 				showList();
-			}else
-			if (tab.equals(mGridTab)){
+			}else{
 				showGrid();
 			}
 		}
@@ -128,6 +120,8 @@ public class MainActivity extends Activity {
 	}
 	
 	private class LoadPhotos extends AsyncTask<String , String , Long > {
+		
+
 		@Override
 		protected void onPreExecute() {
 		}
@@ -141,14 +135,14 @@ public class MainActivity extends Activity {
 			}
 			mProgressBar.setVisibility(View.GONE);
 		}
-		
-		public final static String API_TOKEN = "1124191323.1fb234f.b57465c65f6647af97bf03629f1a4b37";
-		public final static String API_PATH = "https://api.instagram.com/v1/media/popular";
+
 		@Override
 		protected Long doInBackground(String... params) {
 			HttpURLConnection connection = null;
+			FlickrPhotoDbAdapter photoDbAdapter = new FlickrPhotoDbAdapter(MainActivity.this);
+			photoDbAdapter.open();
 			try {
-				URL dataUrl = new URL(API_PATH+"?access_token="+API_TOKEN);
+				URL dataUrl = new URL("http://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key="+ API_KEY+ "&per_page=" + NUM_PHOTOS +"&format=json&nojsoncallback=1");
 				connection = (HttpURLConnection) dataUrl.openConnection();
 				connection.connect();
 				int status = connection.getResponseCode();
@@ -162,8 +156,46 @@ public class MainActivity extends Activity {
 					  sb = sb.append(responseString);
 				  }
 				  String photoData = sb.toString();
-				  mPhotos = InstagramPhoto.Load_From_RAW(photoData);
-				  //Log.d("connection", photoData);
+				  mPhotos = FlickrPhoto.makePhotoList(photoData);
+				  for (FlickrPhoto currentPhoto : mPhotos) {
+					  ContentValues newValues = new ContentValues();
+						if (currentPhoto.id!=null)
+							newValues.put("flickr_id", currentPhoto.id);	
+						if (currentPhoto.owner!=null)
+							newValues.put("owner", currentPhoto.owner);	
+						if (currentPhoto.secret!=null)
+							newValues.put("secret", currentPhoto.secret);	
+						if (currentPhoto.server!=null)
+							newValues.put("server", currentPhoto.server);	
+						if (currentPhoto.farm!=null)
+							newValues.put("farm", currentPhoto.farm);	
+						if (currentPhoto.title!=null)
+							newValues.put("title", currentPhoto.title);	
+						if (currentPhoto.isPublic!=null)
+							newValues.put("isPublic", currentPhoto.isPublic);	
+						if (currentPhoto.isFriend!=null)
+							newValues.put("isFriend", currentPhoto.isFriend);	
+						if (currentPhoto.isFamily!=null)
+							newValues.put("isFamily", currentPhoto.isFamily);	
+						if (currentPhoto.isFavorite!=null)
+							newValues.put("isFavorite", currentPhoto.isFavorite);		
+						
+				
+						Cursor photoCursor = managedQuery(Uri.withAppendedPath(FlickrPhotoProvider.CONTENT_URI ,currentPhoto.id), null, null, null, null);
+						if (photoCursor.moveToFirst()){
+							 FlickrPhoto existingPhoto = FlickrPhotoDbAdapter.getPhotoFromCursor(photoCursor);
+							 photoDbAdapter.updatePhoto(existingPhoto.id, currentPhoto);
+							 Log.d(TAG,"Updated " + existingPhoto.id);
+							 photoCursor.close();
+						}else{
+							Uri newUri = getContentResolver().insert(
+									FlickrPhotoProvider.CONTENT_URI, 
+									newValues);   
+						}
+	
+					} 
+				  
+				  Log.d("connection", photoData);
 				  return (0l);
 				}else{
 					return (1l);
@@ -179,39 +211,14 @@ public class MainActivity extends Activity {
 			} catch (NullPointerException e) {
 				e.printStackTrace();
 				return (1l);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return (1l);
 			} finally {
 				connection.disconnect();
+				photoDbAdapter.close();
 			}
 		}
 	}
-	public class DownloadImageTask extends AsyncTask<ImageView, Void, Bitmap> {
 
-	    ImageView imageView = null;
-
-	    @Override
-	    protected Bitmap doInBackground(ImageView... imageViews) {
-	        this.imageView = imageViews[0];
-	        return download_Image((String)imageView.getTag());
-	    }
-
-	    @Override
-	    protected void onPostExecute(Bitmap result) {
-	        imageView.setImageBitmap(result);
-	    }
-
-	    private Bitmap download_Image(String url) {
-
-	        Bitmap bmp =null;
-	        try{
-	            URL ulrn = new URL(url);
-	            HttpURLConnection con = (HttpURLConnection)ulrn.openConnection();
-	            InputStream is = con.getInputStream();
-	            bmp = BitmapFactory.decodeStream(is);
-	            if (null != bmp)
-	                return bmp;
-
-	            }catch(Exception e){}
-	        return bmp;
-	    }
-	}
 }

@@ -1,4 +1,4 @@
-package com.example.hour12app_instagram;
+package com.example.hour14app;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,12 +9,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import com.example.hour12app_instagram.InstagramPhoto;
+import com.example.hour14app.InstagramPhoto;
 
-import com.example.hour12app_instagram.R;
-import com.example.hour12app_instagram.R.id;
-import com.example.hour12app_instagram.R.layout;
-import com.example.hour12app_instagram.R.menu;
+import com.example.hour14app.R;
+import com.example.hour14app.R.id;
+import com.example.hour14app.R.layout;
+import com.example.hour14app.R.menu;
 
 
 import android.net.ConnectivityManager;
@@ -61,8 +61,37 @@ public class MainActivity extends Activity {
 			mProgressBar.setVisibility(View.GONE);
 			Toast.makeText(MainActivity.this.getApplicationContext(), "Please connect to retrieve photos", Toast.LENGTH_SHORT).show();
 		}
+		
+		
 	}
-
+	//call by Asyntask when finish
+	private void onGetJSON_Finish()
+	{
+		InstagramPhotoDbAdapter mDB = new InstagramPhotoDbAdapter(MainActivity.this);
+		mDB.open();
+		  for(InstagramPhoto item:mPhotos)
+		  {
+			  if(mDB.getPhotoByInstagramId(item.id)!=null)
+			  {
+				  //đã có trong CSDL
+				  mDB.updatePhoto(item.id, item);
+				  Log.w("qd","Updated Instagram photo id "+item.id+" in SQLite db");
+			  }
+			  else
+			  {
+				  //chưa có
+				  mDB.createPhoto(item);
+				  Log.w("qd","Inserted new Instagram photo id "+item.id+" to SQLite db");
+				  //tải hình về
+			  }
+			  
+		  }
+		  mDB.close();
+		  
+		  //then call show list view
+		  showList();
+		  
+	}
 	public ArrayList<InstagramPhoto> getPhotos() {
 		return mPhotos;
 	}
@@ -91,7 +120,6 @@ public class MainActivity extends Activity {
 		img_view.setTag(url);
 		new DownloadImageTask().execute(img_view);
 	}
-	
 	public void showList(){
 		PhotoListFragment photoListFragment = new PhotoListFragment();
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -135,12 +163,13 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Long result) {
 			if (result==0){
-				showList();
+				onGetJSON_Finish();
 			}else{
 				Toast.makeText(MainActivity.this.getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
 			}
 			mProgressBar.setVisibility(View.GONE);
 		}
+		
 		
 		public final static String API_TOKEN = "1124191323.1fb234f.b57465c65f6647af97bf03629f1a4b37";
 		public final static String API_PATH = "https://api.instagram.com/v1/media/popular";
@@ -163,6 +192,7 @@ public class MainActivity extends Activity {
 				  }
 				  String photoData = sb.toString();
 				  mPhotos = InstagramPhoto.Load_From_RAW(photoData);
+				  
 				  //Log.d("connection", photoData);
 				  return (0l);
 				}else{

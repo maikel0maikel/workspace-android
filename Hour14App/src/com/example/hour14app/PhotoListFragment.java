@@ -1,13 +1,12 @@
-package com.example.hour12app_instagram;
+package com.example.hour14app;
 import java.util.ArrayList;
 
-import com.example.hour12app_instagram.MainActivity;
+import com.example.hour14app.MainActivity;
 
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
