@@ -23,6 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <provider android:name="com.example.hour14app.InstagramContentProvider"
+            android:exported="false"
+        		android:authorities="com.example.hour14app.provider">
+    	</provider>
     </application>
 
 </manifest>

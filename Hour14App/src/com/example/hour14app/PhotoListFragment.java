@@ -5,33 +5,42 @@ import com.example.hour14app.MainActivity;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 public class PhotoListFragment extends ListFragment    {
-	String[] mTitles;
-	String[] mUrl;
-	MainActivity current_ac;
+	Cursor mPhotoCursor;
+	SimpleCursorAdapter mAdapter;
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		MainActivity currentActivity = (MainActivity) this.getActivity();
-		ArrayList <InstagramPhoto> photos = currentActivity.getPhotos();
-		mTitles = new String[photos.size()];
-		mUrl = new String[photos.size()];
-		for (int i=0; i < photos.size(); i++){
-			mTitles[i] =photos.get(i).title;
-			mUrl[i] =photos.get(i).img_thumb_url;
-		}
-		setListAdapter(new ArrayAdapter<String>(this.getActivity(),
-				android.R.layout.simple_list_item_1, mTitles));
+		//get favarite phôt from URI
+		mPhotoCursor = getActivity().managedQuery(
+				Uri.withAppendedPath(InstagramContentProvider.CONTENT_URI,"favourite"),
+						null, null, null, null);
+		Log.w("qd","PhotoListFragment call 'get favourite' imgs via URI InstagramContentProvider");
+		mAdapter = new SimpleCursorAdapter(getActivity(), 
+				android.R.layout.simple_list_item_1, 
+				mPhotoCursor, //Cursor
+				new String[] {"title"},
+				new int[] { android.R.id.text1 }, 0); 
+		setListAdapter(mAdapter);
 	}
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Toast.makeText(this.getActivity().getApplicationContext(), mUrl[position], Toast.LENGTH_SHORT).show();
-		((MainActivity)this.getActivity()).Set_Image(mUrl[position]);
+		mPhotoCursor.moveToPosition(position);
+		InstagramPhoto tmp=InstagramPhotoDbAdapter.getPhotoFromCursor(mPhotoCursor);
+		String img_url = tmp.img_thumb_url;
+		Toast.makeText(this.getActivity().getApplicationContext(), img_url, Toast.LENGTH_SHORT).show();
+		((MainActivity)this.getActivity()).Set_Image(img_url);
+		Log.w("qd","PhotoListFragment wants show img on 'main layout'");
 	}
 	@Override
 	public void onAttach(Activity activity) {

@@ -1,4 +1,4 @@
-package com.bffmedia.hour15app;
+package com.example.hour15app;
 
 
 import android.app.ListFragment;
@@ -26,7 +26,7 @@ public class PhotoListFragment extends ListFragment implements LoaderCallbacks<C
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		CursorLoader cursorLoader = new CursorLoader(getActivity(),
-				FlickrPhotoProvider.CONTENT_URI, 
+				InstagramContentProvider.CONTENT_URI, 
 				null, null, null, null);		
 		return cursorLoader;
 	}
@@ -42,3 +42,4 @@ public class PhotoListFragment extends ListFragment implements LoaderCallbacks<C
 	
 	
 } 
+

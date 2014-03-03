@@ -1,4 +1,4 @@
-package com.example.hour14app;
+package com.example.hour15app;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,25 +12,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import com.example.hour14app.InstagramPhoto;
 
-import com.example.hour14app.R;
-import com.example.hour14app.R.id;
-import com.example.hour14app.R.layout;
-import com.example.hour14app.R.menu;
+import com.example.hour15app.InstagramPhoto;
+import com.example.hour15app.R;
 
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -48,18 +42,19 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		//set title
-		setTitle("Instagram favourite images");
+		setContentView(R.layout.vdthoi);
 		
+		/*
 		ActionBar actionBar = getActionBar();	
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		mListTab= actionBar.newTab().setText("List").setTabListener(new NavTabListener());
 		actionBar.addTab(mListTab);
 		mGridTab= actionBar.newTab().setText("Grid").setTabListener(new NavTabListener());
 		actionBar.addTab(mGridTab);
+		*/
 		
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBar_working);
+		
 		if (isOnline()){
 			LoadPhotos task = new LoadPhotos();
 			task.execute();
@@ -67,6 +62,7 @@ public class MainActivity extends Activity {
 			mProgressBar.setVisibility(View.GONE);
 			Toast.makeText(MainActivity.this.getApplicationContext(), "Please connect to retrieve photos", Toast.LENGTH_SHORT).show();
 		}
+		
 		
 		
 	}
@@ -80,7 +76,7 @@ public class MainActivity extends Activity {
 		  {
 			  if(ii%2==0) item.is_favourite=1;//random favourite
 			  ii++;
-			  //nếu title||img == rỗng thì bỏ qua
+			  //nếu title||img == rỗng thì b�? qua
 			  if(item.img_thumb_url.equals("") || item.title.equals("")) continue;
 			  
 			  if(mDB.getPhotoByInstagramId(item.id)!=null)
@@ -120,9 +116,11 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	public void Set_Image(String url) {
+		/*
 		img_view=(ImageView)findViewById(R.id.imageView_current);
 		img_view.setTag(url);
 		new DownloadImageTask().execute(img_view);
+		*/
 	}
 	private void Show_Load_IMG_Status(Boolean load_from_cache)
 	{
@@ -136,12 +134,22 @@ public class MainActivity extends Activity {
 		}
 	}
 	public void showList(){
+		
 		Log.w("qd", "PhotoListFragment called for replacing 'linearLayout_result' holder");
-		PhotoListFragment photoListFragment = new PhotoListFragment();
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.linearLayout_result, photoListFragment);
+		PhotoGalleryFragment photoGalleryFragment = new PhotoGalleryFragment();
+		android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.linearLayout_result, photoGalleryFragment);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
+		
+		
+		/*
+		PhotoListFragment photoGalleryFragment = new PhotoListFragment();
+		android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.linearLayout_result, photoGalleryFragment);
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.commit();
+		WORK OK............ */
 	}
 	public void showGrid(){
 		/*
@@ -185,7 +193,7 @@ public class MainActivity extends Activity {
 			}else{
 				Toast.makeText(MainActivity.this.getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
 			}
-			mProgressBar.setVisibility(View.GONE);
+			//mProgressBar.setVisibility(View.GONE);
 		}
 		
 		
@@ -276,7 +284,7 @@ public class MainActivity extends Activity {
 	    	if (imageFile.exists ())//nếu đã có file rồi
 	    	{
 	    		Log.w("qd", "Img already existed inCache dir, abs_filename="+imageFile.getAbsolutePath());
-	    		//đọc file lên bmp
+	    		//đ�?c file lên bmp
 	    		bmp = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
 	    		Log.w("qd", "Read img from Cache dir successfully, abs_filename="+imageFile.getAbsolutePath());
 	    		load_from_cache=true;

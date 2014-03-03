@@ -1,4 +1,5 @@
-package com.bffmedia.hour15app;
+package com.example.hour15app;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +10,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -22,20 +24,22 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 
-public class FlickrPhotoProvider extends ContentProvider {
-	private FlickrPhotoDbAdapter mPhotoDbAdapter;
+public class InstagramContentProvider extends ContentProvider {
+	private InstagramPhotoDbAdapter mPhotoDbHelper;
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	static {
-		  sUriMatcher.addURI("com.bffmedia.hour15app.provider", "flickrphoto", 1);
-		  sUriMatcher.addURI("com.bffmedia.hour15app.provider", "flickrphoto/#", 2);
+		  sUriMatcher.addURI("com.example.hour15app.provider", "instagramphoto", 1);
+		  sUriMatcher.addURI("com.example.hour15app.provider", "instagramphoto/#", 2);
+		  sUriMatcher.addURI("com.example.hour15app.provider", "instagramphoto/favourite", 3);
 	}
-	public static final Uri CONTENT_URI = Uri.parse("content://com.bffmedia.hour15app.provider/flickrphoto");
+	public static final Uri CONTENT_URI =
+			Uri.parse("content://com.example.hour15app.provider/instagramphoto");
 
 	@Override
 	public boolean onCreate() {
-		mPhotoDbAdapter = new FlickrPhotoDbAdapter(getContext());
-		mPhotoDbAdapter.open();
+		mPhotoDbHelper = new InstagramPhotoDbAdapter(getContext());
+		mPhotoDbHelper.open();
 		return true;
 	}
 
@@ -47,11 +51,17 @@ public class FlickrPhotoProvider extends ContentProvider {
 		int uriType = sUriMatcher.match(uri);
 		switch (uriType) {
 		case 1:
-			cursor =  mPhotoDbAdapter.fetchPhotos();
+				cursor = mPhotoDbHelper.mDb.query(true, InstagramPhotoDbAdapter.DATABASE_TABLE, 
+					projection, selection, selectionArgs, null,null,sortOrder, null);
 			cursor.setNotificationUri(getContext().getContentResolver(), uri);
 			break;
 		case 2:
-			cursor =  mPhotoDbAdapter.fetchByFlickrId(uri.getLastPathSegment());
+			cursor =  mPhotoDbHelper.fetchByInstagramId(uri.getLastPathSegment());
+			cursor.setNotificationUri(getContext().getContentResolver(), uri);			
+			break;
+		case 3:
+			cursor =  mPhotoDbHelper.mDb.query(true, InstagramPhotoDbAdapter.DATABASE_TABLE,
+					projection, "is_favorite=1", selectionArgs, null, null, "instagram_id desc, title asc", null);
 			cursor.setNotificationUri(getContext().getContentResolver(), uri);			
 			break;
 		default:
@@ -67,9 +77,10 @@ public class FlickrPhotoProvider extends ContentProvider {
 		int uriType = sUriMatcher.match(uri);
 		switch (uriType) {
 		case 1:
-			return ContentResolver.CURSOR_DIR_BASE_TYPE + "/com.bffmedia.hour15app.FlickrPhoto";
+		case 3:
+			return ContentResolver.CURSOR_DIR_BASE_TYPE + "/com.example.hour15app.instagramphoto";
 		case 2:
-			return ContentResolver.CURSOR_ITEM_BASE_TYPE + "/com.bffmedia.hour15app.FlickrPhoto";
+			return ContentResolver.CURSOR_ITEM_BASE_TYPE + "/com.example.hour15app.instagramphoto";
 		default:
 			return null;
 		}
@@ -83,7 +94,7 @@ public class FlickrPhotoProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		long newID = mPhotoDbAdapter.mDb.insert(FlickrPhotoDbAdapter.DATABASE_TABLE, null, values);
+		long newID = mPhotoDbHelper.mDb.insert(InstagramPhotoDbAdapter.DATABASE_TABLE, null, values);
 		if (newID > 0) {
 			Uri newUri = ContentUris.withAppendedId(uri, newID);
 			getContext().getContentResolver().notifyChange(uri, null);
@@ -95,7 +106,7 @@ public class FlickrPhotoProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
-		int  result =  mPhotoDbAdapter.mDb.update(FlickrPhotoDbAdapter.DATABASE_TABLE, values, selection, selectionArgs);
+		int  result =  mPhotoDbHelper.mDb.update(InstagramPhotoDbAdapter.DATABASE_TABLE, values, selection, selectionArgs);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return result;
 
@@ -103,7 +114,7 @@ public class FlickrPhotoProvider extends ContentProvider {
 	}
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		int  result =   mPhotoDbAdapter.mDb.delete(FlickrPhotoDbAdapter.DATABASE_TABLE,  selection, selectionArgs);
+		int  result =   mPhotoDbHelper.mDb.delete(InstagramPhotoDbAdapter.DATABASE_TABLE,  selection, selectionArgs);
 		getContext().getContentResolver().notifyChange(uri,null);
 		return result;
 	}
@@ -121,8 +132,8 @@ public class FlickrPhotoProvider extends ContentProvider {
 		Cursor photoCursor = query(uri, null, null, null, null);
 		if (photoCursor == null) return null;
 		if (photoCursor.getCount()==0) return null;
-		FlickrPhoto currentPhoto = FlickrPhotoDbAdapter.getPhotoFromCursor(photoCursor);
-		final String imageString = currentPhoto.getPhotoUrl(true);
+		InstagramPhoto currentPhoto = InstagramPhotoDbAdapter.getPhotoFromCursor(photoCursor);
+		final String imageString = currentPhoto.img_thumb_url;
 		imageOS = new BufferedOutputStream(new FileOutputStream(imageFile));
 		RetrieveImage ri = new RetrieveImage (uri, imageString, imageOS);
 		ri.execute();
