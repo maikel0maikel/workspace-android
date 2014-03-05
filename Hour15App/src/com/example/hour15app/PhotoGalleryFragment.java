@@ -2,9 +2,11 @@ package com.example.hour15app;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.view.LayoutInflater;
@@ -61,8 +63,8 @@ public class PhotoGalleryFragment extends Fragment implements LoaderCallbacks<Cu
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		// TODO Auto-generated method stub
 		return new CursorLoader(getActivity(),
-				Uri.withAppendedPath(InstagramContentProvider.CONTENT_URI, "favourite")
-				, new String[] {"title"}, null, null, null);
+				Uri.withAppendedPath(InstagramContentProvider.CONTENT_URI, "favourite/"+MainActivity.limit_r)
+				, null, null, null, null);
 	}
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
@@ -101,9 +103,12 @@ public class PhotoGalleryFragment extends Fragment implements LoaderCallbacks<Cu
 		public Object getItem(int arg0) {
 			// TODO Auto-generated method stub
 			if(data==null || data.getCount()==0) return null;
-			data.moveToPosition(arg0);
-			//InstagramPhoto hk=InstagramPhotoDbAdapter.getPhotoFromCursor(data);//fail tai day
-			//data.moveToFirst();
+			if(data.moveToPosition(arg0))
+			{
+				InstagramPhoto hk=InstagramPhotoDbAdapter.getPhotoFromCursor(data);//fail tai day
+				//data.moveToFirst();
+				return hk;//new InstagramPhoto();
+			}
 			return new InstagramPhoto();
 		}
 
@@ -124,7 +129,7 @@ public class PhotoGalleryFragment extends Fragment implements LoaderCallbacks<Cu
 			}
 			else
 			{
-				
+				//nothing to do right nơ right here, kuể 
 			}
 			return tmpv;
 		}

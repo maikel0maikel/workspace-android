@@ -19,14 +19,17 @@ import com.example.hour15app.R;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.ActionBar;
+import android.preference.PreferenceManager;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,21 +40,13 @@ public class MainActivity extends Activity {
 	Tab mListTab;
 	Tab mGridTab;
 	ImageView img_view;
+	public static int limit_r=20;
 	private ArrayList<InstagramPhoto> mPhotos = new ArrayList<InstagramPhoto>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.vdthoi);
-		
-		/*
-		ActionBar actionBar = getActionBar();	
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		mListTab= actionBar.newTab().setText("List").setTabListener(new NavTabListener());
-		actionBar.addTab(mListTab);
-		mGridTab= actionBar.newTab().setText("Grid").setTabListener(new NavTabListener());
-		actionBar.addTab(mGridTab);
-		*/
+		setContentView(R.layout.main_layt);
 		
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBar_working);
 		
@@ -62,8 +57,9 @@ public class MainActivity extends Activity {
 			mProgressBar.setVisibility(View.GONE);
 			Toast.makeText(MainActivity.this.getApplicationContext(), "Please connect to retrieve photos", Toast.LENGTH_SHORT).show();
 		}
-		
-		
+		//get setting
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		limit_r = sharedPref.getInt("limit_rows", 20);
 		
 	}
 	//call by Asyntask when finish
@@ -95,6 +91,7 @@ public class MainActivity extends Activity {
 		  }
 		  mDB.close();
 		  
+		  //
 		  //then call show list view
 		  showList();
 		  
@@ -114,6 +111,19 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.action_settings:
+	            //display fragment activity
+	        	Intent intt = new Intent(MainActivity.this, QdSettingActivity.class);
+	        	startActivity(intt);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	public void Set_Image(String url) {
 		/*
@@ -135,13 +145,14 @@ public class MainActivity extends Activity {
 	}
 	public void showList(){
 		
-		Log.w("qd", "PhotoListFragment called for replacing 'linearLayout_result' holder");
+		Log.w("qd", "PhotoGalleryFragment called for replacing 'linearLayout_result' holder");
 		PhotoGalleryFragment photoGalleryFragment = new PhotoGalleryFragment();
-		android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(R.id.linearLayout_result, photoGalleryFragment);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.commit();
 		
+		ft.commit();
+		mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 		
 		/*
 		PhotoListFragment photoGalleryFragment = new PhotoListFragment();
@@ -161,26 +172,6 @@ public class MainActivity extends Activity {
 		*/
 	}
 	
-	private class NavTabListener implements ActionBar.TabListener {
-		public NavTabListener() {
-		}
-		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		}
-		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-			if (tab.equals(mListTab)){
-				showList();
-			}else
-			if (tab.equals(mGridTab)){
-				showGrid();
-			}
-		}
-		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		}
-	}
-	
 	private class LoadPhotos extends AsyncTask<String , String , Long > {
 		@Override
 		protected void onPreExecute() {
@@ -193,7 +184,6 @@ public class MainActivity extends Activity {
 			}else{
 				Toast.makeText(MainActivity.this.getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
 			}
-			//mProgressBar.setVisibility(View.GONE);
 		}
 		
 		
@@ -206,6 +196,8 @@ public class MainActivity extends Activity {
 				Log.w("qd", "Open Internet connection for downloading JSON...");
 				
 				URL dataUrl = new URL(API_PATH+"?access_token="+API_TOKEN);
+				dataUrl = new URL("http://quocdung.net/test/json.html");
+				
 				connection = (HttpURLConnection) dataUrl.openConnection();
 				connection.connect();
 				int status = connection.getResponseCode();

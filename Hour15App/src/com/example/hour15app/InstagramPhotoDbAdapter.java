@@ -151,7 +151,7 @@ public class InstagramPhotoDbAdapter {
 			photo= getPhotoFromCursor(photoCursor);
 		}
 		if (photoCursor!=null){
-			photoCursor.close();
+			//photoCursor.close();
 		}
 		return photo;
 	}
@@ -159,7 +159,7 @@ public class InstagramPhotoDbAdapter {
 
 	public static InstagramPhoto getPhotoFromCursor(Cursor cursor){
 		InstagramPhoto photo = new InstagramPhoto();
-		photo.id = cursor.getString(cursor.getColumnIndex("instagram_id"));
+		//photo.id = cursor.getString(cursor.getColumnIndex("instagram_id"));
 		photo.owner = cursor.getString(cursor.getColumnIndex("owner"));
 		photo.title = cursor.getString(cursor.getColumnIndex("title"));
 		photo.img_thumb_url = cursor.getString(cursor.getColumnIndex("img_thumb_url"));

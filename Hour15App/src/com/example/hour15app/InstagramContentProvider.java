@@ -31,7 +31,8 @@ public class InstagramContentProvider extends ContentProvider {
 	static {
 		  sUriMatcher.addURI("com.example.hour15app.provider", "instagramphoto", 1);
 		  sUriMatcher.addURI("com.example.hour15app.provider", "instagramphoto/#", 2);
-		  sUriMatcher.addURI("com.example.hour15app.provider", "instagramphoto/favourite", 3);
+		  sUriMatcher.addURI("com.example.hour15app.provider", "instagramphoto/favourite/#", 3);//the last is limit row
+		  sUriMatcher.addURI("com.example.hour15app.provider", "instagramphoto/favourite", 4);//
 	}
 	public static final Uri CONTENT_URI =
 			Uri.parse("content://com.example.hour15app.provider/instagramphoto");
@@ -60,8 +61,22 @@ public class InstagramContentProvider extends ContentProvider {
 			cursor.setNotificationUri(getContext().getContentResolver(), uri);			
 			break;
 		case 3:
+			int limit_r = 20;//by default
+			if(!uri.getLastPathSegment().equals(""))
+			{
+				try {
+					limit_r = Integer.parseInt(uri.getLastPathSegment());
+				}catch(Exception ex){limit_r=20;}
+			}
 			cursor =  mPhotoDbHelper.mDb.query(true, InstagramPhotoDbAdapter.DATABASE_TABLE,
-					projection, "is_favorite=1", selectionArgs, null, null, "instagram_id desc, title asc", null);
+					projection, "is_favorite=1", selectionArgs, null, null,
+					"instagram_id desc, title asc", String.valueOf(limit_r));
+			cursor.setNotificationUri(getContext().getContentResolver(), uri);			
+			break;
+		case 4:
+			cursor =  mPhotoDbHelper.mDb.query(true, InstagramPhotoDbAdapter.DATABASE_TABLE,
+					projection, "is_favorite=1", selectionArgs, null, null,
+					"instagram_id desc, title asc", null);
 			cursor.setNotificationUri(getContext().getContentResolver(), uri);			
 			break;
 		default:

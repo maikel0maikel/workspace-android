@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <EditTextPreference android:positiveButtonText="OK" android:negativeButtonText="Cancel" android:dialogMessage="How many rows u wanna display ?" android:dialogTitle="LIMIT ROWs request" android:summary="Default is 20" android:title="Set limit rows..." android:defaultValue="20" android:key="limit_rows"/>
+    
+
+</PreferenceScreen>
