@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Hour13App</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <string-array name="user">
+        <item>user1</item>
+        <item>user2</item>
+        <item>user3</item>
+    </string-array>
+
+    <string name="title_activity_user__detail">User_Detail</string>
+
+</resources>

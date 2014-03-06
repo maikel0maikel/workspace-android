@@ -196,7 +196,7 @@ public class MainActivity extends Activity {
 				Log.w("qd", "Open Internet connection for downloading JSON...");
 				
 				URL dataUrl = new URL(API_PATH+"?access_token="+API_TOKEN);
-				dataUrl = new URL("http://quocdung.net/test/json.html");
+				//dataUrl = new URL("http://quocdung.net/test/json.html");
 				
 				connection = (HttpURLConnection) dataUrl.openConnection();
 				connection.connect();
