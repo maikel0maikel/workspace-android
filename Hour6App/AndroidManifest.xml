@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hour6app"
+    package="com.bffmedia.hour6app"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="19" />
+        android:minSdkVersion="11"
+        android:targetSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.hour6app.MainActivity"
+            android:name="com.bffmedia.hour6app.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:label="Form Control Activity" android:name="com.bffmedia.hour6app.FormControlActivity"></activity>
+        <activity android:label="Using Adapters" android:name="com.bffmedia.hour6app.UsingAdaptersActivity"></activity>
+        <activity android:label="Progress Activity" android:name="com.bffmedia.hour6app.ProgressActivity"></activity>
+        <activity android:label="ImageView Activity" android:name="com.bffmedia.hour6app.ImageViewActivity"></activity>
+        <activity android:label="Exercise Activity" android:name="com.bffmedia.hour6app.Excercise"></activity>
+        <activity android:label="Setting Activity" android:name="com.bffmedia.hour6app.SettingActivity"></activity>
     </application>
 
 </manifest>

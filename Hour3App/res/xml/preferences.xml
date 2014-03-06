@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="custom_text"
+        android:title="Custom text"
+        android:summary="Use default text"
+        android:defaultValue="False"/>
+    	<EditTextPreference 
+	    android:key="edit_text"
+	    android:dependency="custom_text"
+	    android:title="Type your text"
+	    android:summary=""
+	    android:defaultValue=""
+	    />
+    <PreferenceCategory android:title="Images">
+	
+    <ListPreference 
+        android:key="images"
+        android:title="Choose image"
+        android:summary=""
+        android:dialogTitle="Choose image"
+        android:entries="@array/images_array"
+        android:entryValues="@array/entry"
+        android:defaultValue="Android"
+        /></PreferenceCategory>
+</PreferenceScreen>
+

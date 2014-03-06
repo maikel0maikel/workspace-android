@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference 
+        android:key="layout"
+        android:title="Choose layout"
+        android:summary=""
+        android:dialogTitle="Choose layout"
+        android:entries="@array/layout_array"
+        android:entryValues="@array/entry"
+        android:defaultValue="Main layout"
+        />
+</PreferenceScreen>
+

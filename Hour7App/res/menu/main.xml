@@ -4,10 +4,30 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_settings">
-    </item>
-    <item android:id="@+id/item1" android:showAsAction="always" android:title="Action1"></item>
-    <item android:id="@+id/item2" android:showAsAction="always" android:title="Action2"></item>
-    <item android:id="@+id/item3" android:showAsAction="never" android:title="Action3"></item>
-
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/action_settings1"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Item 4"/>
+	<item 
+	    android:id="@+id/menu_test"
+	    android:orderInCategory="10"
+	    android:showAsAction="withText|always"
+	    android:icon="@+drawable/menu_share"
+	    android:title="Icon item 1"
+	    />
+	<item 
+	    android:id="@+id/menu_test2"
+	    android:orderInCategory="10"
+	    android:showAsAction="withText|always"
+	    android:icon="@+drawable/menu_share"
+	    android:title="Icon item 2"
+	    />
+	<item 
+	    android:id="@+id/menu_test1"
+	    android:orderInCategory="10"
+	    android:showAsAction="never"
+	    android:title="Item 3"
+	    />
 </menu>

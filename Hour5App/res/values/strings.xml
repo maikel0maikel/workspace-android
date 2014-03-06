@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Hour5App</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="hello_android">Hello Android</string>
 
+ <string-array  name="layout_array">
+	     <item>Main layout</item>
+        <item>Ex1 Frame Layout</item>
+        <item>Ex1 Relative Layout</item>
+        <item>Ex2 Frame Layout</item>
+        <item>Ex3 Relative Layout</item>
+    </string-array>
+    <string-array name="entry">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item >5</item>
+    </string-array>
 </resources>
+

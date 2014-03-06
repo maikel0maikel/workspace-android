@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -12,20 +13,62 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/kim"
+        android:textColor="@color/app_text_color"
+        android:textSize="@dimen/thumbDim" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="24dp"
+        android:text="@string/kim"
+        android:textColor="@color/app_text_color"
+        android:textSize="@dimen/thumbDim2" />
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_centerVertical="true"
+        android:text="@string/kim"
+        android:textColor="@color/app_text_color"
+        android:textSize="@dimen/thumbDim3" />
+
+    <TextView
+        android:id="@+id/TextView03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView01"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/hello_world"
-        android:textColor="@color/qdColor"
-        android:textSize="@dimen/qdDimension" />
+        android:layout_marginBottom="98dp"
+        android:text="@string/kim"
+        android:textColor="@color/app_text_color"
+        android:textSize="@dimen/thumbDim4" />
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="nothing"
-        android:scaleType="fitCenter"
-        android:src="@drawable/qdimage" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView03"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/background"
+        
+     />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView1"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="17dp"
+        android:layout_toRightOf="@+id/TextView03"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/app_text_color" />
 
 </RelativeLayout>

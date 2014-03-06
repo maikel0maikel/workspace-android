@@ -4,5 +4,14 @@
     <string name="app_name">Hour6App</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+	 <string-array  name="layout_array">
+	     <item>Color 1</item>
+        <item>Color 2</item>
+        <item>Color 3</item>
+    </string-array>
+    <string-array name="entry">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>
