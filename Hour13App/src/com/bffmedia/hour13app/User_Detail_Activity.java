@@ -89,7 +89,7 @@ public class User_Detail_Activity extends Activity {
 			user.setText(cObj.username);
 			pass.setText(cObj.password);
 			//hide
-			Delete.setVisibility(Button.INVISIBLE);
+			
 			user.setEnabled(false);
 			
 		}
@@ -98,6 +98,7 @@ public class User_Detail_Activity extends Activity {
 			//set value
 			user.setText("");
 			pass.setText("");
+			Delete.setVisibility(Button.INVISIBLE);
 		}
 	}
 	private void Add()
