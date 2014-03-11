@@ -23,10 +23,23 @@ public class MyFileHelper {
 				fullFilename.lastIndexOf("/")+1,
 				fullFilename.length()
 				);
+		filename=filename.substring(0, filename.lastIndexOf("."));
 		if(withExtension)
 		{
 			filename+=MyFileHelper.getFileExtension(fullFilename, false);
 		}
+        return filename;
+	}
+	public static String getFolderName(String fullFilename)
+	{
+		if(fullFilename==null)
+		{
+			return null;
+		}
+		String filename = fullFilename.substring(
+				fullFilename.lastIndexOf("/")+1,
+				fullFilename.length()
+				);
         return filename;
 	}
 	public static Boolean isSoundFile(String fullFilename)

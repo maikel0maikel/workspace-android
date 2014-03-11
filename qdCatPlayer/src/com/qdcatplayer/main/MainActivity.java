@@ -1,8 +1,10 @@
 package com.qdcatplayer.main;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.example.qdcatplayer.R;
+import com.qdcatplayer.objects.MyFolder;
 import com.qdcatplayer.objects.MyPath;
 import com.qdcatplayer.objects.MySong;
 
@@ -21,10 +23,7 @@ public class MainActivity extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		
-		MySong tmp=new MySong("/music/facebook_ringtone_pop.m4a");
-		tmp.getPath();
-		tmp.getAlbum();
-		int i=0;
+		
 	}
 
 	@Override

@@ -6,16 +6,16 @@ import com.qdcatplayer.libraries.MyFileHelper;
 
 public class MyPath {
 	private String _absPath = "";
-	private String _fileName = null;
+	protected String _fileName = null;
 	private Boolean _isSoundFile = null;
 	private Boolean _isFile = null;
 	private Boolean _isFolder = null;
-	private MyPath _parentFolder = null;
+	private MyFolder _parentFolder = null;
 		//because file/folder has no parent will got null too
 		//so, we need to declare new Boolean varible to separate meaning
 		//of 2 concept: "no parent" and "not ready yet"
 		private Boolean _parentFolder_ready = false;
-	private ArrayList<MyPath> _childsFolder = null;
+	
 	public MyPath() {
 		// TODO Auto-generated constructor stub
 	}
@@ -34,7 +34,20 @@ public class MyPath {
 		{
 			return _isSoundFile;
 		}
-		_isSoundFile = MyFileHelper.isSoundFile(_absPath);
+		//
+		if(!isFile())
+		{
+			_isSoundFile=false;
+		}
+		else
+		{
+			_isSoundFile = MyFileHelper.isSoundFile(_absPath);
+		}
+		if(_isSoundFile)
+		{
+			_isFile = true;
+			_isFolder = false;
+		}
 		return _isSoundFile;
 	}
 	public Boolean isFile()
@@ -51,6 +64,8 @@ public class MyPath {
 		File f=new File(_absPath);
 		
 		_isFile = f.isFile();
+		//get for other too
+		_isFolder = !_isFile;
 		return _isFile;
 	}
 	public Boolean isFolder()
@@ -61,39 +76,14 @@ public class MyPath {
 		}
 		File f=new File(_absPath);
 		
-		_isFolder = f.isDirectory();
+		_isFolder = f.isDirectory();//FAIL
+		//get for other too
+		_isFile = !_isFolder;
+		_isSoundFile=!_isFolder;
 		return _isFolder;
 	}
-	public ArrayList<MyPath> getChildFolders()
-	{
-		if(_childsFolder!=null)
-		{
-			return _childsFolder;
-		}
-		//lazy loading
-		_childsFolder = new ArrayList<MyPath>();
-		File f = new File(_absPath);
-		File[] tmp = f.listFiles();
-		//no childs
-		if(tmp==null)
-		{
-			return _childsFolder;
-		}
-		//has childs
-		for(File item:tmp)
-		{
-			if(item.isDirectory())
-			{
-				_childsFolder.add(
-						new MyPath(
-								item.getAbsolutePath()
-								)
-						);
-			}
-		}
-		return _childsFolder;
-	}
-	public MyPath getParentFolder()
+	
+	public MyFolder getParentFolder()
 	{
 		if(_parentFolder_ready==true)
 		{
@@ -108,24 +98,31 @@ public class MyPath {
 			return _parentFolder;
 		}
 		//has parent
-		_parentFolder = new MyPath(
-				f.getParent()
+		_parentFolder = new MyFolder(
+				parent+"/"
 				);
 		_parentFolder_ready=true;
 		return _parentFolder;
 	}
-	public Boolean update()
+	public Boolean reset()
 	{
 		//clear all reference members
-		_childsFolder = null;
 		_parentFolder = null;
 		_isFile = null;
+		_isFolder = null;
+		_isSoundFile = null;
+		_fileName=null;
 		//set lazy state
 		_parentFolder_ready=false;
 		return true;
 	}
 	public String getFileName()
 	{
+		//do not support folder
+		if(isFolder()==true)
+		{
+			return "";
+		}
 		if(_fileName!=null)
 		{
 			return _fileName;
@@ -135,11 +132,15 @@ public class MyPath {
 	}
 	public String getFileExtension()
 	{
+		//do not support folder
+		if(isFolder()==true)
+		{
+			return "";
+		}
 		if(getFileName()==null)
 		{
 			return null;
 		}
-		
 		return MyFileHelper.getFileExtension(getFileName(), false);
 	}
 	public String getAbsPath()

@@ -24,6 +24,21 @@ public class MySong {
 		_path = new MyPath();
 		_path.setAbsPath(absPath);
 	}
+	public Boolean loadFromPath(String absPath) {
+		//init new _path
+		_path = new MyPath();
+		_path.setAbsPath(absPath);
+		//then reset
+		reset();
+		return true;
+	}
+	public Boolean loadFromPath(MyPath absPath) {
+		//init new _path
+		_path = absPath;
+		//then reset
+		reset();
+		return true;
+	}
 	
 	public MyPath getPath()
 	{
@@ -123,5 +138,19 @@ public class MySong {
 			_title = "";
 		}
 		return _title;
+	}
+	public Boolean reset()
+	{
+		_title=null;
+		_album=null;
+		_bitrate=null;
+		_duration=null;
+		_format=null;
+		//reset path
+		if(_path!=null)
+		{
+			_path.reset();
+		}
+		return true;
 	}
 }
