@@ -1,10 +1,13 @@
-package com.qdcatplayer.objects;
+package com.qdcatplayer.main.objects;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import com.qdcatplayer.libraries.MyFileHelper;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.libraries.MyFileHelper;
 
+@DatabaseTable(tableName="MyFolders")
 public class MyFolder extends MyPath {
 	private ArrayList<MyFolder> _childsFolder = null;
 	private ArrayList<MySong> _childsSong = null;

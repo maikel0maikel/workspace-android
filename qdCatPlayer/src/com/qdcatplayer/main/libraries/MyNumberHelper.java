@@ -1,4 +1,4 @@
-package com.qdcatplayer.libraries;
+package com.qdcatplayer.main.libraries;
 
 import android.text.format.Time;
 

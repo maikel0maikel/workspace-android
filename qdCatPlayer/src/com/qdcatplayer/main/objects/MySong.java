@@ -1,30 +1,48 @@
-package com.qdcatplayer.objects;
+package com.qdcatplayer.main.objects;
 
-import com.qdcatplayer.libraries.MyNumberHelper;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.DAOs.MySongDAO;
+import com.qdcatplayer.main.libraries.MyNumberHelper;
 
 import android.media.MediaMetadataRetriever;
 import android.text.format.Time;
 
+@DatabaseTable(tableName="MySongs")
 public class MySong {
+	@DatabaseField(generatedId = true)
+	private Integer _id=null;
+	
+	@DatabaseField
 	private String _title = null;
-	private Time _duration = null;
+	
+	@DatabaseField
+	private Long _duration = null;//milisec
 	
 	//foreign
+	@DatabaseField(canBeNull = false, foreign = true)
 	private MyPath _path = null;
+	
+	@DatabaseField(canBeNull = false, foreign = true)
 	private MyFormat _format = null;
+	
+	@DatabaseField(canBeNull = true, foreign = true)
 	private MyAlbum _album = null;
+	
+	@DatabaseField(canBeNull = true, foreign = true)
 	private MyBitrate _bitrate = null;
+	
+	@DatabaseField(canBeNull = true, foreign = true)
+	private MyArtist _artist = null;
+	
 	public MySong() {
-		// TODO Auto-generated constructor stub
-		
 	}
 	public MySong(String absPath) {
-		// TODO Auto-generated constructor stub
 		//init _path but not load right now
 		_path = new MyPath();
 		_path.setAbsPath(absPath);
 	}
-	public Boolean loadFromPath(String absPath) {
+	public Boolean setPath(String absPath) {
 		//init new _path
 		_path = new MyPath();
 		_path.setAbsPath(absPath);
@@ -32,7 +50,7 @@ public class MySong {
 		reset();
 		return true;
 	}
-	public Boolean loadFromPath(MyPath absPath) {
+	public Boolean setPath(MyPath absPath) {
 		//init new _path
 		_path = absPath;
 		//then reset
@@ -80,6 +98,27 @@ public class MySong {
 			);
 		return _album;
 	}
+	public MyArtist getArtist()
+	{
+		//lazy load
+		if(_artist!=null)
+		{
+			return _artist;
+		}
+		//required
+		if(getPath()==null)
+		{
+			return null;
+		}
+		
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		retriever.setDataSource(getPath().getAbsPath());
+		String tmp = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+		_artist = new MyArtist(
+				tmp
+			);
+		return _artist;
+	}
 	public MyBitrate getBirate()
 	{
 		//required
@@ -94,7 +133,7 @@ public class MySong {
 		}
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
-		String tmp = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
+		String tmp = "128";//retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
 		_bitrate = new MyBitrate(
 				tmp
 			);
@@ -102,33 +141,32 @@ public class MySong {
 	}
 	public Time getDuration()
 	{
+		//lazy load
+		if(_duration!=null)
+		{
+			return MyNumberHelper.toTime(_duration);
+		}
 		//required
 		if(getPath()==null)
 		{
 			return null;
-		}
-		//lazy load
-		if(_duration!=null)
-		{
-			return _duration;
 		}
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
 		String tmp = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-		_duration = MyNumberHelper.toTime(tmp);
-		return _duration;
+		return MyNumberHelper.toTime(tmp);
 	}
 	public String getTitle()
 	{
-		//required
-		if(getPath()==null)
-		{
-			return null;
-		}
 		//lazy load
 		if(_title!=null)
 		{
 			return _title;
+		}
+		//required
+		if(getPath()==null)
+		{
+			return null;
 		}
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
@@ -138,6 +176,7 @@ public class MySong {
 			_title = "";
 		}
 		return _title;
+		
 	}
 	public Boolean reset()
 	{
@@ -151,6 +190,33 @@ public class MySong {
 		{
 			_path.reset();
 		}
+		return true;
+	}
+	public Integer getId()
+	{
+		if(_id!=null)
+		{
+			return _id;
+		}
+		_id = 0;
+		return _id;
+	}
+	public Boolean setId(Integer id)
+	{
+		_id = id;
+		return true;
+	}
+	public Boolean loadAllProperties()
+	{
+		getAlbum();
+		getArtist();
+		getBirate();
+		getDuration();
+		getFormat();
+		getId();
+		getPath();
+		getTitle();
+		
 		return true;
 	}
 }

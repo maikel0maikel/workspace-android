@@ -1,4 +1,4 @@
-package com.qdcatplayer.libraries;
+package com.qdcatplayer.main.libraries;
 
 public class MyFileHelper {
 	public static final String[] soundExtention =

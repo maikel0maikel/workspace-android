@@ -1,7 +1,18 @@
-package com.qdcatplayer.objects;
+package com.qdcatplayer.main.objects;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName="MyBitrates")
 public class MyBitrate {
-	private Long _value=0l;
+	@DatabaseField(generatedId=true)
+	private Integer _id=null;
+	@DatabaseField(unique=true, canBeNull=false)
+	private Long _value=0l;//never null
+	
+	public MyBitrate() {
+		
+	}
 	public MyBitrate(Long value) {
 		// TODO Auto-generated constructor stub
 		_value = value;
@@ -25,6 +36,10 @@ public class MyBitrate {
 		}
 	}
 	public Long getValue()
+	{
+		return _value;
+	}
+	public Long setValue()
 	{
 		return _value;
 	}

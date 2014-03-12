@@ -1,15 +1,27 @@
-package com.qdcatplayer.objects;
+package com.qdcatplayer.main.objects;
 
 import java.io.File;
 import java.util.ArrayList;
-import com.qdcatplayer.libraries.MyFileHelper;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.libraries.MyFileHelper;
+
+@DatabaseTable(tableName="MyPaths")
 public class MyPath {
+	@DatabaseField(generatedId = true)
+	private Integer _id = null;
+	@DatabaseField(unique=true, canBeNull=false)
 	private String _absPath = "";
+	@DatabaseField
 	protected String _fileName = null;
+	@DatabaseField
 	private Boolean _isSoundFile = null;
+	@DatabaseField
 	private Boolean _isFile = null;
+	@DatabaseField
 	private Boolean _isFolder = null;
+	@DatabaseField(canBeNull=true, foreign=true)
 	private MyFolder _parentFolder = null;
 		//because file/folder has no parent will got null too
 		//so, we need to declare new Boolean varible to separate meaning
