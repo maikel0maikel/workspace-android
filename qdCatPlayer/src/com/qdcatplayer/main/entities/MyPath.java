@@ -1,16 +1,17 @@
-package com.qdcatplayer.main.objects;
+package com.qdcatplayer.main.entities;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MyPathDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.libraries.MyFileHelper;
 
 @DatabaseTable(tableName="MyPaths")
-public class MyPath extends _MyObjectAbstract<MyPathDAO> {
+public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	@DatabaseField(unique=true, canBeNull=false)
 	private String _absPath = "";
 	@DatabaseField
@@ -42,18 +43,19 @@ public class MyPath extends _MyObjectAbstract<MyPathDAO> {
 		{
 			return _parentFolder;
 		}
-		File f = new File(_absPath);
-		String parent = f.getParent();
-		//no parent
-		if(parent==null)
+		//do not know DAO !
+		if(getDao()==null)
 		{
-			_parentFolder = null;
-			return _parentFolder;
+			return null;
 		}
-		//has parent
-		_parentFolder = new MyFolder(
-				parent+"/"
-				);
+		//get through DAO is recommended, DAO will look SOURCE to choose
+		//where to get Parent Obj
+		_parentFolder = getDao().getParentFolder(this);
+		//pass custom DAO to MyFolder parent for later use
+		//Ngay tai luc goi nay thi GlobalDAO se tao ra mot custom moi neu chua co san
+		_parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
+		_parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
+		
 		_parentFolder_ready=true;
 		return _parentFolder;
 	}
@@ -109,4 +111,5 @@ public class MyPath extends _MyObjectAbstract<MyPathDAO> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 }

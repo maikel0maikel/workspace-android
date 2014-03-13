@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
-import com.qdcatplayer.main.objects.MyAlbum;
+import com.qdcatplayer.main.entities.MyAlbum;
 
 public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
-
-	public MyAlbumDAO(Context ctx) {
-		super(ctx);
+	/**
+	 * Neu khong chi dinh GlobalDAO thi dat g=null (se tu dong tao)
+	 * @param ctx
+	 * @param g
+	 */
+	public MyAlbumDAO(Context ctx, GlobalDAO g) {
+		super(ctx, g);
 	}
 
 	@Override

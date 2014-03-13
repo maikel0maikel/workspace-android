@@ -1,16 +1,17 @@
-package com.qdcatplayer.main.objects;
+package com.qdcatplayer.main.entities;
 
 import java.util.ArrayList;
 
 import com.j256.ormlite.dao.Dao;
+import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs._MyDAOInterface;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.objects.MySong;
+import com.qdcatplayer.main.entities.MySong;
 
 import android.content.Context;
 
-public interface _MyObjectInterface<T> {
+public interface _MyEntityInterface<T> {
 	public Integer getId();
 	public Boolean setId(Integer id);
 	public Boolean loadAllProperties();

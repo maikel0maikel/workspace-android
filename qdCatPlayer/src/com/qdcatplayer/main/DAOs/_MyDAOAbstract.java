@@ -9,10 +9,21 @@ import com.j256.ormlite.dao.Dao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 
-public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T> {
+public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T>, _GlobalDAOInterface {
+	/**
+	 * Lam viec truc tiep voi MyDBmanager, cac DAO nguyen thuy duoc Cache
+	 * trong day
+	 * MyDBHelper duoc truy xuat thong qua Manager nay
+	 */
 	private MyDBManager _mn=null;
-	public _MyDAOAbstract(Context ctx) {
-		init(ctx);
+	/*
+	 * Trung tam quan ly cac custom DAO
+	 * cung cap cho cac Objects su dung cross-space
+	 * ho tro Cache cac custom DAO
+	 */
+	private GlobalDAO _globalDAO=null;
+	public _MyDAOAbstract(Context ctx, GlobalDAO g) {
+		init(ctx, g);
 	}
 	@Override
 	public Boolean release() {
@@ -30,7 +41,7 @@ public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T> {
      * @return
      */
 	@Override
-	public Boolean init(Context ctx) {
+	public Boolean init(Context ctx, GlobalDAO g) {
 		//cached
     	if(_mn!=null && getHelper()!=null)
     	{
@@ -38,6 +49,16 @@ public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T> {
     	}
     	_mn = new MyDBManager();
 		_mn.getHelper(ctx);//init helper inside MyDBManager
+		//init GlobalDAO if not ready but not generate any custom DAO inside
+		//will be use when call from Object
+		if(g!=null)
+		{
+			_globalDAO = g;
+		}
+		else
+		{
+			_globalDAO = new GlobalDAO(ctx);
+		}
 		return true;
 	}
 
@@ -53,5 +74,10 @@ public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T> {
 	public MyDBManager getManager() {
 		// TODO Auto-generated method stub
 		return _mn;
+	}
+	@Override
+	public GlobalDAO getGlobalDAO() {
+		// TODO Auto-generated method stub
+		return _globalDAO;
 	}
 }

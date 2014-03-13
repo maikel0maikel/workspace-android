@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
-import com.qdcatplayer.main.objects.MyArtist;
-import com.qdcatplayer.main.objects.MySong;
+import com.qdcatplayer.main.entities.MyArtist;
+import com.qdcatplayer.main.entities.MySong;
 
 public class MyArtistDAO extends _MyDAOAbstract<MyArtist> {
 
-	public MyArtistDAO(Context ctx) {
-		super(ctx);
+	public MyArtistDAO(Context ctx, GlobalDAO g) {
+		super(ctx, g);
 		// TODO Auto-generated constructor stub
 	}
 

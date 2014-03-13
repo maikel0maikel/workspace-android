@@ -8,9 +8,9 @@ import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.objects.MyFolder;
-import com.qdcatplayer.main.objects.MyPath;
-import com.qdcatplayer.main.objects.MySong;
+import com.qdcatplayer.main.entities.MyFolder;
+import com.qdcatplayer.main.entities.MyPath;
+import com.qdcatplayer.main.entities.MySong;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,9 +34,10 @@ public class MainActivity extends Activity {
 		h.getWritableDatabase();
 		
 		/*
-		MySongDAO d=new MySongDAO(getApplicationContext());
-		MySong obj=d.getById(1);
+		MySongDAO d=new MySongDAO(getApplicationContext(),null);
+		
 		d.release();
+		
 		
 		Vd f=new Vd();
 		f.execute("");
@@ -57,13 +58,13 @@ public class MainActivity extends Activity {
 		
 		MyFolder fd=new MyFolder("/sdcard/music");
 		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
-		MySongDAO dao=new MySongDAO(getApplicationContext());
+		MySongDAO dao=new MySongDAO(getApplicationContext(),null);
+		
 		for(MySong item:ss)
 		{
-			Log.w("qd",item.getPath().getFileName() + item.getPath().getFileExtension(true));
-			//dao.insert(item);//not test yet
+			item.setDao(dao);//do khong lay tu CSDL ra nen chua có DAO
+			Log.w("qd",item.getPath().getFileName());
 		}
-		
 		
 		
 	}
@@ -81,7 +82,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected String doInBackground(String... arg0) {
 			// TODO Auto-generated method stub
-			MySongDAO d2=new MySongDAO(getApplicationContext());
+			MySongDAO d2=new MySongDAO(getApplicationContext(),null);
 			ArrayList<MySong> s1= d2.getAll();
 			for(MySong item:s1)
 			{

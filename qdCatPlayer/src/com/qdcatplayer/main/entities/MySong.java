@@ -1,7 +1,8 @@
-package com.qdcatplayer.main.objects;
+package com.qdcatplayer.main.entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs._MyDAOAbstract;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
@@ -16,7 +17,7 @@ import android.text.format.Time;
  *
  */
 @DatabaseTable(tableName="MySongs")
-public class MySong extends _MyObjectAbstract<MySongDAO> {
+public class MySong extends _MyEntityAbstract<MySongDAO> {
 	/**
 	 * Because 1 song only has 1 title, and common music player
 	 * doesn't group songs by title too, no need to create Object
@@ -29,7 +30,7 @@ public class MySong extends _MyObjectAbstract<MySongDAO> {
 	private Long _duration = null;//milisec
 	
 	//foreign
-	@DatabaseField(canBeNull = false, foreign = true)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh=true)
 	private MyPath _path = null;
 	
 	@DatabaseField(canBeNull = false, foreign = true)
@@ -69,36 +70,43 @@ public class MySong extends _MyObjectAbstract<MySongDAO> {
 	
 	public MyPath getPath()
 	{
+		//pass Global DAO to MyPath for lazy load and after-query if needed
+		if(_path!=null)
+		{
+			_path.setDao(getGlobalDAO().getMyPathDAO());
+		}
 		return _path;
 	}
 	public MyFormat getFormat()
 	{
-		//required
-		if(getPath()==null)
-		{
-			return null;
-		}
 		//lazy load
 		if(_format!=null)
 		{
 			return _format;
 		}
+		//required
+		if(getPath()==null)
+		{
+			return null;
+		}
+		
 		//read sound tag from _path object
 		_format = new MyFormat(getPath().getFileExtension(false));
 		return _format;
 	}
 	public MyAlbum getAlbum()
 	{
-		//required
-		if(getPath()==null)
-		{
-			return null;
-		}
 		//lazy load
 		if(_album!=null)
 		{
 			return _album;
 		}
+		//required
+		if(getPath()==null)
+		{
+			return null;
+		}
+		
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
 		String tmp = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
@@ -130,16 +138,17 @@ public class MySong extends _MyObjectAbstract<MySongDAO> {
 	}
 	public MyBitrate getBirate()
 	{
-		//required
-		if(getPath()==null)
-		{
-			return null;
-		}
 		//lazy load
 		if(_bitrate!=null)
 		{
 			return _bitrate;
 		}
+		//required
+		if(getPath()==null)
+		{
+			return null;
+		}
+		
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
 		String tmp = "128";//retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
@@ -231,5 +240,4 @@ public class MySong extends _MyObjectAbstract<MySongDAO> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 }

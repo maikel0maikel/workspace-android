@@ -9,8 +9,8 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
-import com.qdcatplayer.main.objects.MyAlbum;
-import com.qdcatplayer.main.objects.MySong;
+import com.qdcatplayer.main.entities.MyAlbum;
+import com.qdcatplayer.main.entities.MySong;
 
 /**
  * Lam viec truc tiep voi doi tuong MySong
@@ -20,8 +20,8 @@ import com.qdcatplayer.main.objects.MySong;
  */
 public class MySongDAO extends _MyDAOAbstract<MySong> {
     //_mn member inherted from parent class
-	public MySongDAO(Context ctx) {
-    	super(ctx);
+	public MySongDAO(Context ctx, GlobalDAO g) {
+    	super(ctx,g);
 	}
     @Override
     public ArrayList<MySong> getAll()
@@ -52,20 +52,7 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 			return null;
 		}
 	}
-	public ArrayList<MySong> getByTitle(String title)
-	{
-		ArrayList<MySong> re = new ArrayList<MySong>();
-		
-		
-		return re;
-	}
-	public ArrayList<MySong> getByAlbum(MyAlbum album)
-	{
-		ArrayList<MySong> re = new ArrayList<MySong>();
-		
-		
-		return re;
-	}
+	
 	public ArrayList<MySong> getByAbsPath(Integer id)
 	{
 		ArrayList<MySong> re = new ArrayList<MySong>();

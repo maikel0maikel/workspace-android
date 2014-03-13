@@ -1,24 +1,26 @@
-package com.qdcatplayer.main.objects;
-
-import android.graphics.Bitmap;
+package com.qdcatplayer.main.entities;
 
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName="MyArtists")
-public class MyArtist {
+import android.graphics.Bitmap;
+
+@DatabaseTable(tableName="MyAlbums")
+public class MyAlbum {
 	@DatabaseField(generatedId=true)
 	private Integer _id=null;
 	@DatabaseField(unique=true)
 	private String _name="";//never null
 	@ForeignCollectionField
-	private ForeignCollection<MySong> _mySongs = null;
-	public MyArtist() {
+	private ForeignCollection<MySong> _songs = null;
+	
+	private Bitmap _cover=null;
+	public MyAlbum() {
 		
 	}
-	public MyArtist(String name) {
+	public MyAlbum(String name) {
 		setName(name);
 	}
 	public String getName()
