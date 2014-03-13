@@ -1,6 +1,8 @@
 package com.qdcatplayer.main.objects;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import android.graphics.Bitmap;
@@ -11,6 +13,8 @@ public class MyAlbum {
 	private Integer _id=null;
 	@DatabaseField(unique=true)
 	private String _name="";//never null
+	@ForeignCollectionField
+	private ForeignCollection<MySong> _songs = null;
 	
 	private Bitmap _cover=null;
 	public MyAlbum() {

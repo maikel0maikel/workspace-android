@@ -1,6 +1,8 @@
 package com.qdcatplayer.main.objects;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="MyFormats")
@@ -11,6 +13,8 @@ public class MyFormat {
 	private String _extension = null;//never null
 	@DatabaseField(canBeNull=false)
 	private String _mimetype= "audio/mp3";
+	@ForeignCollectionField
+	private ForeignCollection<MySong> _mySongs = null;
 	
 	public MyFormat() {
 	}

@@ -2,17 +2,26 @@ package com.qdcatplayer.main.objects;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.DAOs._MyDAOAbstract;
 import com.qdcatplayer.main.DAOs.MySongDAO;
+import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.libraries.MyNumberHelper;
 
 import android.media.MediaMetadataRetriever;
 import android.text.format.Time;
 
+/**
+ * Dinh nghia luon lop My...DAO tuong ung lam viec truc tiep voi class MySong
+ * @author quocdunginfo
+ *
+ */
 @DatabaseTable(tableName="MySongs")
-public class MySong {
-	@DatabaseField(generatedId = true)
-	private Integer _id=null;
-	
+public class MySong extends _MyObjectAbstract<MySongDAO> {
+	/**
+	 * Because 1 song only has 1 title, and common music player
+	 * doesn't group songs by title too, no need to create Object
+	 * String better
+	 */
 	@DatabaseField
 	private String _title = null;
 	
@@ -178,6 +187,7 @@ public class MySong {
 		return _title;
 		
 	}
+	@Override
 	public Boolean reset()
 	{
 		_title=null;
@@ -192,20 +202,7 @@ public class MySong {
 		}
 		return true;
 	}
-	public Integer getId()
-	{
-		if(_id!=null)
-		{
-			return _id;
-		}
-		_id = 0;
-		return _id;
-	}
-	public Boolean setId(Integer id)
-	{
-		_id = id;
-		return true;
-	}
+	@Override
 	public Boolean loadAllProperties()
 	{
 		getAlbum();
@@ -219,4 +216,20 @@ public class MySong {
 		
 		return true;
 	}
+	@Override
+	public Integer insert() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Boolean update() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer delete() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

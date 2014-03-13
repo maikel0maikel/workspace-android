@@ -1,6 +1,8 @@
 package com.qdcatplayer.main.objects;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="MyBitrates")
@@ -9,6 +11,8 @@ public class MyBitrate {
 	private Integer _id=null;
 	@DatabaseField(unique=true, canBeNull=false)
 	private Long _value=0l;//never null
+	@ForeignCollectionField
+	private ForeignCollection<MySong> _mySongs = null;
 	
 	public MyBitrate() {
 		

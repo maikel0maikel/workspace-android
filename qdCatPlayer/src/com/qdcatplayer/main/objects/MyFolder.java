@@ -3,22 +3,43 @@ package com.qdcatplayer.main.objects;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.DAOs.MyFolderDAO;
+import com.qdcatplayer.main.DAOs.MyPathDAO;
 import com.qdcatplayer.main.libraries.MyFileHelper;
 
 @DatabaseTable(tableName="MyFolders")
-public class MyFolder extends MyPath {
+public class MyFolder extends _MyObjectAbstract<MyFolderDAO> {
+	@DatabaseField(unique=true, canBeNull=false)
+	private String _absPath = "";
+	@DatabaseField
+	private String _folderName = null;
+	@ForeignCollectionField
+	private ForeignCollection<MyPath> _paths = null;
+	
+	@DatabaseField(canBeNull=true, foreign=true)
+	private MyFolder _parentFolder = null;
+		//because file/folder has no parent will got null too
+		//so, we need to declare new Boolean varible to separate meaning
+		//of 2 concept: "no parent" and "not ready yet"
+		private Boolean _parentFolder_ready = false;
+		
 	private ArrayList<MyFolder> _childsFolder = null;
 	private ArrayList<MySong> _childsSong = null;
 	private ArrayList<MySong> _recursiveSongs=null;
 	public MyFolder() {
-		// TODO Auto-generated constructor stub
-		super();
+		
 	}
 	public MyFolder(String absPath) {
 		// TODO Auto-generated constructor stub
-		super(absPath);
+		setAbsPath(absPath);
+	}
+	public Boolean setAbsPath(String path) {
+		_absPath = path;
+		return true;
 	}
 	public ArrayList<MyFolder> getChildFolders()
 	{
@@ -28,12 +49,7 @@ public class MyFolder extends MyPath {
 		}
 		//lazy loading
 		_childsFolder = new ArrayList<MyFolder>();
-		//do not support file/soundfile
-		if(!super.isFolder())
-		{
-			return _childsFolder;
-		}
-		
+
 		File f = new File(getAbsPath());
 		File[] tmp = f.listFiles();
 		//no childs
@@ -55,6 +71,27 @@ public class MyFolder extends MyPath {
 		}
 		return _childsFolder;
 	}
+	public MyFolder getParentFolder()
+	{
+		if(_parentFolder_ready==true)
+		{
+			return _parentFolder;
+		}
+		File f = new File(_absPath);
+		String parent = f.getParent();
+		//no parent
+		if(parent==null)
+		{
+			_parentFolder = null;
+			return _parentFolder;
+		}
+		//has parent
+		_parentFolder = new MyFolder(
+				parent+"/"
+				);
+		_parentFolder_ready=true;
+		return _parentFolder;
+	}
 	/**
 	 * 
 	 * @return Khong bao gio return null, neu khong co thi return mang rong
@@ -67,11 +104,6 @@ public class MyFolder extends MyPath {
 		}
 		//lazy loading
 		_childsSong = new ArrayList<MySong>();
-		//do not support file/soundfile
-		if(!super.isFolder())
-		{
-			return _childsSong;
-		}
 		
 		File f = new File(getAbsPath());
 		File[] tmp = f.listFiles();
@@ -92,22 +124,28 @@ public class MyFolder extends MyPath {
 		}
 		return _childsSong;
 	}
+	public String getAbsPath()
+	{
+		return _absPath;
+	}
 	@Override
 	public Boolean reset()
 	{
-		super.reset();
-		_childsFolder = null;
-		_childsSong=null;
+		//clear all reference members
+		_parentFolder = null;
+		_folderName=null;
+		//set lazy state
+		_parentFolder_ready=false;
 		return true;
 	}
 	public String getFolderName()
 	{
-		if(_fileName!=null)
+		if(_folderName!=null)
 		{
-			return _fileName;
+			return _folderName;
 		}
-		_fileName = MyFileHelper.getFolderName(getAbsPath());
-		return _fileName;
+		_folderName = MyFileHelper.getFolderName(getAbsPath());
+		return _folderName;
 	}
 	/**
 	 * Lay tat ca SONG de quy ke tu root
@@ -145,5 +183,25 @@ public class MyFolder extends MyPath {
 		{
 			_loadRecursiveSongs(item);
 		}
+	}
+	@Override
+	public Boolean loadAllProperties() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer insert() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Boolean update() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer delete() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

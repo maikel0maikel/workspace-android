@@ -20,7 +20,7 @@ import com.qdcatplayer.main.objects.MySong;
 
 public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 	private static final String DATABASE_NAME = "QDCATPLAYER_DB";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 1;
 	public MySQLiteHelper(Context ctx) {
 		super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -63,7 +63,7 @@ public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 		//init pre-data
 		//...
 	}
-	//original DAO provider
+	//original DAOs provider
 	private Dao<MySong, Integer> _mySongDAO = null;
 	public Dao<MySong, Integer> getMySongDAO()
 	{

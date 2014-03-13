@@ -18,32 +18,21 @@ import com.qdcatplayer.main.objects.MySong;
  * @author quocdunginfo
  *
  */
-public class MySongDAO {
-	private MyDBManager _mn=null;//only one
-    public MySongDAO(Context ctx) {
-		//use init instead
-    	init(ctx);
+public class MySongDAO extends _MyDAOAbstract<MySong> {
+    //_mn member inherted from parent class
+	public MySongDAO(Context ctx) {
+    	super(ctx);
 	}
-    /**
-     * Khoi tao du lieu tu Context, MyDBHelper duoc tao tu dong
-     * @param ctx
-     * @return
-     */
-    public Boolean init(Context ctx) {
-    	//cached
-    	if(_mn!=null && getHelper()!=null)
-    	{
-    		return true;
-    	}
-    	_mn = new MyDBManager();
-		_mn.getHelper(ctx);//init helper inside MyDBManager
-		return true;
-    }
+    @Override
     public ArrayList<MySong> getAll()
 	{
 		ArrayList<MySong> re = new ArrayList<MySong>();
 		try {
             List<MySong> tmp = getDao().queryForAll();
+            for(MySong item:tmp)
+            {
+            	item.setDao(this);
+            }
             re.addAll(tmp);
             return re;
         } catch (SQLException e) {
@@ -52,6 +41,7 @@ public class MySongDAO {
             return null;
         }
 	}
+    @Override
 	public MySong getById(Integer id)
 	{
 		try {
@@ -83,6 +73,7 @@ public class MySongDAO {
 		
 		return re;
 	}
+	@Override
 	public int insert(MySong obj)
 	{
 		if(getDao()==null)
@@ -101,40 +92,38 @@ public class MySongDAO {
         }
         return 0;
 	}
-	public int update(MySong obj)
+	@Override
+	public Boolean update(MySong obj)
     {
         try {
         	//triger lazy load to get all data need to be inserted
         	obj.loadAllProperties();
-        	return getDao().update(obj);
+        	getDao().update(obj);
+        	return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return false;
     }
-	public int delete(MySong obj)
+	@Override
+	public Boolean delete(MySong obj)
     {
         try {
         	//must have _id first
-        	return getDao().delete(obj);
+        	getDao().delete(obj);
+        	return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return false;
     }
-	public Boolean release()
+	@Override
+	public Dao<MySong,Integer> getDao()
 	{
-		//release
-		_mn.releaseHelper();
-		_mn=null;
-		return true;
-	}
-	private Dao<MySong,Integer> getDao()
-	{
-		return _mn.getHelper().getMySongDAO();
-	}
-	private MySQLiteHelper getHelper()
-	{
-		return _mn.getHelper();
+		if(getManager()!=null && getHelper()!=null)
+		{
+			return getHelper().getMySongDAO();
+		}
+		return null;
 	}
 }

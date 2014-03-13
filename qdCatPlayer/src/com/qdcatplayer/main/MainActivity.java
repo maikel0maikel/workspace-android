@@ -28,21 +28,23 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-		/*
+		
 		MyDBManager mn=new MyDBManager();
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
-		*/
 		
+		/*
 		MySongDAO d=new MySongDAO(getApplicationContext());
-		d.getAll();
+		MySong obj=d.getById(1);
+		d.release();
+		
 		Vd f=new Vd();
 		f.execute("");
 		Vd f1=new Vd();
 		f1.execute("");
 		Vd f2=new Vd();
 		f2.execute("");
-		
+		*/
 		/*
 		ArrayList<MySong> s1= d1.getAll();
 		for(MySong item:s1)
