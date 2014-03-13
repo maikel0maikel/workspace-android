@@ -76,13 +76,14 @@ public class MyPath extends _MyObjectAbstract<MyPathDAO> {
 		_fileName = MyFileHelper.getFileName(_absPath, false);
 		return _fileName;
 	}
-	public String getFileExtension()
+	//qd FAIL
+	public String getFileExtension(Boolean withDot)
 	{
-		if(getFileName()==null)
+		if(getAbsPath()==null || getAbsPath().equals(""))
 		{
-			return null;
+			return "";
 		}
-		return MyFileHelper.getFileExtension(getFileName(), false);
+		return MyFileHelper.getFileExtension(getAbsPath(), withDot);
 	}
 	public String getAbsPath()
 	{

@@ -84,7 +84,7 @@ public class MySong extends _MyObjectAbstract<MySongDAO> {
 			return _format;
 		}
 		//read sound tag from _path object
-		_format = new MyFormat(getPath().getFileExtension());
+		_format = new MyFormat(getPath().getFileExtension(false));
 		return _format;
 	}
 	public MyAlbum getAlbum()

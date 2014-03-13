@@ -54,16 +54,16 @@ public class MainActivity extends Activity {
 		}
 		d1.release();
 		*/
-		/*
+		
 		MyFolder fd=new MyFolder("/sdcard/music");
 		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
 		MySongDAO dao=new MySongDAO(getApplicationContext());
 		for(MySong item:ss)
 		{
-			//Log.w("qd",item.getPath().getFileName());
-			dao.insert(item);
+			Log.w("qd",item.getPath().getFileName() + item.getPath().getFileExtension(true));
+			//dao.insert(item);//not test yet
 		}
-		*/
+		
 		
 		
 	}
