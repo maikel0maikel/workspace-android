@@ -13,6 +13,10 @@ import android.text.format.Time;
 
 /**
  * Dinh nghia luon lop My...DAO tuong ung lam viec truc tiep voi class MySong
+ * Neu khai bao 1 Entity thi no van chua hieu phai lam viec voi Disk Hay DB
+ * Chi co the dung de pass data giua cac Activity
+ * Muon Entity lam viec duoc voi du lieu thi bat buoc phai setDAO(My...DAO)
+ * va DAO phai duoc chi dinh SOURCE truoc, thong qua My...DAO.setSource(SOURCE)
  * @author quocdunginfo
  *
  */
