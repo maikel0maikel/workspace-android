@@ -10,36 +10,34 @@ public abstract class _MyEntityAbstract<T> implements _MyEntityInterface<T>, _Gl
 	 * Table always has _id field for PK
 	 */
 	@DatabaseField(generatedId=true)
-	protected Integer _id=null;
+	protected Integer id=null;
 	/**
 	 * work directly with its own custom My...DAO, nothing else
 	 */
-	protected T _dao=null;
+	protected T dao=null;
 	/**
 	 * Must be declare to make sure ORMLite can reference to
 	 */
 	public _MyEntityAbstract() {
 	}
-	public Boolean setDao(T dao) {
-		_dao=dao;
-		return true;
+	public void setDao(T dao_) {
+		dao=dao_;
 	}
 	@Override
 	public T getDao() {
-		return _dao;
+		return dao;
 	}
 	
 	@Override
 	public Integer getId() {
 		// TODO Auto-generated method stub
-		return _id;
+		return id;
 	}
 
 	@Override
-	public Boolean setId(Integer id) {
+	public void setId(Integer id_) {
 		// TODO Auto-generated method stub
-		_id=id;
-		return true;
+		id=id_;
 	}
 	@Override
 	public GlobalDAO getGlobalDAO() {

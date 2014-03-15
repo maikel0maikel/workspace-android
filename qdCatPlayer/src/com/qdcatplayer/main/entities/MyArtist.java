@@ -6,15 +6,14 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.DAOs.MyArtistDAO;
 
 @DatabaseTable(tableName="MyArtists")
-public class MyArtist {
-	@DatabaseField(generatedId=true)
-	private Integer _id=null;
+public class MyArtist extends _MyEntityAbstract<MyArtistDAO> {
 	@DatabaseField(unique=true)
-	private String _name="";//never null
+	private String name="";//never null
 	@ForeignCollectionField
-	private ForeignCollection<MySong> _mySongs = null;
+	private ForeignCollection<MySong> mySongs = null;
 	public MyArtist() {
 		
 	}
@@ -23,20 +22,35 @@ public class MyArtist {
 	}
 	public String getName()
 	{
-		return _name;
+		return name;
 	}
-	public Boolean setName(String name)
+	public void setName(String name_)
 	{
-		_name=name==null?"":name;
-		return true;
+		name=name_==null?"":name_;
 	}
-	public Integer getId()
-	{
-		return _id;
+	@Override
+	public Boolean loadAllProperties() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	public Boolean setId(Integer id)
-	{
-		_id = id==null?0:id;
-		return true;
+	@Override
+	public Boolean reset() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer insert() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Boolean update() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer delete() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

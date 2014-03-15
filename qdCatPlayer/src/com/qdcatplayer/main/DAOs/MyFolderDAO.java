@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyFolder;
 
 public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
@@ -16,7 +17,7 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 	}
 
 	@Override
-	public Dao<MyFolder, Integer> getDao() {
+	public RuntimeExceptionDao<MyFolder, Integer> getDao() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -34,7 +35,7 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 	}
 
 	@Override
-	public int insert(MyFolder obj) {
+	public Integer insert(MyFolder obj) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

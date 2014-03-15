@@ -15,22 +15,22 @@ import com.qdcatplayer.main.libraries.MyFileHelper;
 @DatabaseTable(tableName="MyFolders")
 public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 	@DatabaseField(unique=true, canBeNull=false)
-	private String _absPath = "";
-	@DatabaseField
-	private String _folderName = null;
+	private String absPath = null;
+	@DatabaseField(canBeNull=false)
+	private String folderName = null;
 	@ForeignCollectionField
-	private ForeignCollection<MyPath> _paths = null;
+	private ForeignCollection<MyPath> paths = null;
 	
 	@DatabaseField(canBeNull=true, foreign=true)
-	private MyFolder _parentFolder = null;
+	private MyFolder parentFolder = null;
 		//because file/folder has no parent will got null too
 		//so, we need to declare new Boolean varible to separate meaning
 		//of 2 concept: "no parent" and "not ready yet"
-		private Boolean _parentFolder_ready = false;
+		private Boolean parentFolder_ready = false;
 		
-	private ArrayList<MyFolder> _childsFolder = null;
-	private ArrayList<MySong> _childsSong = null;
-	private ArrayList<MySong> _recursiveSongs=null;
+	private ArrayList<MyFolder> childsFolder = null;
+	private ArrayList<MySong> childsSong = null;
+	private ArrayList<MySong> recursiveSongs=null;
 	public MyFolder() {
 		
 	}
@@ -38,45 +38,48 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 		// TODO Auto-generated constructor stub
 		setAbsPath(absPath);
 	}
-	public Boolean setAbsPath(String path) {
-		_absPath = path;
-		return true;
+	public void setAbsPath(String absPath_) {
+		absPath = absPath_;
 	}
 	public ArrayList<MyFolder> getChildFolders()
 	{
-		if(_childsFolder!=null)
+		if(childsFolder!=null)
 		{
-			return _childsFolder;
+			return childsFolder;
 		}
 		//lazy loading
-		_childsFolder = new ArrayList<MyFolder>();
+		childsFolder = new ArrayList<MyFolder>();
 
 		File f = new File(getAbsPath());
 		File[] tmp = f.listFiles();
 		//no childs
 		if(tmp==null)
 		{
-			return _childsFolder;
+			return childsFolder;
 		}
 		//has childs
 		for(File item:tmp)
 		{
 			if(item.isDirectory())
 			{
-				_childsFolder.add(
+				childsFolder.add(
 						new MyFolder(
 								item.getAbsolutePath()
 								)
 						);
 			}
 		}
-		return _childsFolder;
+		return childsFolder;
+	}
+	public void setParentFolder(MyFolder parentFolder_)
+	{
+		parentFolder = parentFolder_;
 	}
 	public MyFolder getParentFolder()
 	{
-		if(_parentFolder_ready==true)
+		if(parentFolder_ready==true)
 		{
-			return _parentFolder;
+			return parentFolder;
 		}
 		//do not know DAO !
 		if(getDao()==null)
@@ -85,9 +88,9 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 		}
 		//get through DAO is recommended, DAO will look SOURCE to choose
 		//where to get Parent Obj
-		_parentFolder = getDao().getParentFolder(this);
-		_parentFolder_ready=true;
-		return _parentFolder;
+		parentFolder = getDao().getParentFolder(this);
+		parentFolder_ready=true;
+		return parentFolder;
 	}
 	/**
 	 * 
@@ -95,19 +98,19 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 	 */
 	public ArrayList<MySong> getChildSongs()
 	{
-		if(_childsSong!=null)
+		if(childsSong!=null)
 		{
-			return _childsSong;
+			return childsSong;
 		}
 		//lazy loading
-		_childsSong = new ArrayList<MySong>();
+		childsSong = new ArrayList<MySong>();
 		
 		File f = new File(getAbsPath());
 		File[] tmp = f.listFiles();
 		//no childs
 		if(tmp==null)
 		{
-			return _childsSong;
+			return childsSong;
 		}
 		//has childs
 		MySong tmps;
@@ -116,33 +119,38 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 			if(item.isFile() && MyFileHelper.isSoundFile(item.getAbsolutePath()))
 			{
 				tmps=new MySong(item.getAbsolutePath());
-				_childsSong.add(tmps);
+				childsSong.add(tmps);
 			}
 		}
-		return _childsSong;
+		return childsSong;
 	}
 	public String getAbsPath()
 	{
-		return _absPath;
+		return absPath;
 	}
+	
 	@Override
 	public Boolean reset()
 	{
 		//clear all reference members
-		_parentFolder = null;
-		_folderName=null;
+		parentFolder = null;
+		folderName=null;
 		//set lazy state
-		_parentFolder_ready=false;
+		parentFolder_ready=false;
 		return true;
+	}
+	public void setFolderName(String folderName_)
+	{
+		folderName = folderName_;
 	}
 	public String getFolderName()
 	{
-		if(_folderName!=null)
+		if(folderName!=null)
 		{
-			return _folderName;
+			return folderName;
 		}
-		_folderName = MyFileHelper.getFolderName(getAbsPath());
-		return _folderName;
+		folderName = MyFileHelper.getFolderName(getAbsPath());
+		return folderName;
 	}
 	/**
 	 * Lay tat ca SONG de quy ke tu root
@@ -150,15 +158,15 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 	 */
 	public ArrayList<MySong> getAllRecursiveSongs()
 	{
-		if(_recursiveSongs!=null)
+		if(recursiveSongs!=null)
 		{
-			return _recursiveSongs;
+			return recursiveSongs;
 		}
 		//init new array
-		_recursiveSongs=new ArrayList<MySong>();
+		recursiveSongs=new ArrayList<MySong>();
 		//call recursive method
 		_loadRecursiveSongs(this);
-		return _recursiveSongs;
+		return recursiveSongs;
 	}
 	private void _loadRecursiveSongs(MyFolder root)
 	{
@@ -169,7 +177,7 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 		//add direct first
 		for(MySong item:root.getChildSongs())
 		{
-			_recursiveSongs.add(item);
+			recursiveSongs.add(item);
 		}
 		//finish on this node
 		if(root.getChildFolders().size()<=0)

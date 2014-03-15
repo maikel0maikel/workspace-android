@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyArtist;
 import com.qdcatplayer.main.entities.MySong;
 
@@ -16,7 +17,7 @@ public class MyArtistDAO extends _MyDAOAbstract<MyArtist> {
 	}
 
 	@Override
-	public Dao<MyArtist, Integer> getDao() {
+	public RuntimeExceptionDao<MyArtist, Integer> getDao() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -34,7 +35,7 @@ public class MyArtistDAO extends _MyDAOAbstract<MyArtist> {
 	}
 
 	@Override
-	public int insert(MyArtist obj) {
+	public Integer insert(MyArtist obj) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

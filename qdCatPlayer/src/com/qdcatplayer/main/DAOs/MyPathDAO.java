@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyFolder;
 import com.qdcatplayer.main.entities.MyPath;
 
@@ -17,7 +18,7 @@ public class MyPathDAO extends _MyDAOAbstract<MyPath> {
 	}
 
 	@Override
-	public Dao<MyPath, Integer> getDao() {
+	public RuntimeExceptionDao<MyPath, Integer> getDao() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -35,7 +36,7 @@ public class MyPathDAO extends _MyDAOAbstract<MyPath> {
 	}
 
 	@Override
-	public int insert(MyPath obj) {
+	public Integer insert(MyPath obj) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -3,6 +3,16 @@ package com.qdcatplayer.main.libraries;
 import android.text.format.Time;
 
 public class MyNumberHelper {
+	public static Long stringToLong(String input)
+	{
+		try{
+			return Long.parseLong(input);
+		}catch(NumberFormatException e)
+		{
+			e.printStackTrace();
+			return 0l;
+		}
+	}
 	public static Time toTime(String milisecs)
 	{
 		Time tmp = new Time();

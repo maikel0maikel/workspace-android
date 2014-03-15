@@ -15,7 +15,9 @@ public class GlobalDAO {
 	public Context getContext() {
 		return _ctx;
 	}
-	
+	/**
+	 * Chua cac Custom DAO de su dung lai
+	 */
 	private MySongDAO _mySongDAO=null;
 	public MySongDAO getMySongDAO() {
 		//require

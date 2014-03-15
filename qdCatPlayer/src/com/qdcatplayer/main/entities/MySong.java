@@ -28,65 +28,63 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 	 * String better
 	 */
 	@DatabaseField
-	private String _title = null;
+	private String title = null;
 	
-	@DatabaseField
-	private Long _duration = null;//milisec
+	@DatabaseField(canBeNull=true)
+	private Long duration = null;//milisec
 	
 	//foreign
-	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh=true)
-	private MyPath _path = null;
+	@DatabaseField(canBeNull = false, foreign = true)
+	private MyPath path = null;
 	
 	@DatabaseField(canBeNull = false, foreign = true)
-	private MyFormat _format = null;
+	private MyFormat format = null;
 	
 	@DatabaseField(canBeNull = true, foreign = true)
-	private MyAlbum _album = null;
+	private MyAlbum album = null;
 	
 	@DatabaseField(canBeNull = true, foreign = true)
-	private MyBitrate _bitrate = null;
+	private MyBitrate bitrate = null;
 	
 	@DatabaseField(canBeNull = true, foreign = true)
-	private MyArtist _artist = null;
+	private MyArtist artist = null;
 	
 	public MySong() {
 	}
 	public MySong(String absPath) {
 		//init _path but not load right now
-		_path = new MyPath();
-		_path.setAbsPath(absPath);
+		path = new MyPath();
+		path.setAbsPath(absPath);
 	}
-	public Boolean setPath(String absPath) {
+	public void setPath(String absPath) {
 		//init new _path
-		_path = new MyPath();
-		_path.setAbsPath(absPath);
+		path = new MyPath();
+		path.setAbsPath(absPath);
 		//then reset
 		reset();
-		return true;
 	}
-	public Boolean setPath(MyPath absPath) {
+	public void setPath(MyPath absPath) {
 		//init new _path
-		_path = absPath;
+		path = absPath;
 		//then reset
 		reset();
-		return true;
 	}
 	
 	public MyPath getPath()
 	{
 		//pass Global DAO to MyPath for lazy load and after-query if needed
-		if(_path!=null)
+		if(path!=null)
 		{
-			_path.setDao(getGlobalDAO().getMyPathDAO());
+			path.setDao(getGlobalDAO().getMyPathDAO());
 		}
-		return _path;
+		return path;
 	}
 	public MyFormat getFormat()
 	{
 		//lazy load
-		if(_format!=null)
+		if(format!=null)
 		{
-			return _format;
+			return format;
 		}
 		//required
 		if(getPath()==null)
@@ -95,15 +93,15 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		}
 		
 		//read sound tag from _path object
-		_format = new MyFormat(getPath().getFileExtension(false));
-		return _format;
+		format = new MyFormat(getPath().getFileExtension(false));
+		return format;
 	}
 	public MyAlbum getAlbum()
 	{
 		//lazy load
-		if(_album!=null)
+		if(album!=null)
 		{
-			return _album;
+			return album;
 		}
 		//required
 		if(getPath()==null)
@@ -114,17 +112,17 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
 		String tmp = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-		_album = new MyAlbum(
+		album = new MyAlbum(
 				tmp
 			);
-		return _album;
+		return album;
 	}
 	public MyArtist getArtist()
 	{
 		//lazy load
-		if(_artist!=null)
+		if(artist!=null)
 		{
-			return _artist;
+			return artist;
 		}
 		//required
 		if(getPath()==null)
@@ -135,17 +133,17 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
 		String tmp = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-		_artist = new MyArtist(
+		artist = new MyArtist(
 				tmp
 			);
-		return _artist;
+		return artist;
 	}
 	public MyBitrate getBirate()
 	{
 		//lazy load
-		if(_bitrate!=null)
+		if(bitrate!=null)
 		{
-			return _bitrate;
+			return bitrate;
 		}
 		//required
 		if(getPath()==null)
@@ -156,17 +154,17 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
 		String tmp = "128";//retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
-		_bitrate = new MyBitrate(
+		bitrate = new MyBitrate(
 				tmp
 			);
-		return _bitrate;
+		return bitrate;
 	}
-	public Time getDuration()
+	public Long getDuration()
 	{
 		//lazy load
-		if(_duration!=null)
+		if(duration!=null)
 		{
-			return MyNumberHelper.toTime(_duration);
+			return duration;
 		}
 		//required
 		if(getPath()==null)
@@ -176,14 +174,15 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
 		String tmp = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-		return MyNumberHelper.toTime(tmp);
+		duration = MyNumberHelper.stringToLong(tmp);
+		return duration;
 	}
 	public String getTitle()
 	{
 		//lazy load
-		if(_title!=null)
+		if(title!=null)
 		{
-			return _title;
+			return title;
 		}
 		//required
 		if(getPath()==null)
@@ -192,47 +191,46 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		}
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		retriever.setDataSource(getPath().getAbsPath());
-		_title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-		if(_title==null)
+		title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+		if(title==null)
 		{
-			_title = "";
+			title = "";
 		}
-		return _title;
+		return title;
 		
 	}
 	@Override
 	public Boolean reset()
 	{
-		_title=null;
-		_album=null;
-		_bitrate=null;
-		_duration=null;
-		_format=null;
+		title=null;
+		album=null;
+		bitrate=null;
+		duration=null;
+		format=null;
 		//reset path
-		if(_path!=null)
+		if(path!=null)
 		{
-			_path.reset();
+			path.reset();
 		}
 		return true;
 	}
 	@Override
 	public Boolean loadAllProperties()
 	{
+		getPath();
 		getAlbum();
 		getArtist();
 		getBirate();
 		getDuration();
 		getFormat();
 		getId();
-		getPath();
 		getTitle();
 		
 		return true;
 	}
 	@Override
 	public Integer insert() {
-		// TODO Auto-generated method stub
-		return null;
+		return getDao().insert(this);//new id
 	}
 	@Override
 	public Boolean update() {

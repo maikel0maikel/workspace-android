@@ -4,47 +4,71 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.DAOs.MyBitrateDAO;
 
 @DatabaseTable(tableName="MyBitrates")
-public class MyBitrate {
-	@DatabaseField(generatedId=true)
-	private Integer _id=null;
+public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
 	@DatabaseField(unique=true, canBeNull=false)
-	private Long _value=0l;//never null
+	private Long value=0l;//never null
 	@ForeignCollectionField
-	private ForeignCollection<MySong> _mySongs = null;
+	private ForeignCollection<MySong> mySongs = null;
 	
 	public MyBitrate() {
 		
 	}
-	public MyBitrate(Long value) {
+	public MyBitrate(Long value_) {
 		// TODO Auto-generated constructor stub
-		_value = value;
-		if(_value==null)
-		{
-			_value=0l;
-		}
-	}
-	public MyBitrate(String value) {
-		// TODO Auto-generated constructor stub
+		value = value_;
 		if(value==null)
 		{
-			_value=0l;
+			value=0l;
+		}
+	}
+	public MyBitrate(String value_) {
+		// TODO Auto-generated constructor stub
+		if(value_==null)
+		{
+			value=0l;
 		}
 		try{
-			_value = Long.parseLong(value);
+			value = Long.parseLong(value_);
 		}catch(NumberFormatException ex)
 		{
 			ex.printStackTrace();
-			_value = 0l;
+			value = 0l;
 		}
 	}
 	public Long getValue()
 	{
-		return _value;
+		return value;
 	}
 	public Long setValue()
 	{
-		return _value;
+		return value;
+	}
+	@Override
+	public Boolean loadAllProperties() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Boolean reset() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer insert() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Boolean update() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer delete() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -13,13 +13,13 @@ import com.qdcatplayer.main.libraries.MyFileHelper;
 @DatabaseTable(tableName="MyPaths")
 public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	@DatabaseField(unique=true, canBeNull=false)
-	private String _absPath = "";
+	private String absPath = "";
 	@DatabaseField
-	protected String _fileName = null;
+	protected String fileName = null;
 	@DatabaseField(foreign=true, canBeNull=false)
-	private MySong _song = null;
+	private MySong song = null;
 	@DatabaseField(canBeNull=true, foreign=true)
-	private MyFolder _parentFolder = null;
+	private MyFolder parentFolder = null;
 		//because file/folder has no parent will got null too
 		//so, we need to declare new Boolean varible to separate meaning
 		//of 2 concept: "no parent" and "not ready yet"
@@ -34,14 +34,14 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	}
 	public Boolean setAbsPath(String path)
 	{
-		_absPath = path;
+		absPath = path;
 		return true;
 	}
 	public MyFolder getParentFolder()
 	{
 		if(_parentFolder_ready==true)
 		{
-			return _parentFolder;
+			return parentFolder;
 		}
 		//do not know DAO !
 		if(getDao()==null)
@@ -50,33 +50,33 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 		}
 		//get through DAO is recommended, DAO will look SOURCE to choose
 		//where to get Parent Obj
-		_parentFolder = getDao().getParentFolder(this);
+		parentFolder = getDao().getParentFolder(this);
 		//pass custom DAO to MyFolder parent for later use
 		//Ngay tai luc goi nay thi GlobalDAO se tao ra mot custom moi neu chua co san
-		_parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
-		_parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
+		parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
+		parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
 		
 		_parentFolder_ready=true;
-		return _parentFolder;
+		return parentFolder;
 	}
 	@Override
 	public Boolean reset()
 	{
 		//clear all reference members
-		_parentFolder = null;
-		_fileName=null;
+		parentFolder = null;
+		fileName=null;
 		//set lazy state
 		_parentFolder_ready=false;
 		return true;
 	}
 	public String getFileName()
 	{
-		if(_fileName!=null)
+		if(fileName!=null)
 		{
-			return _fileName;
+			return fileName;
 		}
-		_fileName = MyFileHelper.getFileName(_absPath, false);
-		return _fileName;
+		fileName = MyFileHelper.getFileName(absPath, false);
+		return fileName;
 	}
 	//qd FAIL
 	public String getFileExtension(Boolean withDot)
@@ -89,7 +89,7 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	}
 	public String getAbsPath()
 	{
-		return _absPath;
+		return absPath;
 	}
 	@Override
 	public Boolean loadAllProperties() {

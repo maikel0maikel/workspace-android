@@ -5,9 +5,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.DAOs.MyAlbumDAO;
+import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
+import com.qdcatplayer.main.entities.MyAlbum;
 import com.qdcatplayer.main.entities.MyFolder;
 import com.qdcatplayer.main.entities.MyPath;
 import com.qdcatplayer.main.entities.MySong;
@@ -33,6 +36,16 @@ public class MainActivity extends Activity {
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
 		
+		
+		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
+		MyAlbum ma=new MyAlbum("moi chen vo 343423213");
+		ma.setDao(dao);
+		ma.insert();
+		
+		//MyFolder f1=new MyFolder("/sdcard/music");
+		//f1.getAllRecursiveSongs();
+		
+		
 		/*
 		MySongDAO d=new MySongDAO(getApplicationContext(),null);
 		
@@ -55,17 +68,19 @@ public class MainActivity extends Activity {
 		}
 		d1.release();
 		*/
-		
+		/*
 		MyFolder fd=new MyFolder("/sdcard/music");
 		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
-		MySongDAO dao=new MySongDAO(getApplicationContext(),null);
-		
+		//MySongDAO dao=new MySongDAO(getApplicationContext(),null);
+		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(),null);
+		dao.getManager().getHelper().getMyAlbumDAO();
 		for(MySong item:ss)
 		{
-			item.setDao(dao);//do khong lay tu CSDL ra nen chua có DAO
-			Log.w("qd",item.getPath().getFileName());
+			//item.setDao(dao);
+			//item.loadAllProperties();
+			//item.insert();
 		}
-		
+		*/
 		
 	}
 

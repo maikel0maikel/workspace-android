@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.entities.MyAlbum;
@@ -27,30 +28,18 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
     public ArrayList<MySong> getAll()
 	{
 		ArrayList<MySong> re = new ArrayList<MySong>();
-		try {
-            List<MySong> tmp = getDao().queryForAll();
-            for(MySong item:tmp)
-            {
-            	item.setDao(this);
-            }
-            re.addAll(tmp);
-            return re;
-        } catch (SQLException e) {
-            // TODO: Exception Handling
-            e.printStackTrace();
-            return null;
+        List<MySong> tmp = getDao().queryForAll();
+        for(MySong item:tmp)
+        {
+        	item.setDao(this);
         }
+        re.addAll(tmp);
+        return re;
 	}
     @Override
 	public MySong getById(Integer id)
 	{
-		try {
-			return getDao().queryForId(id);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return getDao().queryForId(id);	
 	}
 	
 	public ArrayList<MySong> getByAbsPath(Integer id)
@@ -61,51 +50,35 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 		return re;
 	}
 	@Override
-	public int insert(MySong obj)
+	public Integer insert(MySong obj)
 	{
-		if(getDao()==null)
+		if(getDao()==null)//qd fail
 		{
-			return 0;
+			return -1;
 		}
-		
-		try {
-            //triger lazy load to get all data need to be inserted
-			//obj.loadAllProperties();
-			//call insert for 
-            //create forieng first
-			return getDao().create(obj);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
+		//load all direct properties
+		//obj.loadAllProperties();
+        return getDao().create(obj);
+        
 	}
 	@Override
 	public Boolean update(MySong obj)
     {
-        try {
-        	//triger lazy load to get all data need to be inserted
-        	obj.loadAllProperties();
-        	getDao().update(obj);
-        	return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        //triger lazy load to get all data need to be inserted
+    	obj.loadAllProperties();
+    	getDao().update(obj);
+    	return true;
+        
     }
 	@Override
 	public Boolean delete(MySong obj)
     {
-        try {
-        	//must have _id first
-        	getDao().delete(obj);
-        	return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        getDao().delete(obj);
+    	return true;
+        
     }
 	@Override
-	public Dao<MySong,Integer> getDao()
+	public RuntimeExceptionDao<MySong,Integer> getDao()
 	{
 		if(getManager()!=null && getHelper()!=null)
 		{

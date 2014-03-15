@@ -1,10 +1,12 @@
 package com.qdcatplayer.main.DAOs;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyAlbum;
 
 public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
@@ -18,8 +20,12 @@ public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
 	}
 
 	@Override
-	public Dao<MyAlbum, Integer> getDao() {
+	public RuntimeExceptionDao<MyAlbum, Integer> getDao() {
 		// TODO Auto-generated method stub
+		if(getManager()!=null && getHelper()!=null)
+		{
+			return getHelper().getMyAlbumDAO();
+		}
 		return null;
 	}
 
@@ -36,9 +42,14 @@ public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
 	}
 
 	@Override
-	public int insert(MyAlbum obj) {
+	public Integer insert(MyAlbum obj) {
 		// TODO Auto-generated method stub
-		return 0;
+		if(getDao()==null)
+		{
+			return -1;
+		}
+		getDao().create(obj);
+		return 1;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyAlbum;
 import com.qdcatplayer.main.entities.MyFormat;
 
@@ -15,7 +16,7 @@ public class MyFormatDAO extends _MyDAOAbstract<MyFormat> {
 	}
 
 	@Override
-	public Dao<MyFormat, Integer> getDao() {
+	public RuntimeExceptionDao<MyFormat, Integer> getDao() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -33,7 +34,7 @@ public class MyFormatDAO extends _MyDAOAbstract<MyFormat> {
 	}
 
 	@Override
-	public int insert(MyFormat obj) {
+	public Integer insert(MyFormat obj) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

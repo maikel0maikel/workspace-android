@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.qdcatplayer.main.entities.MyAlbum;
@@ -20,7 +21,7 @@ import com.qdcatplayer.main.entities.MySong;
 
 public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 	private static final String DATABASE_NAME = "QDCATPLAYER_DB";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 4;
 	public MySQLiteHelper(Context ctx) {
 		super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -63,102 +64,73 @@ public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 		//init pre-data
 		//...
 	}
-	//original DAOs provider
-	private Dao<MySong, Integer> _mySongDAO = null;
-	public Dao<MySong, Integer> getMySongDAO()
+	/**
+	 * Nen dung RuntimeExceptionDAO vi neu dung Dao binh thuong
+	 * Trong nhieu truong hop se bi quang SQLExeption, mac du du lieu van duoc
+	 * thuc thi tot !!!!!!!!!
+	 */
+	private RuntimeExceptionDao<MyAlbum, Integer> _myAlbumDAO = null;
+	public RuntimeExceptionDao<MyAlbum, Integer> getMyAlbumDAO()
 	{
-		if(_mySongDAO!=null)
+		if(_myAlbumDAO==null)
 		{
-			return _mySongDAO;
+			_myAlbumDAO = getRuntimeExceptionDao(MyAlbum.class);//do not use DaoManager.create(...);
 		}
-		try {
-			_mySongDAO = getDao(MySong.class);//do not use DaoManager.create(...);
-			return _mySongDAO;
-		} catch (java.sql.SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return _myAlbumDAO;
 	}
-	private Dao<MyArtist, Integer> _myArtistDAO = null;
-	public Dao<MyArtist, Integer> getMyArtistDAO()
+	private RuntimeExceptionDao<MySong, Integer> _mySongDAO = null;
+	public RuntimeExceptionDao<MySong, Integer> getMySongDAO()
 	{
-		if(_myArtistDAO!=null)
+		if(_mySongDAO==null)
 		{
-			return _myArtistDAO;
+			_mySongDAO = getRuntimeExceptionDao(MySong.class);//do not use DaoManager.create(...);
 		}
-		try {
-			_myArtistDAO = getDao(MyArtist.class);//do not use DaoManager.create(...);
-			return _myArtistDAO;
-		} catch (java.sql.SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return _mySongDAO;
 	}
-	private Dao<MyBitrate, Integer> _myBitrateDAO = null;
-	public Dao<MyBitrate, Integer> getMyBitrateDAO()
+	private RuntimeExceptionDao<MyArtist, Integer> _myArtistDAO = null;
+	public RuntimeExceptionDao<MyArtist, Integer> getMyArtistDAO()
 	{
-		if(_myBitrateDAO!=null)
+		if(_myArtistDAO==null)
 		{
-			return _myBitrateDAO;
+			_myArtistDAO = getRuntimeExceptionDao(MyArtist.class);//do not use DaoManager.create(...);
 		}
-		try {
-			_myBitrateDAO = getDao(MyBitrate.class);//do not use DaoManager.create(...);
-			return _myBitrateDAO;
-		} catch (java.sql.SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return _myArtistDAO;
 	}
-	private Dao<MyFormat, Integer> _myFormatDAO = null;
-	public Dao<MyFormat, Integer> getMyFormatDAO()
+	private RuntimeExceptionDao<MyBitrate, Integer> _myBitrateDAO = null;
+	public RuntimeExceptionDao<MyBitrate, Integer> getMyBitrateDAO()
 	{
-		if(_myFormatDAO!=null)
+		if(_myBitrateDAO==null)
 		{
-			return _myFormatDAO;
+			_myBitrateDAO = getRuntimeExceptionDao(MyBitrate.class);//do not use DaoManager.create(...);
 		}
-		try {
-			_myFormatDAO = getDao(MyFormat.class);//do not use DaoManager.create(...);
-			return _myFormatDAO;
-		} catch (java.sql.SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return _myBitrateDAO;
 	}
-	private Dao<MyFolder, Integer> _myFolderDAO = null;
-	public Dao<MyFolder, Integer> getMyFolderDAO()
+	private RuntimeExceptionDao<MyFormat, Integer> _myFormatDAO = null;
+	public RuntimeExceptionDao<MyFormat, Integer> getMyFormatDAO()
 	{
-		if(_myFolderDAO!=null)
+		if(_myFormatDAO==null)
 		{
-			return _myFolderDAO;
+			_myFormatDAO = getRuntimeExceptionDao(MyFormat.class);//do not use DaoManager.create(...);
 		}
-		try {
-			_myFolderDAO = getDao(MyFolder.class);//do not use DaoManager.create(...);
-			return _myFolderDAO;
-		} catch (java.sql.SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return _myFormatDAO;
 	}
-	private Dao<MyPath, Integer> _myPathDAO = null;
-	public Dao<MyPath, Integer> getMyPathDAO()
+	private RuntimeExceptionDao<MyFolder, Integer> _myFolderDAO = null;
+	public RuntimeExceptionDao<MyFolder, Integer> getMyFolderDAO()
 	{
-		if(_myPathDAO!=null)
+		if(_myFolderDAO==null)
 		{
-			return _myPathDAO;
+			_myFolderDAO = getRuntimeExceptionDao(MyFolder.class);//do not use DaoManager.create(...);
 		}
-		try {
-			_myPathDAO = getDao(MyPath.class);//do not use DaoManager.create(...);
-			return _myPathDAO;
-		} catch (java.sql.SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+		return _myFolderDAO;
+	}
+	private RuntimeExceptionDao<MyPath, Integer> _myPathDAO = null;
+	public RuntimeExceptionDao<MyPath, Integer> getMyPathDAO()
+	{
+		if(_myPathDAO==null)
+		{
+			_myPathDAO = getRuntimeExceptionDao(MyPath.class);//do not use DaoManager.create(...);
 		}
+		return _myPathDAO;
 	}
 	@Override
 	public void close() {

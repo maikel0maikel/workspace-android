@@ -13,10 +13,10 @@ import android.content.Context;
 
 public interface _MyEntityInterface<T> {
 	public Integer getId();
-	public Boolean setId(Integer id);
+	public void setId(Integer id);
 	public Boolean loadAllProperties();
 	public Boolean reset();
-	public Boolean setDao(T dao);
+	public void setDao(T dao);
 	public T getDao();
 	public Integer insert();
 	public Boolean update();

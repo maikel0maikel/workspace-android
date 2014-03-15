@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyBitrate;
 
 public class MyBitrateDAO extends _MyDAOAbstract<MyBitrate> {
@@ -15,7 +16,7 @@ public class MyBitrateDAO extends _MyDAOAbstract<MyBitrate> {
 	}
 
 	@Override
-	public Dao<MyBitrate, Integer> getDao() {
+	public RuntimeExceptionDao<MyBitrate, Integer> getDao() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -33,7 +34,7 @@ public class MyBitrateDAO extends _MyDAOAbstract<MyBitrate> {
 	}
 
 	@Override
-	public int insert(MyBitrate obj) {
+	public Integer insert(MyBitrate obj) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

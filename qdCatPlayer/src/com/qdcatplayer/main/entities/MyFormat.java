@@ -4,17 +4,22 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.qdcatplayer.main.DAOs.MyFormatDAO;
 
 @DatabaseTable(tableName="MyFormats")
-public class MyFormat {
-	@DatabaseField(generatedId=true)
-	private Integer _id=null;
+public class MyFormat extends _MyEntityAbstract<MyFormatDAO> {
 	@DatabaseField(unique=true, canBeNull=false)
-	private String _extension = null;//never null
+	private String extension = null;//never null
 	@DatabaseField(canBeNull=false)
-	private String _mimetype= "audio/mp3";
+	private String mimeType= "audio/mp3";
+	public String getMimeType() {
+		return mimeType;
+	}
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
 	@ForeignCollectionField
-	private ForeignCollection<MySong> _mySongs = null;
+	private ForeignCollection<MySong> mySongs = null;
 	
 	public MyFormat() {
 	}
@@ -23,11 +28,35 @@ public class MyFormat {
 	}
 	public String getExtension()
 	{
-		return _extension;
+		return extension;
 	}
-	public Boolean setExtension(String extension)
+	public void setExtension(String extension)
 	{
-		this._extension = extension==null?"":extension;
-		return true;
+		this.extension = extension==null?"":extension;
+	}
+	@Override
+	public Boolean loadAllProperties() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Boolean reset() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer insert() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Boolean update() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Integer delete() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
