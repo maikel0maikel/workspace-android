@@ -48,7 +48,14 @@ public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
 		{
 			return -1;
 		}
-		getDao().create(obj);
+		try{
+			getDao().create(obj);
+		}catch(Exception e){
+			//object co truong name trung voi record trong CSDL do unique
+			//insert khong duoc return ma loi
+			e.printStackTrace();
+			return -1;
+		}
 		return 1;
 	}
 

@@ -32,15 +32,21 @@ public class MainActivity extends Activity {
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		
-		MyDBManager mn=new MyDBManager();
+		/*MyDBManager mn=new MyDBManager();
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
-		
-		
+		h.close();
+		mn.releaseHelper();
+		*/
+		/*
 		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
-		MyAlbum ma=new MyAlbum("moi chen vo 343423213");
+		MyAlbum ma=new MyAlbum("er234frdt");
 		ma.setDao(dao);
 		ma.insert();
+		dao.release();
+		dao=null;
+		*/
+		
 		
 		//MyFolder f1=new MyFolder("/sdcard/music");
 		//f1.getAllRecursiveSongs();
@@ -68,7 +74,7 @@ public class MainActivity extends Activity {
 		}
 		d1.release();
 		*/
-		/*
+		
 		MyFolder fd=new MyFolder("/sdcard/music");
 		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
 		//MySongDAO dao=new MySongDAO(getApplicationContext(),null);
@@ -80,7 +86,7 @@ public class MainActivity extends Activity {
 			//item.loadAllProperties();
 			//item.insert();
 		}
-		*/
+		
 		
 	}
 

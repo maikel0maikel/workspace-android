@@ -8,11 +8,10 @@ import com.qdcatplayer.main.DAOs.MyBitrateDAO;
 
 @DatabaseTable(tableName="MyBitrates")
 public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
-	@DatabaseField(unique=true, canBeNull=false)
-	private Long value=0l;//never null
 	@ForeignCollectionField
 	private ForeignCollection<MySong> mySongs = null;
-	
+	@DatabaseField(unique=true, canBeNull=false)
+	private Long value=0l;//never null
 	public MyBitrate() {
 		
 	}
@@ -38,13 +37,23 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
 			value = 0l;
 		}
 	}
+	
+	@Override
+	public Integer delete() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ForeignCollection<MySong> getMySongs() {
+		return mySongs;
+	}
 	public Long getValue()
 	{
 		return value;
 	}
-	public Long setValue()
-	{
-		return value;
+	@Override
+	public Integer insert() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	@Override
 	public Boolean loadAllProperties() {
@@ -56,18 +65,18 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public Integer insert() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setMySongs(ForeignCollection<MySong> mySongs) {
+		this.mySongs = mySongs;
+	}
+	public Long setValue()
+	{
+		return value;
+	}
+	public void setValue(Long value) {
+		this.value = value;
 	}
 	@Override
 	public Boolean update() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Integer delete() {
 		// TODO Auto-generated method stub
 		return null;
 	}

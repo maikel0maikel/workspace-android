@@ -1,65 +1,88 @@
 package com.qdcatplayer.main.entities;
 
+import android.graphics.Bitmap;
+
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyAlbumDAO;
 
-import android.graphics.Bitmap;
-
-@DatabaseTable(tableName="MyAlbums")
+@DatabaseTable(tableName = "MyAlbums")
 public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO> {
-	@DatabaseField(unique=true)
-	private String name="";//never null
+	private Bitmap cover = null;
+	@DatabaseField(unique = true, useGetSet = true)
+	private String name = "";// never null
+
 	@ForeignCollectionField
 	private ForeignCollection<MySong> songs = null;
-	
-	private Bitmap cover=null;
+
 	public MyAlbum() {
-		
+
 	}
+
 	public MyAlbum(String name) {
 		setName(name);
 	}
-	public String getName()
-	{
-		return name;
+
+	@Override
+	public Integer delete() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	public void setName(String name_)
-	{
-		name=name_==null?"":name_;
+
+	public Bitmap getCover() {
+		return cover;
 	}
-	public Integer getId()
-	{
+
+	public Integer getId() {
 		return id;
 	}
-	public void setId(Integer id_)
-	{
-		id = id_==null?0:id_;
+
+	public String getName() {
+		return name;
 	}
-	@Override
-	public Boolean loadAllProperties() {
-		// TODO Auto-generated method stub
-		return null;
+
+	public ForeignCollection<MySong> getSongs() {
+		return songs;
 	}
-	@Override
-	public Boolean reset() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	@Override
 	public Integer insert() {
 		// TODO Auto-generated method stub
 		return getDao().insert(this);
 	}
+
 	@Override
-	public Boolean update() {
+	public Boolean loadAllProperties() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
-	public Integer delete() {
+	public Boolean reset() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setCover(Bitmap cover) {
+		this.cover = cover;
+	}
+
+	public void setId(Integer id_) {
+		id = id_ == null ? 0 : id_;
+	}
+
+	public void setName(String name_) {
+		name = name_ == null ? "" : name_;
+	}
+
+	public void setSongs(ForeignCollection<MySong> songs) {
+		this.songs = songs;
+	}
+
+	@Override
+	public Boolean update() {
 		// TODO Auto-generated method stub
 		return null;
 	}

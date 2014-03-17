@@ -9,7 +9,7 @@ public abstract class _MyEntityAbstract<T> implements _MyEntityInterface<T>, _Gl
 	/**
 	 * Table always has _id field for PK
 	 */
-	@DatabaseField(generatedId=true)
+	@DatabaseField(generatedId=true, useGetSet=true)
 	protected Integer id=null;
 	/**
 	 * work directly with its own custom My...DAO, nothing else

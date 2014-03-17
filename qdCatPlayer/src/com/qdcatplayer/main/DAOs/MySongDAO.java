@@ -58,7 +58,13 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 		}
 		//load all direct properties
 		//obj.loadAllProperties();
-        return getDao().create(obj);
+		try{
+			return getDao().create(obj);
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			return -1;
+		}
         
 	}
 	@Override
