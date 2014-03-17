@@ -45,7 +45,7 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO> {
 	@Override
 	public Integer insert() {
 		// TODO Auto-generated method stub
-		return null;
+		return getDao().insert(this);
 	}
 
 	@Override

@@ -80,4 +80,20 @@ public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T>, _GlobalDA
 		// TODO Auto-generated method stub
 		return _globalDAO;
 	}
+	@Override
+	public Integer insert(T obj) {
+		if(getDao()==null)
+		{
+			return -1;
+		}
+		try{
+			getDao().create(obj);
+		}catch(Exception e){
+			//object co truong name trung voi record trong CSDL do unique
+			//insert khong duoc return ma loi
+			e.printStackTrace();
+			return -1;
+		}
+		return 1;
+	}
 }

@@ -57,10 +57,14 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 			return -1;
 		}
 		//load all direct properties
-		//obj.loadAllProperties();
 		try{
 			obj.loadAllProperties();
-			obj.getPath().getParentFolder();
+			//create FK First
+			obj.getAlbum().insert();
+			obj.getArtist().insert();
+			obj.getBirate().insert();
+			obj.getFormat().insert();
+			obj.getPath().insert();
 			return getDao().create(obj);
 		}catch(Exception e)
 		{

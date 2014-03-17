@@ -40,25 +40,7 @@ public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public Integer insert(MyAlbum obj) {
-		// TODO Auto-generated method stub
-		if(getDao()==null)
-		{
-			return -1;
-		}
-		try{
-			getDao().create(obj);
-		}catch(Exception e){
-			//object co truong name trung voi record trong CSDL do unique
-			//insert khong duoc return ma loi
-			e.printStackTrace();
-			return -1;
-		}
-		return 1;
-	}
-
+	
 	@Override
 	public Boolean update(MyAlbum obj) {
 		// TODO Auto-generated method stub

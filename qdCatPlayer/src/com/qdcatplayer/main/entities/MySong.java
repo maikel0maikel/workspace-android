@@ -75,6 +75,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		String tmp = retriever
 				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
 		album = new MyAlbum(tmp);
+		album.setDao(getGlobalDAO().getMyAlbumDAO());
 		return album;
 	}
 
@@ -93,6 +94,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		String tmp = retriever
 				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 		artist = new MyArtist(tmp);
+		artist.setDao(getGlobalDAO().getMyArtistDAO());
 		return artist;
 	}
 
@@ -110,10 +112,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		retriever.setDataSource(getPath().getAbsPath());
 		String tmp = "128";// retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
 		bitrate = new MyBitrate(tmp);
-		return bitrate;
-	}
-
-	public MyBitrate getBitrate() {
+		bitrate.setDao(getGlobalDAO().getMyBitrateDAO());
 		return bitrate;
 	}
 
@@ -146,12 +145,13 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 
 		// read sound tag from _path object
 		format = new MyFormat(getPath().getFileExtension(false));
+		format.setDao(getGlobalDAO().getMyFormatDAO());
 		return format;
 	}
 
 	public MyPath getPath() {
 		// pass Global DAO to MyPath for lazy load and after-query if needed
-		if (path != null) {
+		if (path != null && path.getDao()==null) {
 			path.setDao(getGlobalDAO().getMyPathDAO());
 		}
 		return path;

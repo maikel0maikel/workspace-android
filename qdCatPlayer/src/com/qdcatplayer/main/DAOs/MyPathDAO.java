@@ -19,7 +19,10 @@ public class MyPathDAO extends _MyDAOAbstract<MyPath> {
 
 	@Override
 	public RuntimeExceptionDao<MyPath, Integer> getDao() {
-		// TODO Auto-generated method stub
+		if(getManager()!=null && getHelper()!=null)
+		{
+			return getHelper().getMyPathDAO();
+		}
 		return null;
 	}
 
@@ -37,8 +40,21 @@ public class MyPathDAO extends _MyDAOAbstract<MyPath> {
 
 	@Override
 	public Integer insert(MyPath obj) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(getDao()==null)//qd fail
+		{
+			return -1;
+		}
+		//load all direct properties
+		try{
+			obj.loadAllProperties();//FK and Direct Properties too
+			//create FK First
+			obj.getParentFolder().insert();
+			return getDao().create(obj);
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			return -1;
+		}
 	}
 
 	@Override

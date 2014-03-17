@@ -98,4 +98,36 @@ public class GlobalDAO {
 		_myBitrateDAO = new MyBitrateDAO(getContext(), this);
 		return _myBitrateDAO;
 	}
+	private MyArtistDAO _myArtistDAO=null;
+	public MyArtistDAO getMyArtistDAO() {
+		//require
+		if(getContext()==null)
+		{
+			return null;
+		}
+		//lazy
+		if(_myArtistDAO!=null)
+		{
+			return _myArtistDAO;
+		}
+		//init new one
+		_myArtistDAO = new MyArtistDAO(getContext(), this);
+		return _myArtistDAO;
+	}
+	private MyFormatDAO _myFormatDAO=null;
+	public MyFormatDAO getMyFormatDAO() {
+		//require
+		if(getContext()==null)
+		{
+			return null;
+		}
+		//lazy
+		if(_myFormatDAO!=null)
+		{
+			return _myFormatDAO;
+		}
+		//init new one
+		_myFormatDAO = new MyFormatDAO(getContext(), this);
+		return _myFormatDAO;
+	}
 }

@@ -83,15 +83,14 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 
 	@Override
 	public Integer insert() {
-		// TODO Auto-generated method stub
-		return null;
+		return getDao().insert(this);
 	}
-
 	@Override
 	public Boolean loadAllProperties() {
 		// TODO Auto-generated method stub
 		getParentFolder();
 		getAbsPath();
+		getFileName();
 		getSong();
 		return true;
 	}

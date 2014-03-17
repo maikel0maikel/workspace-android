@@ -17,7 +17,10 @@ public class MyBitrateDAO extends _MyDAOAbstract<MyBitrate> {
 
 	@Override
 	public RuntimeExceptionDao<MyBitrate, Integer> getDao() {
-		// TODO Auto-generated method stub
+		if(getManager()!=null && getHelper()!=null)
+		{
+			return getHelper().getMyBitrateDAO();
+		}
 		return null;
 	}
 
@@ -31,12 +34,6 @@ public class MyBitrateDAO extends _MyDAOAbstract<MyBitrate> {
 	public MyBitrate getById(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Integer insert(MyBitrate obj) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override

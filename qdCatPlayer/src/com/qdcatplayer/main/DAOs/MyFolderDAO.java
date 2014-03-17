@@ -18,7 +18,10 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 
 	@Override
 	public RuntimeExceptionDao<MyFolder, Integer> getDao() {
-		// TODO Auto-generated method stub
+		if(getManager()!=null && getHelper()!=null)
+		{
+			return getHelper().getMyFolderDAO();
+		}
 		return null;
 	}
 
@@ -32,12 +35,6 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 	public MyFolder getById(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Integer insert(MyFolder obj) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override

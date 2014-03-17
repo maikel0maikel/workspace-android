@@ -53,7 +53,7 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
 	@Override
 	public Integer insert() {
 		// TODO Auto-generated method stub
-		return null;
+		return getDao().insert(this);
 	}
 	@Override
 	public Boolean loadAllProperties() {

@@ -17,7 +17,10 @@ public class MyFormatDAO extends _MyDAOAbstract<MyFormat> {
 
 	@Override
 	public RuntimeExceptionDao<MyFormat, Integer> getDao() {
-		// TODO Auto-generated method stub
+		if(getManager()!=null && getHelper()!=null)
+		{
+			return getHelper().getMyFormatDAO();
+		}
 		return null;
 	}
 
@@ -31,12 +34,6 @@ public class MyFormatDAO extends _MyDAOAbstract<MyFormat> {
 	public MyFormat getById(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Integer insert(MyFormat obj) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override

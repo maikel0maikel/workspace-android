@@ -18,7 +18,10 @@ public class MyArtistDAO extends _MyDAOAbstract<MyArtist> {
 
 	@Override
 	public RuntimeExceptionDao<MyArtist, Integer> getDao() {
-		// TODO Auto-generated method stub
+		if(getManager()!=null && getHelper()!=null)
+		{
+			return getHelper().getMyArtistDAO();
+		}
 		return null;
 	}
 
@@ -32,12 +35,6 @@ public class MyArtistDAO extends _MyDAOAbstract<MyArtist> {
 	public MyArtist getById(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Integer insert(MyArtist obj) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override

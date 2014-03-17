@@ -39,7 +39,7 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO> {
 	@Override
 	public Integer insert() {
 		// TODO Auto-generated method stub
-		return null;
+		return getDao().insert(this);
 	}
 
 	@Override

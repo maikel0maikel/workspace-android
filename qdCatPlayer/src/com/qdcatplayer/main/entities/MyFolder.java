@@ -165,7 +165,7 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 	@Override
 	public Integer insert() {
 		// TODO Auto-generated method stub
-		return null;
+		return getDao().insert(this);
 	}
 
 	@Override
