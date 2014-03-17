@@ -72,7 +72,6 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 		// Ngay tai luc goi nay thi GlobalDAO se tao ra mot custom moi neu chua
 		// co san
 		parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
-		parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
 
 		_parentFolder_ready = true;
 		return parentFolder;
@@ -91,7 +90,10 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	@Override
 	public Boolean loadAllProperties() {
 		// TODO Auto-generated method stub
-		return null;
+		getParentFolder();
+		getAbsPath();
+		getSong();
+		return true;
 	}
 
 	@Override

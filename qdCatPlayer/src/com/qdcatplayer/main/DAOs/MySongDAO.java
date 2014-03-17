@@ -59,6 +59,8 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 		//load all direct properties
 		//obj.loadAllProperties();
 		try{
+			obj.loadAllProperties();
+			obj.getPath().getParentFolder();
 			return getDao().create(obj);
 		}catch(Exception e)
 		{

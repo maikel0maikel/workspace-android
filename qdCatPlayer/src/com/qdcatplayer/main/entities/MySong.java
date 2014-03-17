@@ -42,7 +42,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 	 * Because 1 song only has 1 title, and common music player doesn't group
 	 * songs by title too, no need to create Object String better
 	 */
-	@DatabaseField(useGetSet = true)
+	@DatabaseField
 	private String title = null;
 
 	public MySong() {

@@ -32,12 +32,10 @@ public class MainActivity extends Activity {
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		
-		/*MyDBManager mn=new MyDBManager();
+		MyDBManager mn=new MyDBManager();
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
-		h.close();
-		mn.releaseHelper();
-		*/
+		
 		/*
 		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
 		MyAlbum ma=new MyAlbum("er234frdt");
@@ -78,13 +76,12 @@ public class MainActivity extends Activity {
 		MyFolder fd=new MyFolder("/sdcard/music");
 		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
 		//MySongDAO dao=new MySongDAO(getApplicationContext(),null);
-		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(),null);
-		dao.getManager().getHelper().getMyAlbumDAO();
+		MySongDAO dao=new MySongDAO(getApplicationContext(),null);
 		for(MySong item:ss)
 		{
-			//item.setDao(dao);
+			item.setDao(dao);
 			//item.loadAllProperties();
-			//item.insert();
+			item.insert();
 		}
 		
 		
