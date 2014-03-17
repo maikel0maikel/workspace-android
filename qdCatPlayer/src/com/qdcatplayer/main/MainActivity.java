@@ -4,10 +4,12 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.DAOs.MyAlbumDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
+import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.entities.MyAlbum;
@@ -72,17 +74,33 @@ public class MainActivity extends Activity {
 		}
 		d1.release();
 		*/
-		
+		/*
 		//Declare music folder
 		MyFolder fd=new MyFolder("/sdcard/music");
 		//Init new MyFolderDAO for working with MyFolder Entity
 		MyFolderDAO dao = new MyFolderDAO(getApplicationContext(), null);
+		//Assign DAO to Entity (so far, Entity will pass
+		//related-DAO through any deep level FK reference)
 		fd.setDao(dao);
+		//Get all songs belong to this fd Folder recursively
 		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
+		//Fetch each song from result
 		for(MySong item:ss)
 		{
-			item.insert();//FK auto insert and keep references
+			//call insert on current Entity
+			item.insert();//F_Entity will auto insert and keep references
 		}
+		*/
+		
+		/*
+		MyAlbum ma=new MyAlbum();
+		ma.setId(3);
+		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
+		dao.setSource(MySource.DB_SOURCE);
+		ma.setDao(dao);
+		ArrayList<MySong> tmp = ma.getSongs();
+		int i=9;
+		*/
 	}
 
 	@Override

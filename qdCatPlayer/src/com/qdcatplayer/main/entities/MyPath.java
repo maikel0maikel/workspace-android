@@ -8,12 +8,13 @@ import com.qdcatplayer.main.libraries.MyFileHelper;
 @DatabaseTable(tableName = "MyPaths")
 public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	public static final String ABSPATH_F = "absPath";
+	public static final String P_FOLDER_ID = "parentFolder_id";
 	// because file/folder has no parent will got null too
 	// so, we need to declare new Boolean varible to separate meaning
 	// of 2 concept: "no parent" and "not ready yet"
 	private Boolean _parentFolder_ready = false;
 	@DatabaseField(unique = true, canBeNull = false)
-	private String absPath = "";
+	private String absPath = null;
 	@DatabaseField(canBeNull=false)
 	protected String fileName = null;
 
@@ -45,6 +46,10 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	}
 
 	public String getAbsPath() {
+		if(absPath==null)
+		{
+			absPath = getDao().getAbsPath(this);
+		}
 		return absPath;
 	}
 
@@ -75,11 +80,7 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 		// get through DAO is recommended, DAO will look SOURCE to choose
 		// where to get Parent Obj
 		parentFolder = getDao().getParentFolder(this);
-		// pass custom DAO to MyFolder parent for later use
-		// Ngay tai luc goi nay thi GlobalDAO se tao ra mot custom moi neu chua
-		// co san
-		parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
-
+		//DAO was already set by above call
 		_parentFolder_ready = true;
 		return parentFolder;
 	}

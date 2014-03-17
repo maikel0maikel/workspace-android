@@ -11,6 +11,8 @@ public abstract class _MyEntityAbstract<T> implements _MyEntityInterface<T>, _Gl
 	 */
 	@DatabaseField(generatedId=true)
 	protected Integer id=null;
+
+	public static final String ID_F = "id";
 	/**
 	 * work directly with its own custom My...DAO, nothing else
 	 */

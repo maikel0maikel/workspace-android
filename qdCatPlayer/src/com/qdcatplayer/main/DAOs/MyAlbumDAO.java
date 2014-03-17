@@ -2,12 +2,15 @@ package com.qdcatplayer.main.DAOs;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyAlbum;
+import com.qdcatplayer.main.entities.MySong;
 
 public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
 	/**
@@ -72,5 +75,43 @@ public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	public String getName(MyAlbum obj) {
+		if(getSource()==MySource.DB_SOURCE)
+		{
+			if(obj.getId() > 0)
+			{
+				getDao().refresh(obj);
+				return obj.getName();
+			}
+		}
+		//do not support DISK SOURCE
+		return "";
+	}
+
+	public ArrayList<MySong> getSongs(MyAlbum obj) {
+		ArrayList<MySong> re = new ArrayList<MySong>();
+		if(getSource()==MySource.DB_SOURCE)
+		{
+			try {
+				List<MySong> tmp = getGlobalDAO().getMySongDAO().getDao()
+						.queryBuilder().where().eq(MySong.ALBUM_ID, obj.getId())
+						.query();
+				
+				for(MySong item:tmp)
+				{
+					item.setDao(getGlobalDAO().getMySongDAO());
+					re.add(item);
+				}
+				return re;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		//do not support DISK SOURCE
+		return new ArrayList<MySong>();
 	}
 }

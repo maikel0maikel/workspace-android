@@ -19,6 +19,10 @@ import com.qdcatplayer.main.libraries.MyNumberHelper;
  */
 @DatabaseTable(tableName = "MySongs")
 public class MySong extends _MyEntityAbstract<MySongDAO> {
+	public static final String PATH_ID = "path_id";
+
+	public static final String ALBUM_ID = "album_id";
+
 	@DatabaseField(canBeNull = true, foreign = true)
 	private MyAlbum album = null;
 
@@ -42,7 +46,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 	 * Because 1 song only has 1 title, and common music player doesn't group
 	 * songs by title too, no need to create Object String better
 	 */
-	@DatabaseField
+	@DatabaseField(canBeNull=false)
 	private String title = null;
 
 	public MySong() {
@@ -65,18 +69,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		if (album != null) {
 			return album;
 		}
-		// required
-		if (getPath() == null) {
-			return null;
-		}
-
-		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-		retriever.setDataSource(getPath().getAbsPath());
-		String tmp = retriever
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-		album = new MyAlbum(tmp);
-		album.setDao(getGlobalDAO().getMyAlbumDAO());
-		return album;
+		return getDao().getAlbum(this);
 	}
 
 	public MyArtist getArtist() {
@@ -162,18 +155,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 		if (title != null) {
 			return title;
 		}
-		// required
-		if (getPath() == null) {
-			return null;
-		}
-		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-		retriever.setDataSource(getPath().getAbsPath());
-		title = retriever
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-		if (title == null) {
-			title = "";
-		}
-		return title;
+		return getDao().getTitle(this);
 
 	}
 
@@ -253,5 +235,30 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 	public Boolean update() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public void setDao(MySongDAO dao_) {
+		super.setDao(dao_);
+		//set for all FK
+		if(album!=null)
+		{
+			album.setDao(getGlobalDAO().getMyAlbumDAO());
+		}
+		if(artist!=null)
+		{
+			artist.setDao(getGlobalDAO().getMyArtistDAO());
+		}
+		if(bitrate!=null)
+		{
+			bitrate.setDao(getGlobalDAO().getMyBitrateDAO());
+		}
+		if(format!=null)
+		{
+			format.setDao(getGlobalDAO().getMyFormatDAO());
+		}
+		if(path!=null)
+		{
+			path.setDao(getGlobalDAO().getMyPathDAO());
+		}
 	}
 }

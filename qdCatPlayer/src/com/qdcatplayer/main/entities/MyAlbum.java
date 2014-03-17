@@ -1,5 +1,7 @@
 package com.qdcatplayer.main.entities;
 
+import java.util.ArrayList;
+
 import android.graphics.Bitmap;
 
 import com.j256.ormlite.dao.ForeignCollection;
@@ -17,11 +19,10 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO> {
 	
 	private Bitmap cover = null;
 	@DatabaseField(unique = true)
-	private String name = "";// never null
+	private String name = null;
 
-	@ForeignCollectionField
-	private ForeignCollection<MySong> songs = null;
-
+	private ArrayList<MySong> songs = null;
+	
 	public MyAlbum() {
 
 	}
@@ -45,10 +46,21 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO> {
 	}
 
 	public String getName() {
+		if(name==null)
+		{
+			name = getDao().getName(this);
+		}
 		return name;
 	}
-
-	public ForeignCollection<MySong> getSongs() {
+	/**
+	 * Khong ho tro DISK SOURCE vi ly do Disk khong to chuc theo CSDL
+	 * @return
+	 */
+	public ArrayList<MySong> getSongs() {
+		if(songs==null)
+		{
+			songs = getDao().getSongs(this);
+		}
 		return songs;
 	}
 
@@ -80,10 +92,6 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO> {
 
 	public void setName(String name_) {
 		name = name_ == null ? "" : name_;
-	}
-
-	public void setSongs(ForeignCollection<MySong> songs) {
-		this.songs = songs;
 	}
 
 	@Override

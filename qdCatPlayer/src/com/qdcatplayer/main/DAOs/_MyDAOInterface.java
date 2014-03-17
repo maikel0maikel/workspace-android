@@ -17,6 +17,8 @@ public interface _MyDAOInterface<T> {
 	public MyDBManager getManager();
 	public GlobalDAO getGlobalDAO();
 	public RuntimeExceptionDao<T,Integer> getDao();
+	public void setSource(Integer source);
+	public Integer getSource();
 	
 	public ArrayList<T> getAll();
 	public T getById(Integer id);

@@ -98,4 +98,19 @@ public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T>, _GlobalDA
 		}
 		return 1;
 	}
+	@Override
+	public void setSource(Integer source_) {
+		if(getGlobalDAO()!=null)
+		{
+			getGlobalDAO().setSource(source_);
+		}
+	}
+	@Override
+	public Integer getSource() {
+		if(getGlobalDAO()!=null)
+		{
+			return getGlobalDAO().getSource();
+		}
+		return 0;//by default
+	}
 }

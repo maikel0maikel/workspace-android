@@ -88,7 +88,22 @@ public class MyPathDAO extends _MyDAOAbstract<MyPath> {
 		{
 			return null;
 		}
-		return new MyFolder(parent);
+		MyFolder tmp = new MyFolder(parent);
+		tmp.setDao(getGlobalDAO().getMyFolderDAO());
+		return tmp;
+	}
+
+	public String getAbsPath(MyPath obj) {
+		if(getSource()==MySource.DB_SOURCE)
+		{
+			if(obj.getId()>0)
+			{
+				getDao().refresh(obj);
+				return obj.getAbsPath();
+			}
+		}
+		//do not support from Disk SOURCE
+		return "";
 	}
 
 }

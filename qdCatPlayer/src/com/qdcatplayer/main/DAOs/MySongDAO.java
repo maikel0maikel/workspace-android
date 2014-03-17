@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.media.MediaMetadataRetriever;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -46,7 +47,6 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 	public ArrayList<MySong> getByAbsPath(Integer id)
 	{
 		ArrayList<MySong> re = new ArrayList<MySong>();
-		
 		
 		return re;
 	}
@@ -104,5 +104,69 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 			return getHelper().getMySongDAO();
 		}
 		return null;
+	}
+	public MyAlbum getAlbum(MySong obj) {
+		if(getSource()==MySource.DISK_SOURCE)
+		{
+			// required
+			if (obj.getPath() == null) {
+				return null;
+			}
+	
+			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+			retriever.setDataSource(obj.getPath().getAbsPath());
+			String tmp = retriever
+					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+			MyAlbum album = new MyAlbum(tmp);
+			album.setDao(getGlobalDAO().getMyAlbumDAO());
+			obj.setAlbum(album);
+			return album;
+		}
+		else if(getSource()==MySource.DB_SOURCE)
+		{
+			try {
+				String[] tmp =  getDao().queryBuilder()
+				.selectColumns(MySong.ALBUM_ID)
+				.where()
+				.eq(MySong.ID_F, obj.getId())
+				.queryRawFirst();
+				
+				MyAlbum tmp2 = getGlobalDAO().getMyAlbumDAO().getDao()
+						.queryForId(Integer.parseInt(tmp[0]));
+				obj.setAlbum(tmp2);
+				return tmp2;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return new MyAlbum();
+		}
+		return null;
+	}
+	public String getTitle(MySong obj) {
+		if(getSource()==MySource.DB_SOURCE)
+		{
+			if(obj.getId()>0)
+			{
+				getDao().refresh(obj);
+				return obj.getTitle();
+			}
+		}
+		else if(getSource()==MySource.DISK_SOURCE)
+		{
+			// required
+			if (obj.getPath() == null) {
+				return "";
+			}
+			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+			retriever.setDataSource(obj.getPath().getAbsPath());
+			String title = retriever
+					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+			if (title == null) {
+				title = "";
+			}
+			return title;
+		}
+		return "";
 	}
 }
