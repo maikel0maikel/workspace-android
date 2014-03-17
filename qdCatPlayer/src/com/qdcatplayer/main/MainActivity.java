@@ -75,7 +75,6 @@ public class MainActivity extends Activity {
 		
 		MyFolder fd=new MyFolder("/sdcard/music");
 		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
-		//MySongDAO dao=new MySongDAO(getApplicationContext(),null);
 		MySongDAO dao=new MySongDAO(getApplicationContext(),null);
 		for(MySong item:ss)
 		{

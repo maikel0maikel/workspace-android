@@ -69,7 +69,7 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-			return -1;
+			return -1;//mac du insert thanh cong thi van bi quang Exception
 		}
         
 	}

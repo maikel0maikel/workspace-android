@@ -10,6 +10,11 @@ import com.qdcatplayer.main.DAOs.MyAlbumDAO;
 
 @DatabaseTable(tableName = "MyAlbums")
 public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO> {
+	/**
+	 * 
+	 */
+	public static final String NAME_F = "name";
+	
 	private Bitmap cover = null;
 	@DatabaseField(unique = true)
 	private String name = "";// never null

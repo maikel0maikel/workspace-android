@@ -8,6 +8,8 @@ import com.qdcatplayer.main.DAOs.MyFormatDAO;
 
 @DatabaseTable(tableName = "MyFormats")
 public class MyFormat extends _MyEntityAbstract<MyFormatDAO> {
+	public static final String EXTENSION_F = "extension";
+
 	@DatabaseField(unique = true, canBeNull = false)
 	private String extension = null;// never null
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyFolder;
+import com.qdcatplayer.main.entities.MyPath;
 
 public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 
@@ -60,5 +61,33 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 		}
 		return new MyFolder(parent);
 	}
-
+	@Override
+	public Integer insert(MyFolder obj) {
+		if(getDao()==null)//qd fail
+		{
+			return -1;
+		}
+		//load all direct properties
+		try{
+			obj.loadAllProperties();//FK and Direct Properties too
+			//create FK First
+			if(obj.getParentFolder()!=null)
+			{
+				//xet coi folder nay da co trong he thong
+				MyFolder tmp = getDao().queryBuilder().where().eq(MyFolder.ABSPATH_F, obj.getAbsPath()).queryForFirst();
+				if(tmp!=null)
+				{
+					obj.setId(tmp.getId());
+					return 1;
+				}
+				//goi insert folder cha truoc
+				obj.getParentFolder().insert();
+			}
+			return getDao().create(obj);
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			return -1;
+		}
+	}
 }

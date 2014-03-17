@@ -46,9 +46,19 @@ public class MyPathDAO extends _MyDAOAbstract<MyPath> {
 		}
 		//load all direct properties
 		try{
+			//neu path co roi trong he thong thi khong add
+			MyPath tmp = getDao().queryBuilder().where().eq(MyPath.ABSPATH_F, obj.getAbsPath()).queryForFirst();
+			if(tmp!=null)
+			{
+				obj.setId(tmp.getId());
+				return 1;
+			}
 			obj.loadAllProperties();//FK and Direct Properties too
 			//create FK First
-			obj.getParentFolder().insert();
+			if(obj.getParentFolder()!=null)
+			{
+				obj.getParentFolder().insert();
+			}
 			return getDao().create(obj);
 		}catch(Exception e)
 		{

@@ -8,6 +8,7 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
+import com.qdcatplayer.main.entities._MyEntityInterface;
 
 public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T>, _GlobalDAOInterface {
 	/**
@@ -87,6 +88,7 @@ public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T>, _GlobalDA
 			return -1;
 		}
 		try{
+			((_MyEntityInterface<?>)obj).loadAllProperties();
 			getDao().create(obj);
 		}catch(Exception e){
 			//object co truong name trung voi record trong CSDL do unique

@@ -7,6 +7,7 @@ import com.qdcatplayer.main.libraries.MyFileHelper;
 
 @DatabaseTable(tableName = "MyPaths")
 public class MyPath extends _MyEntityAbstract<MyPathDAO> {
+	public static final String ABSPATH_F = "absPath";
 	// because file/folder has no parent will got null too
 	// so, we need to declare new Boolean varible to separate meaning
 	// of 2 concept: "no parent" and "not ready yet"
@@ -19,8 +20,14 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	@DatabaseField(canBeNull = true, foreign = true)
 	private MyFolder parentFolder = null;
 
-	@DatabaseField(foreign = true, canBeNull = false)
-	private MySong song = null;
+	/**
+	 * Khi insert Path thi do Song van chua duoc insert
+	 * nen tam thoi song=null, sau khi MyPath duoc insert thanh cong thi
+	 * Song se co nhiem vu gan nguoc id cua minh qua chp Path.Song
+	 
+		@DatabaseField(foreign = true, canBeNull = true)
+		private MySong song = null;
+	*/
 
 	public MyPath() {
 		// TODO Auto-generated constructor stub
@@ -77,10 +84,6 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 		return parentFolder;
 	}
 
-	public MySong getSong() {
-		return song;
-	}
-
 	@Override
 	public Integer insert() {
 		return getDao().insert(this);
@@ -91,7 +94,6 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 		getParentFolder();
 		getAbsPath();
 		getFileName();
-		getSong();
 		return true;
 	}
 
@@ -116,10 +118,6 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 
 	public void setParentFolder(MyFolder parentFolder) {
 		this.parentFolder = parentFolder;
-	}
-
-	public void setSong(MySong song) {
-		this.song = song;
 	}
 
 	@Override

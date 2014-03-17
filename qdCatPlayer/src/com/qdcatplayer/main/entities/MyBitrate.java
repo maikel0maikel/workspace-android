@@ -8,6 +8,7 @@ import com.qdcatplayer.main.DAOs.MyBitrateDAO;
 
 @DatabaseTable(tableName="MyBitrates")
 public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
+	public static final String VALUE_F = "value";
 	@ForeignCollectionField
 	private ForeignCollection<MySong> mySongs = null;
 	@DatabaseField(unique=true, canBeNull=false)

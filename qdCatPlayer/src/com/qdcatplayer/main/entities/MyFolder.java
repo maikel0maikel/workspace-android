@@ -14,6 +14,7 @@ import com.qdcatplayer.main.libraries.MyFileHelper;
 
 @DatabaseTable(tableName = "MyFolders")
 public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
+	public static final String ABSPATH_F = "absPath";
 	@DatabaseField(unique = true, canBeNull = false)
 	private String absPath = null;
 	private ArrayList<MyFolder> childsFolder = null;
@@ -155,6 +156,10 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 		// where to get Parent Obj
 		parentFolder = getDao().getParentFolder(this);
 		parentFolder_ready = true;
+		//set dao
+		if(parentFolder != null){
+			parentFolder.setDao(getGlobalDAO().getMyFolderDAO());
+		}
 		return parentFolder;
 	}
 
@@ -170,8 +175,10 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 
 	@Override
 	public Boolean loadAllProperties() {
-		// TODO Auto-generated method stub
-		return null;
+		getFolderName();
+		getAbsPath();
+		getParentFolder();
+		return true;
 	}
 
 	@Override

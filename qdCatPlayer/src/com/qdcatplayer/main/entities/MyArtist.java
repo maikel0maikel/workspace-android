@@ -8,6 +8,8 @@ import com.qdcatplayer.main.DAOs.MyArtistDAO;
 
 @DatabaseTable(tableName = "MyArtists")
 public class MyArtist extends _MyEntityAbstract<MyArtistDAO> {
+	public static final String NAME_F = "name";
+
 	@ForeignCollectionField
 	private ForeignCollection<MySong> mySongs = null;
 

@@ -52,5 +52,25 @@ public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	@Override
+	public Integer insert(MyAlbum obj) {
+		//neu object chua co trong DB thi goi super insert
+		try {
+			MyAlbum tmp = getDao().queryBuilder().where().eq(MyAlbum.NAME_F, obj.getName()).queryForFirst();
+			if(tmp==null)
+			{
+				super.insert(obj);
+			}
+			else
+			{
+				obj.setId(tmp.getId());
+				obj.reset();
+			}
+			return 1;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+	}
 }
