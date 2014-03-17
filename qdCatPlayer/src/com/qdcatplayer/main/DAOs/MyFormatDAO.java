@@ -61,7 +61,6 @@ public class MyFormatDAO extends _MyDAOAbstract<MyFormat> {
 			else
 			{
 				obj.setId(tmp.getId());
-				obj.reset();
 			}
 			return 1;
 		} catch (SQLException e) {

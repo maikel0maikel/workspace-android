@@ -73,17 +73,16 @@ public class MainActivity extends Activity {
 		d1.release();
 		*/
 		
+		//Declare music folder
 		MyFolder fd=new MyFolder("/sdcard/music");
+		//Init new MyFolderDAO for working with MyFolder Entity
+		MyFolderDAO dao = new MyFolderDAO(getApplicationContext(), null);
+		fd.setDao(dao);
 		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
-		MySongDAO dao=new MySongDAO(getApplicationContext(),null);
 		for(MySong item:ss)
 		{
-			item.setDao(dao);
-			//item.loadAllProperties();
-			item.insert();
+			item.insert();//FK auto insert and keep references
 		}
-		
-		
 	}
 
 	@Override

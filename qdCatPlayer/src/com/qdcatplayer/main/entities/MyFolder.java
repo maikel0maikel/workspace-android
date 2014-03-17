@@ -21,7 +21,7 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 
 	private ArrayList<MySong> childsSong = null;
 
-	@DatabaseField(canBeNull = false)
+	@DatabaseField(canBeNull = true)
 	private String folderName = null;
 	@DatabaseField(canBeNull = true, foreign = true)
 	private MyFolder parentFolder = null;
@@ -48,6 +48,8 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 		}
 		// add direct first
 		for (MySong item : root.getChildSongs()) {
+			//set DAo ngay tai day khi tao list
+			item.setDao(getGlobalDAO().getMySongDAO());
 			recursiveSongs.add(item);
 		}
 		// finish on this node

@@ -14,7 +14,7 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	private Boolean _parentFolder_ready = false;
 	@DatabaseField(unique = true, canBeNull = false)
 	private String absPath = "";
-	@DatabaseField
+	@DatabaseField(canBeNull=false)
 	protected String fileName = null;
 
 	@DatabaseField(canBeNull = true, foreign = true)

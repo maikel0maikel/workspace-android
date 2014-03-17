@@ -11,6 +11,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.entities.MyAlbum;
+import com.qdcatplayer.main.entities.MyPath;
 import com.qdcatplayer.main.entities.MySong;
 
 /**
@@ -58,6 +59,12 @@ public class MySongDAO extends _MyDAOAbstract<MySong> {
 		}
 		//load all direct properties
 		try{
+			MyPath tmp = getGlobalDAO().getMyPathDAO().getDao().queryBuilder().where().eq(MyPath.ABSPATH_F, obj.getPath().getAbsPath()).queryForFirst();
+			if(tmp!=null)
+			{
+				obj.setId(tmp.getId());
+				return 1;
+			}
 			obj.loadAllProperties();
 			//create FK First
 			obj.getAlbum().insert();
