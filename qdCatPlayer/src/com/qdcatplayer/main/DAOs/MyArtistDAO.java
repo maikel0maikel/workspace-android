@@ -9,9 +9,12 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyAlbum;
 import com.qdcatplayer.main.entities.MyArtist;
+import com.qdcatplayer.main.entities.MyBitrate;
 import com.qdcatplayer.main.entities.MySong;
 
-public class MyArtistDAO extends _MyDAOAbstract<MyArtist> {
+public class MyArtistDAO extends _MyDAOAbstract<MyArtistDAO, MyArtist>
+implements _MyDAOInterface<MyArtistDAO, MyArtist>
+{
 
 	public MyArtistDAO(Context ctx, GlobalDAO g) {
 		super(ctx, g);
@@ -70,5 +73,10 @@ public class MyArtistDAO extends _MyDAOAbstract<MyArtist> {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	@Override
+	public void load(MyArtist obj) {
+		
 	}
 }

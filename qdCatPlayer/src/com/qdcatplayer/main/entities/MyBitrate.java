@@ -7,7 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyBitrateDAO;
 
 @DatabaseTable(tableName="MyBitrates")
-public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
+public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO, MyBitrate> {
 	public static final String VALUE_F = "value";
 	@ForeignCollectionField
 	private ForeignCollection<MySong> mySongs = null;
@@ -40,7 +40,7 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
 	}
 	
 	@Override
-	public Integer delete() {
+	public Boolean delete() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -56,15 +56,10 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO> {
 		// TODO Auto-generated method stub
 		return getDao().insert(this);
 	}
+
 	@Override
-	public Boolean loadAllProperties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Boolean reset() {
-		// TODO Auto-generated method stub
-		return null;
+	public void reset() {
+
 	}
 	public void setMySongs(ForeignCollection<MySong> mySongs) {
 		this.mySongs = mySongs;

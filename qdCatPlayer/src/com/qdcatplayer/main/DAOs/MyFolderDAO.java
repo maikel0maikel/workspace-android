@@ -10,11 +10,14 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyFolder;
+import com.qdcatplayer.main.entities.MyFormat;
 import com.qdcatplayer.main.entities.MyPath;
 import com.qdcatplayer.main.entities.MySong;
 import com.qdcatplayer.main.libraries.MyFileHelper;
 
-public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
+public class MyFolderDAO extends _MyDAOAbstract<MyFolderDAO, MyFolder>
+implements _MyDAOInterface<MyFolderDAO, MyFolder>
+{
 
 	public MyFolderDAO(Context ctx, GlobalDAO g) {
 		super(ctx,g);
@@ -71,9 +74,7 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 		{
 			return -1;
 		}
-		//load all direct properties
 		try{
-			obj.loadAllProperties();//FK and Direct Properties too
 			//create FK First
 			if(obj.getParentFolder()!=null)
 			{
@@ -133,9 +134,10 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 			for (File item : tmp) {
 				if (item.isFile()
 						&& MyFileHelper.isSoundFile(item.getAbsolutePath())) {
-					tmps = new MySong(item.getAbsolutePath());
-					//set DAO
+					
+					tmps = new MySong();
 					tmps.setDao(getGlobalDAO().getMySongDAO());
+					tmps.setPath(item.getAbsolutePath());
 					childsSong.add(tmps);
 				}
 			}
@@ -176,5 +178,21 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolder> {
 			}
 		}
 		return childsSong;
+	}
+
+	@Override
+	public void load(MyFolder obj) {
+		if(getSource()==MySource.DISK_SOURCE)
+		{
+			obj.setFolderName(
+					MyFileHelper.getFolderName(
+							obj.getAbsPath()
+							)
+					);
+		}
+		else if(getSource()==MySource.DB_SOURCE)
+		{
+			getDao().refresh(obj);
+		}
 	}
 }

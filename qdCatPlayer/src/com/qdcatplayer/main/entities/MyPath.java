@@ -3,16 +3,17 @@ package com.qdcatplayer.main.entities;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyPathDAO;
+import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.libraries.MyFileHelper;
 
 @DatabaseTable(tableName = "MyPaths")
-public class MyPath extends _MyEntityAbstract<MyPathDAO> {
+public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	public static final String ABSPATH_F = "absPath";
 	public static final String P_FOLDER_ID = "parentFolder_id";
 	// because file/folder has no parent will got null too
 	// so, we need to declare new Boolean varible to separate meaning
 	// of 2 concept: "no parent" and "not ready yet"
-	private Boolean _parentFolder_ready = false;
+	private Boolean parentFolder_ready = false;
 	@DatabaseField(unique = true, canBeNull = false)
 	private String absPath = null;
 	@DatabaseField(canBeNull=false)
@@ -31,18 +32,16 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 	*/
 
 	public MyPath() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public MyPath(String absPath) {
-		// TODO Auto-generated constructor stub
 		setAbsPath(absPath);
 	}
 
 	@Override
-	public Integer delete() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean delete() {
+		return getDao().delete(this);
 	}
 
 	public String getAbsPath() {
@@ -52,25 +51,31 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 		}
 		return absPath;
 	}
-
-	// qd FAIL
+	/**
+	 * Ham On The Fly, khong ho tro Cache
+	 * @param withDot
+	 * @return
+	 */
 	public String getFileExtension(Boolean withDot) {
 		if (getAbsPath() == null || getAbsPath().equals("")) {
 			return "";
 		}
 		return MyFileHelper.getFileExtension(getAbsPath(), withDot);
 	}
-
+	/**
+	 * Ham On The Fly, phu thuoc vao absPath
+	 * Cung trang thai voi loaded
+	 * @return
+	 */
 	public String getFileName() {
-		if (fileName != null) {
-			return fileName;
-		}
-		fileName = MyFileHelper.getFileName(absPath, false);
+		super.load();
 		return fileName;
 	}
 
 	public MyFolder getParentFolder() {
-		if (_parentFolder_ready == true) {
+		//parent folder co bien Boolean rieng de load
+		//khong dung chung loaded
+		if (parentFolder_ready == true || parentFolder!=null) {
 			return parentFolder;
 		}
 		// do not know DAO !
@@ -81,36 +86,35 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO> {
 		// where to get Parent Obj
 		parentFolder = getDao().getParentFolder(this);
 		//DAO was already set by above call
-		_parentFolder_ready = true;
+		parentFolder_ready = true;
 		return parentFolder;
 	}
 
 	@Override
 	public Integer insert() {
-		return getDao().insert(this);
-	}
-	@Override
-	public Boolean loadAllProperties() {
-		// TODO Auto-generated method stub
-		getParentFolder();
-		getAbsPath();
-		getFileName();
-		return true;
+		if(getGlobalDAO().getSource()==MySource.DISK_SOURCE)
+		{
+			//Force to load all properties first
+			reset();
+			super.load();
+			return getDao().insert(this);
+		}
+		return -1;
 	}
 
 	@Override
-	public Boolean reset() {
-		// clear all reference members
+	public void reset() {
+		//clear member
 		parentFolder = null;
 		fileName = null;
+		//do not reset absPath
 		// set lazy state
-		_parentFolder_ready = false;
-		return true;
+		parentFolder_ready = false;
+		loaded = false;
 	}
 
-	public Boolean setAbsPath(String path) {
+	public void setAbsPath(String path) {
 		absPath = path;
-		return true;
 	}
 
 	public void setFileName(String fileName) {

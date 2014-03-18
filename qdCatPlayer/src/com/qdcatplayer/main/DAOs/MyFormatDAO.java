@@ -10,8 +10,11 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyAlbum;
 import com.qdcatplayer.main.entities.MyBitrate;
 import com.qdcatplayer.main.entities.MyFormat;
+import com.qdcatplayer.main.entities.MyPath;
 
-public class MyFormatDAO extends _MyDAOAbstract<MyFormat> {
+public class MyFormatDAO extends _MyDAOAbstract<MyFormatDAO, MyFormat>
+implements _MyDAOInterface<MyFormatDAO, MyFormat>
+{
 
 	public MyFormatDAO(Context ctx, GlobalDAO g) {
 		super(ctx,g);
@@ -68,6 +71,12 @@ public class MyFormatDAO extends _MyDAOAbstract<MyFormat> {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	@Override
+	public void load(MyFormat from_) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

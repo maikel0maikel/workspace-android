@@ -7,7 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyArtistDAO;
 
 @DatabaseTable(tableName = "MyArtists")
-public class MyArtist extends _MyEntityAbstract<MyArtistDAO> {
+public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 	public static final String NAME_F = "name";
 
 	@ForeignCollectionField
@@ -25,7 +25,7 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO> {
 	}
 
 	@Override
-	public Integer delete() {
+	public Boolean delete() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -44,16 +44,10 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO> {
 		return getDao().insert(this);
 	}
 
-	@Override
-	public Boolean loadAllProperties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public Boolean reset() {
-		// TODO Auto-generated method stub
-		return null;
+	public void reset() {
+
 	}
 
 	public void setMySongs(ForeignCollection<MySong> mySongs) {

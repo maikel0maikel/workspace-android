@@ -11,14 +11,17 @@ import com.qdcatplayer.main.entities.MySong;
 
 import android.content.Context;
 
-public interface _MyEntityInterface<T> {
+public interface _MyEntityInterface<T,K> {
 	public Integer getId();
 	public void setId(Integer id);
-	public Boolean loadAllProperties();
-	public Boolean reset();
+	/**
+	 * Load all properties
+	 */
+	public void load();
+	public void reset();
 	public void setDao(T dao);
 	public T getDao();
 	public Integer insert();
 	public Boolean update();
-	public Integer delete();
+	public Boolean delete();
 }

@@ -10,10 +10,11 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MyPathDAO;
+import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.libraries.MyFileHelper;
 
 @DatabaseTable(tableName = "MyFolders")
-public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
+public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	public static final String ABSPATH_F = "absPath";
 	@DatabaseField(unique = true, canBeNull = false)
 	private String absPath = null;
@@ -42,7 +43,7 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 	}
 
 	@Override
-	public Integer delete() {
+	public Boolean delete() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -89,7 +90,11 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 	 * @return Khong bao gio return null, neu khong co thi return mang rong
 	 */
 	public ArrayList<MySong> getChildSongs() {
-		return getDao().getChildSongs(this);
+		if(childsSong==null)
+		{
+			childsSong = getDao().getChildSongs(this);
+		}
+		return childsSong;
 	}
 
 	public String getFolderName() {
@@ -101,7 +106,9 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 	}
 
 	public MyFolder getParentFolder() {
-		if (parentFolder_ready == true) {
+		//parent folder co bien Boolean rieng de kiem soat
+		//khong dung chung loaded vi ly do lazy loading
+		if (parentFolder_ready == true || parentFolder!=null) {
 			return parentFolder;
 		}
 		// do not know DAO !
@@ -125,26 +132,24 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO> {
 
 	@Override
 	public Integer insert() {
-		// TODO Auto-generated method stub
-		return getDao().insert(this);
+		if(getGlobalDAO().getSource()==MySource.DISK_SOURCE)
+		{
+			reset();
+			super.load();
+			return getDao().insert(this);
+		}
+		return -1;
 	}
 
-	@Override
-	public Boolean loadAllProperties() {
-		getFolderName();
-		getAbsPath();
-		getParentFolder();
-		return true;
-	}
 
 	@Override
-	public Boolean reset() {
+	public void reset() {
 		// clear all reference members
 		parentFolder = null;
-		folderName = null;
-		// set lazy state
 		parentFolder_ready = false;
-		return true;
+		folderName = null;
+		loaded = false;
+		//do not reset absPath
 	}
 
 	public void setAbsPath(String absPath_) {

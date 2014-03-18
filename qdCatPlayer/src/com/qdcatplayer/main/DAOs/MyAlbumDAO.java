@@ -10,9 +10,12 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyAlbum;
+import com.qdcatplayer.main.entities.MyArtist;
 import com.qdcatplayer.main.entities.MySong;
 
-public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
+public class MyAlbumDAO extends _MyDAOAbstract<MyAlbumDAO, MyAlbum>
+implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
+{
 	/**
 	 * Neu khong chi dinh GlobalDAO thi dat g=null (se tu dong tao)
 	 * @param ctx
@@ -113,5 +116,10 @@ public class MyAlbumDAO extends _MyDAOAbstract<MyAlbum> {
 		}
 		//do not support DISK SOURCE
 		return new ArrayList<MySong>();
+	}
+
+	@Override
+	public void load(MyAlbum obj) {
+		
 	}
 }

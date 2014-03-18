@@ -7,7 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyFormatDAO;
 
 @DatabaseTable(tableName = "MyFormats")
-public class MyFormat extends _MyEntityAbstract<MyFormatDAO> {
+public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 	public static final String EXTENSION_F = "extension";
 
 	@DatabaseField(unique = true, canBeNull = false)
@@ -27,7 +27,7 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO> {
 	}
 
 	@Override
-	public Integer delete() {
+	public Boolean delete() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -50,16 +50,10 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO> {
 		return getDao().insert(this);
 	}
 
-	@Override
-	public Boolean loadAllProperties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public Boolean reset() {
-		// TODO Auto-generated method stub
-		return null;
+	public void reset() {
+
 	}
 
 	public void setExtension(String extension) {

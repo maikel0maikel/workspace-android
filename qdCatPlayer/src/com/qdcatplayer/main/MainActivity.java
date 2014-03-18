@@ -39,6 +39,18 @@ public class MainActivity extends Activity {
 		h.getWritableDatabase();
 		
 		/*
+		MySong obj = new MySong();
+		obj.setId(8);
+		MySongDAO dao = new MySongDAO(getApplicationContext(), null);
+		dao.setSource(MySource.DB_SOURCE);
+		obj.setDao(dao);
+		obj.getPath();
+		obj.getArtist();
+		int i=999;
+		*/
+		//obj.getDao().setSource(MySource.DISK_SOURCE);
+		//obj.delete();
+		/*
 		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
 		MyAlbum ma=new MyAlbum("er234frdt");
 		ma.setDao(dao);
@@ -74,7 +86,39 @@ public class MainActivity extends Activity {
 		}
 		d1.release();
 		*/
+		
+		//Declare music folder
+		MyFolder fd=new MyFolder("/sdcard/music/");
+		//Init new MyFolderDAO for working with MyFolder Entity
+		MyFolderDAO dao = new MyFolderDAO(getApplicationContext(), null);
+		dao.setSource(MySource.DISK_SOURCE);
+		//Assign DAO to Entity (so far, Entity will pass
+		//related-DAO through any deep level FK reference)
+		fd.setDao(dao);
+		//Get all songs belong to this fd Folder recursively
+		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
+		//Fetch each song from result
+		for(MySong item:ss)
+		{
+			//call insert on current Entity
+			Log.w("qd", item.getPath().getFileName());
+			//item.getPath().getFileName();
+			item.insert();//F_Entity will auto insert and keep references
+		}
+		
+		
 		/*
+		MyAlbum ma=new MyAlbum();
+		ma.setId(3);
+		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
+		dao.setSource(MySource.DB_SOURCE);
+		ma.setDao(dao);
+		ArrayList<MySong> tmp = ma.getSongs();
+		int i=9;
+		*/
+	}
+	private void LoadToDB()
+	{
 		//Declare music folder
 		MyFolder fd=new MyFolder("/sdcard/music");
 		//Init new MyFolderDAO for working with MyFolder Entity
@@ -90,19 +134,7 @@ public class MainActivity extends Activity {
 			//call insert on current Entity
 			item.insert();//F_Entity will auto insert and keep references
 		}
-		*/
-		
-		/*
-		MyAlbum ma=new MyAlbum();
-		ma.setId(3);
-		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
-		dao.setSource(MySource.DB_SOURCE);
-		ma.setDao(dao);
-		ArrayList<MySong> tmp = ma.getSongs();
-		int i=9;
-		*/
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

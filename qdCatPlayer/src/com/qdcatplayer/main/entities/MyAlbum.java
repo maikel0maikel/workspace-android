@@ -11,7 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyAlbumDAO;
 
 @DatabaseTable(tableName = "MyAlbums")
-public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO> {
+public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 	/**
 	 * 
 	 */
@@ -32,7 +32,7 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO> {
 	}
 
 	@Override
-	public Integer delete() {
+	public Boolean delete() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -71,15 +71,8 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO> {
 	}
 
 	@Override
-	public Boolean loadAllProperties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public void reset() {
 
-	@Override
-	public Boolean reset() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public void setCover(Bitmap cover) {

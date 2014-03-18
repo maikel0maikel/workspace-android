@@ -7,22 +7,24 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.entities._MyEntityAbstract;
 
 import android.content.Context;
 
-public interface _MyDAOInterface<T> {
+public interface _MyDAOInterface<T,K> {
 	public Boolean release();
 	public Boolean init(Context ctx, GlobalDAO g);
 	public MySQLiteHelper getHelper();
 	public MyDBManager getManager();
 	public GlobalDAO getGlobalDAO();
-	public RuntimeExceptionDao<T,Integer> getDao();
+	public RuntimeExceptionDao<K,Integer> getDao();
 	public void setSource(Integer source);
 	public Integer getSource();
+	public void load(K from_);
 	
-	public ArrayList<T> getAll();
-	public T getById(Integer id);
-	public Integer insert(T obj);
-	public Boolean update(T obj);
-	public Boolean delete(T obj);
+	public ArrayList<K> getAll();
+	public K getById(Integer id);
+	public Integer insert(K obj);
+	public Boolean update(K obj);
+	public Boolean delete(K obj);
 }

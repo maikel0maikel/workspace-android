@@ -5,6 +5,7 @@ import android.media.MediaMetadataRetriever;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MySongDAO;
+import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.libraries.MyNumberHelper;
 
 /**
@@ -18,10 +19,15 @@ import com.qdcatplayer.main.libraries.MyNumberHelper;
  * 
  */
 @DatabaseTable(tableName = "MySongs")
-public class MySong extends _MyEntityAbstract<MySongDAO> {
-	public static final String PATH_ID = "path_id";
-
+public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 	public static final String ALBUM_ID = "album_id";
+
+	/**
+	 * Ban dau tat ca thuoc tinh deu la null va loaded=false
+	 * Mot khi co loi goi load mot object thi se goi toi loadAllProperties
+	 * de dua tat ca truoc du lieu vao
+	 */
+	public static final String PATH_ID = "path_id";
 
 	@DatabaseField(canBeNull = true, foreign = true)
 	private MyAlbum album = null;
@@ -38,7 +44,6 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 	@DatabaseField(canBeNull = false, foreign = true)
 	private MyFormat format = null;
 
-	// foreign
 	@DatabaseField(canBeNull = false, foreign = true)
 	private MyPath path = null;
 
@@ -51,146 +56,95 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 
 	public MySong() {
 	}
-
-	public MySong(String absPath) {
-		// init _path but not load right now
-		path = new MyPath();
-		path.setAbsPath(absPath);
-	}
-
 	@Override
-	public Integer delete() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean delete() {
+		return getDao().delete(this);
 	}
-
 	public MyAlbum getAlbum() {
-		// lazy load
-		if (album != null) {
-			return album;
+		super.load();
+		if(album!=null && album.getDao()==null)
+		{
+			album.setDao(getGlobalDAO().getMyAlbumDAO());
 		}
-		return getDao().getAlbum(this);
+		return album;
 	}
 
 	public MyArtist getArtist() {
-		// lazy load
-		if (artist != null) {
-			return artist;
+		super.load();
+		if(artist!=null && artist.getDao()==null)
+		{
+			artist.setDao(getGlobalDAO().getMyArtistDAO());
 		}
-		// required
-		if (getPath() == null) {
-			return null;
-		}
-
-		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-		retriever.setDataSource(getPath().getAbsPath());
-		String tmp = retriever
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-		artist = new MyArtist(tmp);
-		artist.setDao(getGlobalDAO().getMyArtistDAO());
 		return artist;
 	}
 
 	public MyBitrate getBirate() {
-		// lazy load
-		if (bitrate != null) {
-			return bitrate;
+		super.load();
+		if(bitrate!=null && bitrate.getDao()==null)
+		{
+			bitrate.setDao(getGlobalDAO().getMyBitrateDAO());
 		}
-		// required
-		if (getPath() == null) {
-			return null;
-		}
-
-		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-		retriever.setDataSource(getPath().getAbsPath());
-		String tmp = "128";// retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
-		bitrate = new MyBitrate(tmp);
-		bitrate.setDao(getGlobalDAO().getMyBitrateDAO());
 		return bitrate;
 	}
 
 	public Long getDuration() {
-		// lazy load
-		if (duration != null) {
-			return duration;
-		}
-		// required
-		if (getPath() == null) {
-			return null;
-		}
-		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-		retriever.setDataSource(getPath().getAbsPath());
-		String tmp = retriever
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-		duration = MyNumberHelper.stringToLong(tmp);
+		super.load();
 		return duration;
 	}
 
 	public MyFormat getFormat() {
-		// lazy load
-		if (format != null) {
-			return format;
+		super.load();
+		if(format!=null && format.getDao()==null)
+		{
+			format.setDao(getGlobalDAO().getMyFormatDAO());
 		}
-		// required
-		if (getPath() == null) {
-			return null;
-		}
-
-		// read sound tag from _path object
-		format = new MyFormat(getPath().getFileExtension(false));
-		format.setDao(getGlobalDAO().getMyFormatDAO());
 		return format;
 	}
 
 	public MyPath getPath() {
-		// pass Global DAO to MyPath for lazy load and after-query if needed
-		if (path != null && path.getDao()==null) {
+		if(getGlobalDAO().getSource()!=MySource.DISK_SOURCE)
+		{
+			super.load();
+		}
+		if(path!=null && path.getDao()==null)
+		{
 			path.setDao(getGlobalDAO().getMyPathDAO());
 		}
 		return path;
 	}
 
 	public String getTitle() {
-		// lazy load
-		if (title != null) {
-			return title;
-		}
-		return getDao().getTitle(this);
+		super.load();
+		return title;
 
 	}
-
+	/**
+	 * Chi ho tro DISK SOURCE
+	 */
 	@Override
 	public Integer insert() {
-		return getDao().insert(this);// new id
+		if(getGlobalDAO().getSource()==MySource.DISK_SOURCE)
+		{
+			//force to update all value first
+			reset();
+			super.load();
+			return getDao().insert(this);//new id
+		}
+		return -1;
 	}
 
 	@Override
-	public Boolean loadAllProperties() {
-		getPath();
-		getAlbum();
-		getArtist();
-		getBirate();
-		getDuration();
-		getFormat();
-		getId();
-		getTitle();
-
-		return true;
-	}
-
-	@Override
-	public Boolean reset() {
+	public void reset() {
 		title = null;
 		album = null;
 		bitrate = null;
 		duration = null;
 		format = null;
-		// reset path
-		if (path != null) {
-			path.reset();
-		}
-		return true;
+		artist = null;
+		//do not reset path, id
+		loaded = false;
 	}
+
 
 	public void setAlbum(MyAlbum album) {
 		this.album = album;
@@ -213,52 +167,22 @@ public class MySong extends _MyEntityAbstract<MySongDAO> {
 	}
 
 	public void setPath(MyPath absPath) {
-		// init new _path
 		path = absPath;
-		// then reset
-		reset();
 	}
 
-	public void setPath(String absPath) {
-		// init new _path
+	public void setPath(String absPath_)
+	{
 		path = new MyPath();
-		path.setAbsPath(absPath);
-		// then reset
-		reset();
+		path.setAbsPath(absPath_);
+		path.setDao(getGlobalDAO().getMyPathDAO());
 	}
 
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = title==null?"":title;
 	}
-
 	@Override
 	public Boolean update() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	@Override
-	public void setDao(MySongDAO dao_) {
-		super.setDao(dao_);
-		//set for all FK
-		if(album!=null)
-		{
-			album.setDao(getGlobalDAO().getMyAlbumDAO());
-		}
-		if(artist!=null)
-		{
-			artist.setDao(getGlobalDAO().getMyArtistDAO());
-		}
-		if(bitrate!=null)
-		{
-			bitrate.setDao(getGlobalDAO().getMyBitrateDAO());
-		}
-		if(format!=null)
-		{
-			format.setDao(getGlobalDAO().getMyFormatDAO());
-		}
-		if(path!=null)
-		{
-			path.setDao(getGlobalDAO().getMyPathDAO());
-		}
 	}
 }

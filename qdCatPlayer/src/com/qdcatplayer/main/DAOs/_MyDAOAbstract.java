@@ -8,9 +8,11 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
+import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.entities._MyEntityAbstract;
 import com.qdcatplayer.main.entities._MyEntityInterface;
 
-public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T>, _GlobalDAOInterface {
+public abstract class _MyDAOAbstract<T,K> implements _MyDAOInterface<T,K>, _GlobalDAOInterface {
 	/**
 	 * Lam viec truc tiep voi MyDBmanager, cac DAO nguyen thuy duoc Cache
 	 * trong day
@@ -82,13 +84,12 @@ public abstract class _MyDAOAbstract<T> implements _MyDAOInterface<T>, _GlobalDA
 		return _globalDAO;
 	}
 	@Override
-	public Integer insert(T obj) {
+	public Integer insert(K obj) {
 		if(getDao()==null)
 		{
 			return -1;
 		}
 		try{
-			((_MyEntityInterface<?>)obj).loadAllProperties();
 			getDao().create(obj);
 		}catch(Exception e){
 			//object co truong name trung voi record trong CSDL do unique
