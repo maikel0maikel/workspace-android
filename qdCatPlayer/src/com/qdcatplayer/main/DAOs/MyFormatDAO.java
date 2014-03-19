@@ -42,41 +42,26 @@ implements _MyDAOInterface<MyFormatDAO, MyFormat>
 	}
 
 	@Override
-	public Boolean update(MyFormat obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean delete(MyFormat obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
 	public Integer insert(MyFormat obj) {
 		//neu object chua co trong DB thi goi super insert
-		try {
-			MyFormat tmp = getDao().queryBuilder().where().eq(MyFormat.EXTENSION_F, obj.getExtension()).queryForFirst();
-			if(tmp==null)
-			{
-				super.insert(obj);
+		if(getSource()==MySource.DISK_SOURCE)
+		{
+			try {
+				MyFormat tmp = getDao().queryBuilder().where().eq(MyFormat.EXTENSION_F, obj.getExtension()).queryForFirst();
+				if(tmp==null)
+				{
+					super.insert(obj);
+				}
+				else
+				{
+					obj.setId(tmp.getId());
+				}
+				return 1;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
 			}
-			else
-			{
-				obj.setId(tmp.getId());
-			}
-			return 1;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return -1;
 		}
+		return -1;
 	}
-
-	@Override
-	public void load(MyFormat from_) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

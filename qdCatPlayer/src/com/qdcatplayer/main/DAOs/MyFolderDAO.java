@@ -51,12 +51,6 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 		return null;
 	}
 
-	@Override
-	public Boolean delete(MyFolder obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public MyFolder getParentFolder(MyFolder myFolder) {
 		//see SOURCE to choose Provider 
 		File f = new File(myFolder.getAbsPath());
@@ -70,30 +64,30 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 	}
 	@Override
 	public Integer insert(MyFolder obj) {
-		if(getDao()==null)//qd fail
+		if(getSource()==MySource.DISK_SOURCE)
 		{
-			return -1;
-		}
-		try{
-			//create FK First
-			if(obj.getParentFolder()!=null)
-			{
-				//xet coi folder nay da co trong he thong
-				MyFolder tmp = getDao().queryBuilder().where().eq(MyFolder.ABSPATH_F, obj.getAbsPath()).queryForFirst();
-				if(tmp!=null)
+			try{
+				//create FK First
+				if(obj.getParentFolder()!=null)
 				{
-					obj.setId(tmp.getId());
-					return 1;
+					//xet coi folder nay da co trong he thong
+					MyFolder tmp = getDao().queryBuilder().where().eq(MyFolder.ABSPATH_F, obj.getAbsPath()).queryForFirst();
+					if(tmp!=null)
+					{
+						obj.setId(tmp.getId());
+						return 1;
+					}
+					//goi insert folder cha truoc
+					obj.getParentFolder().insert();
 				}
-				//goi insert folder cha truoc
-				obj.getParentFolder().insert();
+				return super.insert(obj);
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+				return -1;
 			}
-			return getDao().create(obj);
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-			return -1;
 		}
+		return -1;
 	}
 	public ArrayList<MySong> getAllRecursiveSongs(MyFolder obj)
 	{
@@ -192,7 +186,7 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 		}
 		else if(getSource()==MySource.DB_SOURCE)
 		{
-			getDao().refresh(obj);
+			super.load(obj);
 		}
 	}
 }

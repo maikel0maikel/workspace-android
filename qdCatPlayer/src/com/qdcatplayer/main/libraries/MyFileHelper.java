@@ -1,5 +1,7 @@
 package com.qdcatplayer.main.libraries;
 
+import java.io.File;
+
 public class MyFileHelper {
 	public static final String[] soundExtention =
 		{
@@ -51,6 +53,24 @@ public class MyFileHelper {
 			{
 				return true;
 			}
+		}
+		return false;
+	}
+	/**
+	 * Xoa 1 file khoi he thong
+	 * @param absPath
+	 * @return
+	 */
+	public static Boolean removeFile(String absPath)
+	{
+		if(absPath==null || absPath.equals(""))
+		{
+			return false;
+		}
+		File f = new File(absPath);
+		if(f.isFile())
+		{
+			return f.delete();
 		}
 		return false;
 	}

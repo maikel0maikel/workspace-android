@@ -56,13 +56,23 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 
 	public MySong() {
 	}
-	@Override
-	public Boolean delete() {
-		return getDao().delete(this);
+	
+	/**
+	 * Neu khoi tao tu ID thi bat buoc phai set DB SOURCE
+	 * Neu da co san obj voi path, absPath thi SOURCE nao cung duoc
+	 * @param removeFromDisk
+	 * @return
+	 */
+	public Boolean delete(Boolean removeFromDisk)
+	{
+		return getDao().delete(this, true);
 	}
+	/*
+	 * Ho tro pass DAO neu FK chua co, do su dung getById tu lop DAO
+	 */
 	public MyAlbum getAlbum() {
 		super.load();
-		if(album!=null && album.getDao()==null)
+		if(album!=null && album.getDao()==null)//very importance, vi super.load khong ho tro pass DAO khi oad tu DB SOURCE
 		{
 			album.setDao(getGlobalDAO().getMyAlbumDAO());
 		}
@@ -121,6 +131,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 	/**
 	 * Chi ho tro DISK SOURCE
 	 */
+	/*
 	@Override
 	public Integer insert() {
 		if(getGlobalDAO().getSource()==MySource.DISK_SOURCE)
@@ -132,9 +143,12 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 		}
 		return -1;
 	}
-
+	*/
+	
 	@Override
 	public void reset() {
+		super.reset();
+		
 		title = null;
 		album = null;
 		bitrate = null;
@@ -142,7 +156,6 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 		format = null;
 		artist = null;
 		//do not reset path, id
-		loaded = false;
 	}
 
 
@@ -180,9 +193,5 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 	public void setTitle(String title) {
 		this.title = title==null?"":title;
 	}
-	@Override
-	public Boolean update() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 }

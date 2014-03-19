@@ -17,7 +17,7 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 	private String mimeType = "audio/mp3";
 
 	@ForeignCollectionField
-	private ForeignCollection<MySong> mySongs = null;
+	private ForeignCollection<MySong> songs = null;
 
 	public MyFormat() {
 	}
@@ -26,34 +26,31 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 		setExtension(extension);
 	}
 
-	@Override
-	public Boolean delete() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public String getExtension() {
+		super.load();
 		return extension;
 	}
 
 	public String getMimeType() {
+		super.load();
 		return mimeType;
 	}
 
 	public ForeignCollection<MySong> getMySongs() {
-		return mySongs;
-	}
-
-	@Override
-	public Integer insert() {
-		// TODO Auto-generated method stub
-		return getDao().insert(this);
+		super.load();
+		return songs;
 	}
 
 
 	@Override
 	public void reset() {
-
+		super.reset();
+		
+		extension = null;
+		mimeType = null;
+		songs = null;
+		
 	}
 
 	public void setExtension(String extension) {
@@ -65,12 +62,16 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 	}
 
 	public void setMySongs(ForeignCollection<MySong> mySongs) {
-		this.mySongs = mySongs;
+		this.songs = mySongs;
 	}
-
 	@Override
-	public Boolean update() {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer insert() {
+		//very importance
+		//since MyBitrate may be loaded when fetching MySong
+		//if not force to set loaded=true then
+		//new load script will be acted and reset will be called
+		//then all data pre-loaded will swiped out
+		setLoaded(true);
+		return super.insert();
 	}
 }

@@ -42,13 +42,11 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 		setAbsPath(absPath);
 	}
 
-	@Override
-	public Boolean delete() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public String getAbsPath() {
+		if(getGlobalDAO().getSource()!=MySource.DISK_SOURCE)
+		{
+			super.load();
+		}
 		return absPath;
 	}
 
@@ -130,25 +128,16 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 		return paths;
 	}
 
-	@Override
-	public Integer insert() {
-		if(getGlobalDAO().getSource()==MySource.DISK_SOURCE)
-		{
-			reset();
-			super.load();
-			return getDao().insert(this);
-		}
-		return -1;
-	}
-
 
 	@Override
 	public void reset() {
-		// clear all reference members
+		super.reset();
+		//clear all reference members
 		parentFolder = null;
 		parentFolder_ready = false;
 		folderName = null;
-		loaded = false;
+		paths = null;
+		childsSong = null;
 		//do not reset absPath
 	}
 
@@ -167,11 +156,4 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	public void setPaths(ForeignCollection<MyPath> paths) {
 		this.paths = paths;
 	}
-
-	@Override
-	public Boolean update() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

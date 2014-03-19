@@ -39,15 +39,10 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 		setAbsPath(absPath);
 	}
 
-	@Override
-	public Boolean delete() {
-		return getDao().delete(this);
-	}
-
 	public String getAbsPath() {
-		if(absPath==null)
+		if(getGlobalDAO().getSource()!=MySource.DISK_SOURCE)//very importance
 		{
-			absPath = getDao().getAbsPath(this);
+			super.load();
 		}
 		return absPath;
 	}
@@ -91,26 +86,15 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	}
 
 	@Override
-	public Integer insert() {
-		if(getGlobalDAO().getSource()==MySource.DISK_SOURCE)
-		{
-			//Force to load all properties first
-			reset();
-			super.load();
-			return getDao().insert(this);
-		}
-		return -1;
-	}
-
-	@Override
 	public void reset() {
+		super.reset();
 		//clear member
 		parentFolder = null;
 		fileName = null;
 		//do not reset absPath
 		// set lazy state
 		parentFolder_ready = false;
-		loaded = false;
+		
 	}
 
 	public void setAbsPath(String path) {
@@ -125,10 +109,5 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 		this.parentFolder = parentFolder;
 	}
 
-	@Override
-	public Boolean update() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

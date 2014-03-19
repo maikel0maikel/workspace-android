@@ -48,53 +48,42 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 		{
 			return -1;
 		}
-		//load all direct properties
-		try{
-			//neu path co roi trong he thong thi khong add
-			if(obj.getId() != null && obj.getId() > 0)
+		if(getSource()==MySource.DISK_SOURCE)
+		{
+			//load all direct properties
+			try{
+				//neu path co roi trong he thong thi khong add
+				if(obj.getId() != null && obj.getId() > 0)
+				{
+					return -1;
+				}
+				//neu path co roi trong he thong thi khong add ma
+				//chi cap nhat id sang
+				MyPath tmp = getDao().queryBuilder().where().eq(MyPath.ABSPATH_F, obj.getAbsPath()).queryForFirst();
+				if(tmp!=null)
+				{
+					obj.setId(tmp.getId());
+					return 1;
+				}
+				//create FK First
+				if(obj.getParentFolder()!=null)
+				{
+					obj.getParentFolder().insert();
+				}
+				return getDao().create(obj);
+			}catch(Exception e)
 			{
+				e.printStackTrace();
 				return -1;
 			}
-			//neu path co roi trong he thong thi khong add ma
-			//chi cap nhat id sang
-			MyPath tmp = getDao().queryBuilder().where().eq(MyPath.ABSPATH_F, obj.getAbsPath()).queryForFirst();
-			if(tmp!=null)
-			{
-				obj.setId(tmp.getId());
-				return 1;
-			}
-			//create FK First
-			if(obj.getParentFolder()!=null)
-			{
-				obj.getParentFolder().insert();
-			}
-			return getDao().create(obj);
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-			return -1;
 		}
+		return -1;
 	}
 
 	@Override
 	public Boolean update(MyPath obj) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Boolean delete(MyPath obj) {
-		if(getSource()==MySource.DB_SOURCE)
-		{
-			getDao().delete(obj);
-			//do not call Song delete here because of loopback
-			return true;
-		}
-		else if(getSource()==MySource.DISK_SOURCE)
-		{
-			return true;
-		}
-		return false;
 	}
 
 	public MyFolder getParentFolder(MyPath obj) {
@@ -150,7 +139,7 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 		}
 		else if(getSource()==MySource.DB_SOURCE)
 		{
-			getDao().refresh(obj);
+			super.load(obj);
 		}
 	}
 

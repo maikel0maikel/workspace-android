@@ -12,6 +12,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.entities.MyAlbum;
 import com.qdcatplayer.main.entities.MyArtist;
 import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.libraries.MyFileHelper;
 
 public class MyAlbumDAO extends _MyDAOAbstract<MyAlbumDAO, MyAlbum>
 implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
@@ -54,43 +55,29 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 	}
 
 	@Override
-	public Boolean delete(MyAlbum obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
 	public Integer insert(MyAlbum obj) {
 		//neu object chua co trong DB thi goi super insert
-		try {
-			MyAlbum tmp = getDao().queryBuilder().where().eq(MyAlbum.NAME_F, obj.getName()).queryForFirst();
-			if(tmp==null)
-			{
-				super.insert(obj);
-			}
-			else
-			{
-				obj.setId(tmp.getId());
-				obj.reset();
-			}
-			return 1;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return -1;
-		}
-	}
-
-	public String getName(MyAlbum obj) {
-		if(getSource()==MySource.DB_SOURCE)
+		if(getSource()==MySource.DISK_SOURCE)
 		{
-			if(obj.getId() > 0)
-			{
-				getDao().refresh(obj);
-				return obj.getName();
+			try {
+				MyAlbum tmp = getDao().queryBuilder().where().eq(MyAlbum.NAME_F, obj.getName()).queryForFirst();
+				if(tmp==null)
+				{
+					super.insert(obj);
+				}
+				else
+				{
+					obj.setId(tmp.getId());
+					obj.reset();
+				}
+				return 1;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
 			}
 		}
-		//do not support DISK SOURCE
-		return "";
+		//DO NOT SUPPORT DB SOURCE
+		return -1;
 	}
 
 	public ArrayList<MySong> getSongs(MyAlbum obj) {
@@ -116,10 +103,5 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 		}
 		//do not support DISK SOURCE
 		return new ArrayList<MySong>();
-	}
-
-	@Override
-	public void load(MyAlbum obj) {
-		
 	}
 }

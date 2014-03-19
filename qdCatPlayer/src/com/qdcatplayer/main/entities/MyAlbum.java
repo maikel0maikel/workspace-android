@@ -31,25 +31,13 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 		setName(name);
 	}
 
-	@Override
-	public Boolean delete() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public Bitmap getCover() {
 		return cover;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
 	public String getName() {
-		if(name==null)
-		{
-			name = getDao().getName(this);
-		}
+		super.load();
 		return name;
 	}
 	/**
@@ -65,31 +53,28 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 	}
 
 	@Override
-	public Integer insert() {
-		// TODO Auto-generated method stub
-		return getDao().insert(this);
-	}
-
-	@Override
 	public void reset() {
-
+		super.reset();
+		cover = null;
+		name = null;
+		songs = null;
 	}
 
 	public void setCover(Bitmap cover) {
 		this.cover = cover;
 	}
 
-	public void setId(Integer id_) {
-		id = id_ == null ? 0 : id_;
-	}
-
 	public void setName(String name_) {
 		name = name_ == null ? "" : name_;
 	}
-
 	@Override
-	public Boolean update() {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer insert() {
+		//very importance
+		//since MyBitrate may be loaded when fetching MySong
+		//if not force to set loaded=true then
+		//new load script will be acted and reset will be called
+		//then all data pre-loaded will swiped out
+		setLoaded(true);
+		return super.insert();
 	}
 }

@@ -18,6 +18,8 @@ public interface _MyEntityInterface<T,K> {
 	 * Load all properties
 	 */
 	public void load();
+	public Boolean isLoaded();
+	public void setLoaded(Boolean loaded);
 	public void reset();
 	public void setDao(T dao);
 	public T getDao();

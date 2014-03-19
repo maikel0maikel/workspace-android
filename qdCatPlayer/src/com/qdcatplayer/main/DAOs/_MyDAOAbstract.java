@@ -8,6 +8,7 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
+import com.qdcatplayer.main.entities.MyAlbum;
 import com.qdcatplayer.main.entities.MySong;
 import com.qdcatplayer.main.entities._MyEntityAbstract;
 import com.qdcatplayer.main.entities._MyEntityInterface;
@@ -89,15 +90,19 @@ public abstract class _MyDAOAbstract<T,K> implements _MyDAOInterface<T,K>, _Glob
 		{
 			return -1;
 		}
-		try{
-			getDao().create(obj);
-		}catch(Exception e){
-			//object co truong name trung voi record trong CSDL do unique
-			//insert khong duoc return ma loi
-			e.printStackTrace();
-			return -1;
+		if(getSource()==MySource.DISK_SOURCE)
+		{
+			try{
+				getDao().create(obj);
+				return 1;
+			}catch(Exception e){
+				//object co truong name trung voi record trong CSDL do unique
+				//insert khong duoc return ma loi
+				e.printStackTrace();
+				return -1;
+			}
 		}
-		return 1;
+		return -1;
 	}
 	@Override
 	public void setSource(Integer source_) {
@@ -113,5 +118,37 @@ public abstract class _MyDAOAbstract<T,K> implements _MyDAOInterface<T,K>, _Glob
 			return getGlobalDAO().getSource();
 		}
 		return 0;//by default
+	}
+	/**
+	 * getDao().refresh(obj);
+	 * DO NOT SUPPORT LOAD FROM DISK SOURCE
+	 * IF YOU WANT OTHER WAY YOU CAN Override
+	 */
+	@Override
+	public void load(K obj) {
+		if(getSource()==MySource.DB_SOURCE)
+		{
+			getDao().refresh(obj);
+		}
+		//do not support load from DISK SOURCE
+	}
+	/**
+	 * DO NOT SUPPORT DISK SOURCE
+	 * getDao().delete(obj);
+	 */
+	@Override
+	public Boolean delete(K obj) {
+		if(getSource()==MySource.DB_SOURCE)
+		{
+			getDao().delete(obj);
+			return true;
+		}
+		//DO NOT SUPPORT DISK SOURCE
+		return false;
+	}
+	@Override
+	public Boolean update(K obj) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

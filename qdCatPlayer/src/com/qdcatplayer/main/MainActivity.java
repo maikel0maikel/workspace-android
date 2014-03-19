@@ -37,6 +37,18 @@ public class MainActivity extends Activity {
 		MyDBManager mn=new MyDBManager();
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
+		/*
+		MySongDAO dao = new MySongDAO(getApplicationContext(),null);
+		dao.setSource(MySource.DB_SOURCE);//very importance
+		MySong obj = new MySong();//dao.getById(8);
+		obj.setId(13);
+		obj.setDao(dao);
+		obj.load();
+		obj.getPath().getAbsPath();
+		obj.getAlbum().getName();
+		
+		*/
+		
 		
 		/*
 		MySong obj = new MySong();
@@ -105,6 +117,7 @@ public class MainActivity extends Activity {
 			//item.getPath().getFileName();
 			item.insert();//F_Entity will auto insert and keep references
 		}
+		
 		
 		
 		/*

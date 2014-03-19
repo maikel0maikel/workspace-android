@@ -24,12 +24,6 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 		setName(name);
 	}
 
-	@Override
-	public Boolean delete() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public ForeignCollection<MySong> getMySongs() {
 		return mySongs;
 	}
@@ -38,16 +32,11 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 		return name;
 	}
 
-	@Override
-	public Integer insert() {
-		// TODO Auto-generated method stub
-		return getDao().insert(this);
-	}
-
 
 	@Override
 	public void reset() {
-
+		super.reset();
+		name = null;
 	}
 
 	public void setMySongs(ForeignCollection<MySong> mySongs) {
@@ -57,10 +46,15 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 	public void setName(String name_) {
 		name = name_ == null ? "" : name_;
 	}
-
 	@Override
-	public Boolean update() {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer insert() {
+		//very importance
+		//since MyBitrate may be loaded when fetching MySong
+		//if not force to set loaded=true then
+		//new load script will be acted and reset will be called
+		//then all data pre-loaded will swiped out
+		setLoaded(true);
+		return super.insert();
 	}
+
 }

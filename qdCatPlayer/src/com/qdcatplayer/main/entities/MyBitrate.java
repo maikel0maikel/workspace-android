@@ -10,7 +10,7 @@ import com.qdcatplayer.main.DAOs.MyBitrateDAO;
 public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO, MyBitrate> {
 	public static final String VALUE_F = "value";
 	@ForeignCollectionField
-	private ForeignCollection<MySong> mySongs = null;
+	private ForeignCollection<MySong> songs = null;
 	@DatabaseField(unique=true, canBeNull=false)
 	private Long value=0l;//never null
 	public MyBitrate() {
@@ -38,31 +38,23 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO, MyBitrate> {
 			value = 0l;
 		}
 	}
-	
-	@Override
-	public Boolean delete() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	public ForeignCollection<MySong> getMySongs() {
-		return mySongs;
+		return songs;
 	}
 	public Long getValue()
 	{
 		return value;
 	}
-	@Override
-	public Integer insert() {
-		// TODO Auto-generated method stub
-		return getDao().insert(this);
-	}
 
 	@Override
 	public void reset() {
-
+		value = null;
+		songs = null;
+		super.reset();
 	}
 	public void setMySongs(ForeignCollection<MySong> mySongs) {
-		this.mySongs = mySongs;
+		this.songs = mySongs;
 	}
 	public Long setValue()
 	{
@@ -72,8 +64,14 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO, MyBitrate> {
 		this.value = value;
 	}
 	@Override
-	public Boolean update() {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer insert() {
+		//very importance
+		//since MyBitrate may be loaded when fetching MySong
+		//if not force to set loaded=true then
+		//new load script will be acted and reset will be called
+		//then all data pre-loaded will swiped out
+		setLoaded(true);
+		return super.insert();
 	}
+
 }

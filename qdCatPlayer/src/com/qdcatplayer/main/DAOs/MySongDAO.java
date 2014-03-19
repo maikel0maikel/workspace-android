@@ -18,6 +18,7 @@ import com.qdcatplayer.main.entities.MyBitrate;
 import com.qdcatplayer.main.entities.MyFormat;
 import com.qdcatplayer.main.entities.MyPath;
 import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.libraries.MyFileHelper;
 import com.qdcatplayer.main.libraries.MyNumberHelper;
 
 /**
@@ -45,10 +46,16 @@ implements _MyDAOInterface<MySongDAO,MySong>
         re.addAll(tmp);
         return re;
 	}
+    /**
+     * Ho tro pass DAO cho obj tra ve
+     */
     @Override
 	public MySong getById(Integer id)
 	{
-		return getDao().queryForId(id);	
+		MySong re = getDao().queryForId(id);
+		re.setDao(this);
+		re.setLoaded(true);//very importance
+		return re;
 	}
 
 	@Override
@@ -58,32 +65,35 @@ implements _MyDAOInterface<MySongDAO,MySong>
 		{
 			return -1;
 		}
-		try{
-			MyPath tmp = getGlobalDAO().getMyPathDAO()
-					.getDao().queryBuilder()
-					.where().eq(MyPath.ABSPATH_F, obj.getPath().getAbsPath())
-					.queryForFirst();
-			//neu Path da ton tai thi bo qua insert luon
-			if(tmp!=null)
-			{
-				obj.getPath().setId(tmp.getId());
-				return -1;
-			}
-			
-			//create FK First
-			obj.getAlbum().insert();
-			obj.getArtist().insert();
-			obj.getBirate().insert();
-			obj.getFormat().insert();
-			obj.getPath().insert();
-			int re = getDao().create(obj);
-			return re;
-		}catch(Exception e)
+		if(getSource()==MySource.DISK_SOURCE)
 		{
-			//e.printStackTrace();
-			return -1;//mac du insert thanh cong thi van bi quang Exception
+			try{
+				MyPath tmp = getGlobalDAO().getMyPathDAO()
+						.getDao().queryBuilder()
+						.where().eq(MyPath.ABSPATH_F, obj.getPath().getAbsPath())
+						.queryForFirst();
+				//neu Path da ton tai thi bo qua insert luon
+				if(tmp!=null)
+				{
+					obj.getPath().setId(tmp.getId());
+					return -1;
+				}
+				
+				//create FK First
+				obj.getAlbum().insert();//FAIL HERE
+				obj.getArtist().insert();
+				obj.getBirate().insert();
+				obj.getFormat().insert();
+				obj.getPath().insert();
+				int re = getDao().create(obj);
+				return re;
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+				return -1;//mac du insert thanh cong thi van bi quang Exception
+			}
 		}
-        
+        return -1;
 	}
 	@Override
 	public Boolean update(MySong obj)
@@ -98,9 +108,10 @@ implements _MyDAOInterface<MySongDAO,MySong>
     {
         if(getSource()==MySource.DB_SOURCE)
         {
-        	//delete song first
+        	//get path for tmp use
 			MyPath path = obj.getPath();
-			getDao().delete(obj);
+			//delete song first by call super method
+			super.delete(obj);//#########################
 			//then delete path
 			if(path!=null)
 			{
@@ -110,15 +121,11 @@ implements _MyDAOInterface<MySongDAO,MySong>
         }
         else if(getSource()==MySource.DISK_SOURCE)
         {
-        	//delete by absPath
-        	String absPath = obj.getPath().getAbsPath();
-        	File f = new File(absPath);
-        	if(f!=null && f.isFile())
+        	if(obj.getPath()==null)
         	{
-        		f.delete();
-        		return true;
+        		return false;
         	}
-        	return false;
+        	return MyFileHelper.removeFile(obj.getPath().getAbsPath());
         }
         return false;
     }
@@ -169,50 +176,14 @@ implements _MyDAOInterface<MySongDAO,MySong>
 		}
 		return null;
 	}
-	public String getTitle(MySong obj) {
-		if(getSource()==MySource.DB_SOURCE)
-		{
-			if(obj.getId()>0)
-			{
-				getDao().refresh(obj);
-				return obj.getTitle();
-			}
-		}
-		else if(getSource()==MySource.DISK_SOURCE)
-		{
-			// required
-			if (obj.getPath() == null) {
-				return "";
-			}
-			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-			retriever.setDataSource(obj.getPath().getAbsPath());
-			String title = retriever
-					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-			if (title == null) {
-				title = "";
-			}
-			return title;
-		}
-		return "";
-	}
-	public MyPath getPath(MySong obj) {
-		if(getSource()==MySource.DB_SOURCE)
-		{
-			getDao().refresh(obj);
-			if(obj.getPath()==null)
-			{
-				return null;
-			}
-			return obj.getPath();
-		}
-		//do not support get Path from DISK source
-		return null;
-	}
+	/**
+	 * Khong ho tro pass DAO, phan quan ly pass DAO thuoc MySong
+	 */
 	@Override
 	public void load(MySong obj) {
 		if(getSource()==MySource.DB_SOURCE)
 		{
-			getDao().refresh(obj);
+			super.load(obj);
 		}
 		else if(getSource()==MySource.DISK_SOURCE)
 		{
@@ -229,7 +200,7 @@ implements _MyDAOInterface<MySongDAO,MySong>
 			tmp = retriever
 					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
 			MyAlbum album = new MyAlbum(tmp);
-			album.setDao(getGlobalDAO().getMyAlbumDAO());
+			//album.setDao(getGlobalDAO().getMyAlbumDAO());
 			obj.setAlbum(album);
 			
 			tmp = retriever
@@ -239,20 +210,63 @@ implements _MyDAOInterface<MySongDAO,MySong>
 			tmp = retriever
 					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 			MyArtist artist = new MyArtist(tmp);
-			artist.setDao(getGlobalDAO().getMyArtistDAO());
+			//artist.setDao(getGlobalDAO().getMyArtistDAO());
 			obj.setArtist(artist);
 			
 			//tmp = retriever
 			//		.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
 			MyBitrate bitrate = new MyBitrate("128");
-			bitrate.setDao(getGlobalDAO().getMyBitrateDAO());
+			//bitrate.setDao(getGlobalDAO().getMyBitrateDAO());
 			obj.setBitrate(bitrate);
 			
 			MyFormat format = new MyFormat("MP3");
-			format.setDao(getGlobalDAO().getMyFormatDAO());
+			//format.setDao(getGlobalDAO().getMyFormatDAO());
 			obj.setFormat(format);
 			
 			//DONE
+		}
+	}
+	/**
+	 * Phai set DB SOURCE cho dao truoc
+	 * @param obj
+	 * @param removeFromDisk
+	 * @return
+	 */
+	public Boolean delete(MySong obj, Boolean removeFromDisk) {
+		if(obj==null || obj.getPath()==null)
+		{
+			return false;
+		}
+		if(removeFromDisk)
+		{
+			//neu obj da co san absPath va tu DISK
+			if(getSource()==MySource.DISK_SOURCE
+					&& obj.getPath()!=null
+					&& obj.getPath().getAbsPath()!=null)
+			{
+				return delete(obj);
+			}
+			
+			//Init new 2 layers delete script
+			Integer bk = obj.getGlobalDAO().getSource();
+			//try to switch to DB SOURCE first to get info
+			obj.getGlobalDAO().setSource(MySource.DB_SOURCE);
+			//call to load absPath in Path fisrt
+			obj.getPath().getAbsPath();//trigger load absPath before delete from DB
+			//call delete
+			obj.delete();
+			//absPath would still be existed after call above delete
+			//change to DISK SOURCE
+			obj.getGlobalDAO().setSource(MySource.DISK_SOURCE);
+			obj.delete();
+			//swicth to previous SOURCE
+			obj.getGlobalDAO().setSource(bk);
+			//finish
+			return true;
+		}
+		else
+		{
+			return delete(obj);
 		}
 	}
 }

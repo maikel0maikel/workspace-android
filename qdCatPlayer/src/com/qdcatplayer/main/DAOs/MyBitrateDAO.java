@@ -46,36 +46,28 @@ implements _MyDAOInterface<MyBitrateDAO, MyBitrate>
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public Boolean delete(MyBitrate obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	@Override
 	public Integer insert(MyBitrate obj) {
 		//neu object chua co trong DB thi goi super insert
-		try {
-			MyBitrate tmp = getDao().queryBuilder().where().eq(MyBitrate.VALUE_F, obj.getValue()).queryForFirst();
-			if(tmp==null)
-			{
-				super.insert(obj);
+		if(getSource()==MySource.DISK_SOURCE)
+		{
+			try {
+				MyBitrate tmp = getDao().queryBuilder().where().eq(MyBitrate.VALUE_F, obj.getValue()).queryForFirst();
+				if(tmp==null)
+				{
+					super.insert(obj);
+				}
+				else
+				{
+					obj.setId(tmp.getId());
+					obj.reset();
+				}
+				return 1;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
 			}
-			else
-			{
-				obj.setId(tmp.getId());
-				obj.reset();
-			}
-			return 1;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return -1;
 		}
-	}
-
-	@Override
-	public void load(MyBitrate obj) {
-		
+		return -1;
 	}
 }
