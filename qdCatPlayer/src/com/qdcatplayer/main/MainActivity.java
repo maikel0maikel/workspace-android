@@ -12,13 +12,17 @@ import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
+import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
+import com.qdcatplayer.main.FileSystem.MyFolderChanges;
 import com.qdcatplayer.main.entities.MyAlbum;
 import com.qdcatplayer.main.entities.MyFolder;
 import com.qdcatplayer.main.entities.MyPath;
 import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.libraries.MyMD5;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.FileObserver;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
@@ -37,105 +41,43 @@ public class MainActivity extends Activity {
 		MyDBManager mn=new MyDBManager();
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
-		/*
-		MySongDAO dao = new MySongDAO(getApplicationContext(),null);
-		dao.setSource(MySource.DB_SOURCE);//very importance
-		MySong obj = new MySong();//dao.getById(8);
-		obj.setId(13);
-		obj.setDao(dao);
-		obj.load();
-		obj.getPath().getAbsPath();
-		obj.getAlbum().getName();
-		
-		*/
 		
 		
-		/*
-		MySong obj = new MySong();
-		obj.setId(8);
-		MySongDAO dao = new MySongDAO(getApplicationContext(), null);
+	}
+	private void getSongsFromFolderId()
+	{
+		MyFolder fd=new MyFolder();
+		fd.setId(5);
+		MyFolderDAO dao=new MyFolderDAO(getApplicationContext(), null);
 		dao.setSource(MySource.DB_SOURCE);
-		obj.setDao(dao);
-		obj.getPath();
-		obj.getArtist();
-		int i=999;
-		*/
-		//obj.getDao().setSource(MySource.DISK_SOURCE);
-		//obj.delete();
-		/*
-		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
-		MyAlbum ma=new MyAlbum("er234frdt");
-		ma.setDao(dao);
-		ma.insert();
-		dao.release();
-		dao=null;
-		*/
-		
-		
-		//MyFolder f1=new MyFolder("/sdcard/music");
-		//f1.getAllRecursiveSongs();
-		
-		
-		/*
-		MySongDAO d=new MySongDAO(getApplicationContext(),null);
-		
-		d.release();
-		
-		
-		Vd f=new Vd();
-		f.execute("");
-		Vd f1=new Vd();
-		f1.execute("");
-		Vd f2=new Vd();
-		f2.execute("");
-		*/
-		/*
-		ArrayList<MySong> s1= d1.getAll();
-		for(MySong item:s1)
-		{
-			Log.w("qd", item.getTitle());
-			d1.delete(item);
-		}
-		d1.release();
-		*/
-		
-		//Declare music folder
-		MyFolder fd=new MyFolder("/sdcard/music/");
-		//Init new MyFolderDAO for working with MyFolder Entity
-		MyFolderDAO dao = new MyFolderDAO(getApplicationContext(), null);
-		dao.setSource(MySource.DISK_SOURCE);
-		//Assign DAO to Entity (so far, Entity will pass
-		//related-DAO through any deep level FK reference)
 		fd.setDao(dao);
-		//Get all songs belong to this fd Folder recursively
-		ArrayList<MySong> ss = fd.getAllRecursiveSongs();
-		//Fetch each song from result
-		for(MySong item:ss)
+		fd.load();
+		ArrayList<MySong> ss=fd.getAllRecursiveSongs();
+		for(MySong tmp:ss)
 		{
-			//call insert on current Entity
-			Log.w("qd", item.getPath().getFileName());
-			//item.getPath().getFileName();
-			item.insert();//F_Entity will auto insert and keep references
+			if(!tmp.isOnDisk())
+			{
+				Log.w("qd", tmp.getPath().getAbsPath());
+			}
 		}
-		
-		
-		
-		/*
-		MyAlbum ma=new MyAlbum();
-		ma.setId(3);
-		MyAlbumDAO dao=new MyAlbumDAO(getApplicationContext(), null);
-		dao.setSource(MySource.DB_SOURCE);
-		ma.setDao(dao);
-		ArrayList<MySong> tmp = ma.getSongs();
-		int i=9;
-		*/
+	}
+	private void Tracking()
+	{
+		MyFolderChanges tracker = new MyFolderChanges("/sdcard/music/hay", new MyFileChangesInterface() {
+			@Override
+			public void onFinish(MyFolderChanges obj) {
+				Log.w("qd", "Finish tracking on asynctask, md5="+obj.getMd5());
+			}
+		});
+		tracker.start();
 	}
 	private void LoadToDB()
 	{
 		//Declare music folder
-		MyFolder fd=new MyFolder("/sdcard/music");
+		MyFolder fd=new MyFolder("/sdcard/music/Bang Kieu");
 		//Init new MyFolderDAO for working with MyFolder Entity
 		MyFolderDAO dao = new MyFolderDAO(getApplicationContext(), null);
+		dao.setSource(MySource.DISK_SOURCE);
 		//Assign DAO to Entity (so far, Entity will pass
 		//related-DAO through any deep level FK reference)
 		fd.setDao(dao);
@@ -176,5 +118,4 @@ public class MainActivity extends Activity {
 			super.onPostExecute(result);
 		}
 	}
-	
 }

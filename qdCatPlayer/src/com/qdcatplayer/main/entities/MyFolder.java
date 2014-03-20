@@ -16,6 +16,7 @@ import com.qdcatplayer.main.libraries.MyFileHelper;
 @DatabaseTable(tableName = "MyFolders")
 public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	public static final String ABSPATH_F = "absPath";
+	public static String PARENT_ID = "parentFolder_id";
 	@DatabaseField(unique = true, canBeNull = false)
 	private String absPath = null;
 	private ArrayList<MyFolder> childsFolder = null;
@@ -64,22 +65,7 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 			return childsFolder;
 		}
 		// lazy loading
-		childsFolder = new ArrayList<MyFolder>();
-
-		File f = new File(getAbsPath());
-		File[] tmp = f.listFiles();
-		// no childs
-		if (tmp == null) {
-			return childsFolder;
-		}
-		// has childs
-		for (File item : tmp) {
-			if (item.isDirectory()) {
-				MyFolder tmp__ = new MyFolder(item.getAbsolutePath());
-				tmp__.setDao(getDao());//quan trong
-				childsFolder.add(tmp__);
-			}
-		}
+		childsFolder = getDao().getChildFolders(this);
 		return childsFolder;
 	}
 

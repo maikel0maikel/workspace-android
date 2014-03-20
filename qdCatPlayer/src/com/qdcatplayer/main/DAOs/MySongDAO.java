@@ -177,6 +177,7 @@ implements _MyDAOInterface<MySongDAO,MySong>
 		return null;
 	}
 	/**
+	 * Khong ho tro set Loaded
 	 * Khong ho tro pass DAO, phan quan ly pass DAO thuoc MySong
 	 */
 	@Override

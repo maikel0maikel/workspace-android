@@ -74,4 +74,9 @@ public class MyFileHelper {
 		}
 		return false;
 	}
+	public static Boolean isExist(String absPath)
+	{
+		File f = new File(absPath);
+		return f.exists();
+	}
 }

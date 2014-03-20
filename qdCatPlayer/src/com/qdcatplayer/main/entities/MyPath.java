@@ -109,5 +109,13 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 		this.parentFolder = parentFolder;
 	}
 
+	public Boolean isOnDisk() {
+		if(getAbsPath()==null)
+		{
+			return false;
+		}
+		return MyFileHelper.isExist(getAbsPath());
+	}
+
 
 }

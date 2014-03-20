@@ -187,11 +187,22 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 	{
 		path = new MyPath();
 		path.setAbsPath(absPath_);
-		path.setDao(getGlobalDAO().getMyPathDAO());
+		path.setDao(getGlobalDAO().getMyPathDAO());//importance
 	}
 
 	public void setTitle(String title) {
 		this.title = title==null?"":title;
 	}
-	
+	/**
+	 * Check 1 bai hat con ton ton tren DISK
+	 * @return
+	 */
+	public Boolean isOnDisk()
+	{
+		if(getPath()==null)
+		{
+			return false;
+		}
+		return getPath().isOnDisk();
+	}
 }

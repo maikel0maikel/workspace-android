@@ -9,6 +9,7 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.Where;
 import com.qdcatplayer.main.entities.MyFolder;
 import com.qdcatplayer.main.entities.MyFormat;
 import com.qdcatplayer.main.entities.MyPath;
@@ -159,9 +160,11 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 							.queryBuilder().where()
 							.eq(MySong.PATH_ID, item.getId())
 							.queryForFirst();
+					
 					if(song_tmp!=null)
 					{
 						song_tmp.setDao(getGlobalDAO().getMySongDAO());
+						song_tmp.setLoaded(true);//importance
 						childsSong.add(song_tmp);
 					}
 				}
@@ -188,5 +191,48 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 		{
 			super.load(obj);
 		}
+	}
+
+	public ArrayList<MyFolder> getChildFolders(MyFolder obj) {
+		ArrayList<MyFolder> re = new ArrayList<MyFolder>();
+		if(getSource()==MySource.DISK_SOURCE)
+		{
+			File f = new File(obj.getAbsPath());
+			File[] tmp = f.listFiles();
+			// no childs
+			if (tmp == null) {
+				return re;
+			}
+			// has childs
+			MyFolder tmp__;
+			for (File item : tmp) {
+				if (item.isDirectory()) {
+					tmp__ = new MyFolder(item.getAbsolutePath());
+					tmp__.setDao(this);//quan trong
+					re.add(tmp__);
+				}
+			}
+			return re;
+		}
+		else if(getSource()==MySource.DB_SOURCE)
+		{
+			try {
+				List<MyFolder> fds = getDao().queryBuilder().where()
+						.eq(MyFolder.PARENT_ID, obj.getId()).query();
+				for(MyFolder item:fds)
+				{
+					item.setDao(this);
+					re.add(item);
+				}
+				
+				return re;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}
+		return re;
 	}
 }
