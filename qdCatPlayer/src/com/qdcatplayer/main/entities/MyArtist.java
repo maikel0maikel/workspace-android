@@ -11,7 +11,7 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 	public static final String NAME_F = "name";
 
 	@ForeignCollectionField
-	private ForeignCollection<MySong> mySongs = null;
+	private ForeignCollection<MySong> songs = null;
 
 	@DatabaseField(unique = true)
 	private String name = "";// never null
@@ -24,8 +24,9 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 		setName(name);
 	}
 
-	public ForeignCollection<MySong> getMySongs() {
-		return mySongs;
+	public ForeignCollection<MySong> getSongs() {
+		super.load();
+		return songs;
 	}
 
 	public String getName() {
@@ -40,7 +41,7 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 	}
 
 	public void setMySongs(ForeignCollection<MySong> mySongs) {
-		this.mySongs = mySongs;
+		this.songs = mySongs;
 	}
 
 	public void setName(String name_) {

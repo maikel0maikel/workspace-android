@@ -79,4 +79,24 @@ public class MyFileHelper {
 		File f = new File(absPath);
 		return f.exists();
 	}
+	/**
+	 * Delete File or Folder recursively
+	 * @param root
+	 * @return
+	 */
+	public static Boolean delete(String root) {
+		if(root==null)
+		{
+			return false;
+		}
+		File f = new File(root);
+		if(f.isDirectory())
+		{
+			for(File tmp:f.listFiles())
+			{
+				delete(tmp.getAbsolutePath());
+			}
+		}
+		return f.delete();
+	}
 }

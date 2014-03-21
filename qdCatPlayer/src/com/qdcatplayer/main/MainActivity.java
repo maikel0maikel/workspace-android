@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.DAOs.MyAlbumDAO;
+import com.qdcatplayer.main.DAOs.MyArtistDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
@@ -15,6 +16,7 @@ import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
 import com.qdcatplayer.main.FileSystem.MyFolderChanges;
 import com.qdcatplayer.main.entities.MyAlbum;
+import com.qdcatplayer.main.entities.MyArtist;
 import com.qdcatplayer.main.entities.MyFolder;
 import com.qdcatplayer.main.entities.MyPath;
 import com.qdcatplayer.main.entities.MySong;
@@ -42,7 +44,20 @@ public class MainActivity extends Activity {
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
 		
+		LoadToDB();
 		
+		/*
+		MyAlbumDAO dao = new MyAlbumDAO(getApplicationContext(), null);
+		dao.setSource(MySource.DB_SOURCE);
+		MyAlbum obj=new MyAlbum();
+		obj.setId(2);
+		obj.setDao(dao);
+		obj.load();
+		
+		obj.getSongs();
+		obj.getName();
+		*/
+
 	}
 	private void getSongsFromFolderId()
 	{

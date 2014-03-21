@@ -230,9 +230,64 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
 		}
 		return re;
+	}
+	@Override
+	public Boolean delete(MyFolder obj) {
+		if(getSource()==MySource.DB_SOURCE)
+		{
+			for(MyFolder tmp:obj.getChildFolders())
+			{
+				tmp.delete();
+			}
+			for(MySong tmp: obj.getChildSongs())
+			{
+				tmp.delete();
+			}
+			return true;
+		}
+		else if(getSource()==MySource.DISK_SOURCE)
+		{
+			return MyFileHelper.delete(obj.getAbsPath());
+		}
+		return false;
+	}
+	
+	public Boolean delete(MyFolder obj, Boolean removeFromDisk) {
+		if(obj==null || obj.getAbsPath()==null)
+		{
+			return false;
+		}
+		if(removeFromDisk)
+		{
+			//neu obj da co san absPath va tu DISK
+			if(getSource()==MySource.DISK_SOURCE
+					&& obj.getAbsPath()!=null)
+			{
+				return delete(obj);
+			}
+			
+			//Init new 2 layers delete script
+			Integer bk = obj.getGlobalDAO().getSource();
+			//try to switch to DB SOURCE first to get info
+			obj.getGlobalDAO().setSource(MySource.DB_SOURCE);
+			//call to load absPath in Path fisrt
+			obj.getAbsPath();//trigger load absPath before delete from DB
+			//call delete
+			obj.delete();
+			//absPath would still be existed after call above delete
+			//change to DISK SOURCE
+			obj.getGlobalDAO().setSource(MySource.DISK_SOURCE);
+			obj.delete();
+			//swicth to previous SOURCE
+			obj.getGlobalDAO().setSource(bk);
+			//finish
+			return true;
+		}
+		else
+		{
+			return delete(obj);
+		}
 	}
 }

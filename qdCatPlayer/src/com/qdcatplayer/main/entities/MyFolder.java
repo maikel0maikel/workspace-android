@@ -142,4 +142,11 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	public void setPaths(ForeignCollection<MyPath> paths) {
 		this.paths = paths;
 	}
+	public Boolean isOnDisk()
+	{
+		return MyFileHelper.isExist(getAbsPath());
+	}
+	public Boolean delete(Boolean removeFromDisk) {
+		return getDao().delete(this, removeFromDisk);
+	}
 }

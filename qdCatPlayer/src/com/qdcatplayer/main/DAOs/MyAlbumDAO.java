@@ -85,13 +85,14 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 		if(getSource()==MySource.DB_SOURCE)
 		{
 			try {
-				List<MySong> tmp = getGlobalDAO().getMySongDAO().getDao()
+				/*List<MySong> tmp = getGlobalDAO().getMySongDAO().getDao()
 						.queryBuilder().where().eq(MySong.ALBUM_ID, obj.getId())
-						.query();
-				
+						.query();*/
+				List<MySong> tmp = getGlobalDAO().getMySongDAO().getDao().queryForEq(MySong.ALBUM_ID, obj.getId());
 				for(MySong item:tmp)
 				{
 					item.setDao(getGlobalDAO().getMySongDAO());
+					item.setLoaded(true);
 					re.add(item);
 				}
 				return re;
@@ -102,6 +103,6 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 			
 		}
 		//do not support DISK SOURCE
-		return new ArrayList<MySong>();
+		return re;
 	}
 }
