@@ -44,7 +44,7 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 
 	@Override
 	public Integer insert(MyPath obj) {
-		if(getDao()==null)//qd fail
+		if(getDao()==null)
 		{
 			return -1;
 		}

@@ -61,7 +61,7 @@ implements _MyDAOInterface<MySongDAO,MySong>
 	@Override
 	public Integer insert(MySong obj)
 	{
-		if(getDao()==null)//qd fail
+		if(getDao()==null)
 		{
 			return -1;
 		}
@@ -81,7 +81,7 @@ implements _MyDAOInterface<MySongDAO,MySong>
 				}
 				
 				//create FK First
-				obj.getAlbum().insert();//FAIL HERE
+				obj.getAlbum().insert();
 				obj.getArtist().insert();
 				obj.getBirate().insert();
 				obj.getFormat().insert();
