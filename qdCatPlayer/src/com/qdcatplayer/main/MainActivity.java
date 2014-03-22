@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
 	private void LoadToDB()
 	{
 		//Declare music folder
-		MyFolder fd=new MyFolder("/sdcard/music/Bang Kieu");
+		MyFolder fd=new MyFolder("/sdcard/music");
 		//Init new MyFolderDAO for working with MyFolder Entity
 		MyFolderDAO dao = new MyFolderDAO(getApplicationContext(), null);
 		dao.setSource(MySource.DISK_SOURCE);

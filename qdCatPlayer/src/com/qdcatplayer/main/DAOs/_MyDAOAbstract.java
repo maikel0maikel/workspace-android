@@ -122,13 +122,16 @@ public abstract class _MyDAOAbstract<T,K> implements _MyDAOInterface<T,K>, _Glob
 	/**
 	 * getDao().refresh(obj);
 	 * DO NOT SUPPORT LOAD FROM DISK SOURCE
-	 * IF YOU WANT OTHER WAY YOU CAN Override
+	 * IF YOU WANT LOAD FROM DISK SOURCE YOU CAN Override
 	 */
 	@Override
 	public void load(K obj) {
 		if(getSource()==MySource.DB_SOURCE)
 		{
-			getDao().refresh(obj);
+			if(getDao().refresh(obj)==1)//load thanh cong
+			{
+				((_MyEntityAbstract<T, K>)obj).setLoaded(true);
+			}
 		}
 		//do not support load from DISK SOURCE
 	}

@@ -18,6 +18,7 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	private String absPath = null;
 	@DatabaseField(canBeNull=false)
 	protected String fileName = null;
+	protected String fileExtension = null;
 
 	@DatabaseField(canBeNull = true, foreign = true)
 	private MyFolder parentFolder = null;
@@ -52,10 +53,8 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	 * @return
 	 */
 	public String getFileExtension(Boolean withDot) {
-		if (getAbsPath() == null || getAbsPath().equals("")) {
-			return "";
-		}
-		return MyFileHelper.getFileExtension(getAbsPath(), withDot);
+		super.load();
+		return withDot?"."+fileExtension:fileExtension;
 	}
 	/**
 	 * Ham On The Fly, phu thuoc vao absPath
@@ -115,6 +114,10 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 			return false;
 		}
 		return MyFileHelper.isExist(getAbsPath());
+	}
+
+	public void setFileExtension(String fileExtension_) {
+		fileExtension = fileExtension_;
 	}
 
 

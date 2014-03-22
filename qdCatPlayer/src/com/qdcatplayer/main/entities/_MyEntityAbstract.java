@@ -57,6 +57,7 @@ public abstract class _MyEntityAbstract<T,K> implements _MyEntityInterface<T,K>,
 	public Integer insert() {
 		if(getGlobalDAO().getSource()==MySource.DISK_SOURCE)
 		{
+			/*
 			//Reset to force to load all properties first
 			//because somthing may be lazy or not loaded at all when
 			//build from other DAO class such as MyFolderDAO (only Id attached)
@@ -68,6 +69,7 @@ public abstract class _MyEntityAbstract<T,K> implements _MyEntityInterface<T,K>,
 				load();
 			}
 			//will call devired class methof if Override declare
+			*/
 			return ((_MyDAOAbstract<T, K>)getDao()).insert((K)this);
 		}
 		return -1;

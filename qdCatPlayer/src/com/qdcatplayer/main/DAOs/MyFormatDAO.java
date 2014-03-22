@@ -37,8 +37,10 @@ implements _MyDAOInterface<MyFormatDAO, MyFormat>
 
 	@Override
 	public MyFormat getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		MyFormat obj = getDao().queryForId(id);
+		obj.setDao(this);
+		obj.setLoaded(true);
+		return obj;
 	}
 
 	@Override

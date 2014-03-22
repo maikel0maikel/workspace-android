@@ -68,20 +68,27 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 		if(getSource()==MySource.DISK_SOURCE)
 		{
 			try{
-				//create FK First
-				if(obj.getParentFolder()!=null)
+				//kiem tra xem folder nay co trong he thong chua
+				//neu co roi thi chi cap nhat id
+				MyFolder tontai = getDao().queryBuilder().where().
+						eq(MyFolder.ABSPATH_F, obj.getAbsPath()).
+						queryForFirst();
+				if(tontai==null)
 				{
-					//xet coi folder nay da co trong he thong
-					MyFolder tmp = getDao().queryBuilder().where().eq(MyFolder.ABSPATH_F, obj.getAbsPath()).queryForFirst();
-					if(tmp!=null)
+					//try to create FK First
+					if(obj.getParentFolder()!=null)
 					{
-						obj.setId(tmp.getId());
-						return 1;
+						obj.getParentFolder().insert();
 					}
-					//goi insert folder cha truoc
-					obj.getParentFolder().insert();
+					obj.load();
+					return super.insert(obj);
 				}
-				return super.insert(obj);
+				else
+				{
+					obj.setId(tontai.getId());
+					obj.reset();
+					return 1;
+				}
 			}catch(Exception e)
 			{
 				e.printStackTrace();
@@ -186,6 +193,7 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 							obj.getAbsPath()
 							)
 					);
+			obj.setLoaded(true);
 		}
 		else if(getSource()==MySource.DB_SOURCE)
 		{

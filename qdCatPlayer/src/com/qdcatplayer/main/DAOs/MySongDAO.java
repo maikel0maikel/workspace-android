@@ -72,6 +72,7 @@ implements _MyDAOInterface<MySongDAO,MySong>
 						.getDao().queryBuilder()
 						.where().eq(MyPath.ABSPATH_F, obj.getPath().getAbsPath())
 						.queryForFirst();
+				
 				//neu Path da ton tai thi bo qua insert luon
 				if(tmp!=null)
 				{
@@ -177,7 +178,7 @@ implements _MyDAOInterface<MySongDAO,MySong>
 		return null;
 	}
 	/**
-	 * Khong ho tro set Loaded
+	 * Ho tro set Loaded
 	 * Khong ho tro pass DAO, phan quan ly pass DAO thuoc MySong
 	 */
 	@Override
@@ -201,7 +202,6 @@ implements _MyDAOInterface<MySongDAO,MySong>
 			tmp = retriever
 					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
 			MyAlbum album = new MyAlbum(tmp);
-			//album.setDao(getGlobalDAO().getMyAlbumDAO());
 			obj.setAlbum(album);
 			
 			tmp = retriever
@@ -211,20 +211,18 @@ implements _MyDAOInterface<MySongDAO,MySong>
 			tmp = retriever
 					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 			MyArtist artist = new MyArtist(tmp);
-			//artist.setDao(getGlobalDAO().getMyArtistDAO());
 			obj.setArtist(artist);
 			
 			//tmp = retriever
 			//		.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
 			MyBitrate bitrate = new MyBitrate("128");
-			//bitrate.setDao(getGlobalDAO().getMyBitrateDAO());
 			obj.setBitrate(bitrate);
 			
 			MyFormat format = new MyFormat("MP3");
-			//format.setDao(getGlobalDAO().getMyFormatDAO());
 			obj.setFormat(format);
 			
 			//DONE
+			obj.setLoaded(true);
 		}
 	}
 	/**

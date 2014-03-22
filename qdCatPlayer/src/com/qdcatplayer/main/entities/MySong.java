@@ -72,7 +72,7 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 	 */
 	public MyAlbum getAlbum() {
 		super.load();
-		if(album!=null && album.getDao()==null)//very importance, vi super.load khong ho tro pass DAO khi oad tu DB SOURCE
+		if(album!=null && album.getDao()==null)//very importance, vi super.load khong ho tro pass DAO khi load tu DB SOURCE
 		{
 			album.setDao(getGlobalDAO().getMyAlbumDAO());
 		}

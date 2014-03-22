@@ -50,7 +50,6 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 		}
 		if(getSource()==MySource.DISK_SOURCE)
 		{
-			//load all direct properties
 			try{
 				//neu path co roi trong he thong thi khong add
 				if(obj.getId() != null && obj.getId() > 0)
@@ -70,6 +69,8 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 				{
 					obj.getParentFolder().insert();
 				}
+				//load all properties here and then insert ngay lap tuc
+				obj.load();
 				return getDao().create(obj);
 			}catch(Exception e)
 			{
@@ -131,11 +132,17 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 	public void load(MyPath obj) {
 		if(getSource()==MySource.DISK_SOURCE)
 		{
+			if (obj.getAbsPath() == null || obj.getAbsPath().equals("")) {
+				return;
+			}
 			obj.setFileName(
 					MyFileHelper.getFileName(
 							obj.getAbsPath(),
 							false)
 					);
+			
+			obj.setFileExtension(MyFileHelper.getFileExtension(obj.getAbsPath(),false));
+			obj.setLoaded(true);
 		}
 		else if(getSource()==MySource.DB_SOURCE)
 		{
