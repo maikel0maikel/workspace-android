@@ -1,0 +1,27 @@
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:cmwmobile="http://schemas.android.com/apk/res/com.qdcatplayer.main.Setting2"
+        >
+
+    <PreferenceCategory
+            android:title="Alo1234">
+
+        <CheckBoxPreference
+                android:key="checkbox_preference"
+                android:title="Alo123"
+                android:summary="Alo123_mota" />
+        
+
+    </PreferenceCategory>
+    <com.qdcatplayer.main.Setting2.FolderChooserPreference
+		android:key="imageList"
+		android:title="Title"
+		android:summary="Summary"
+		android:entries="@array/vdthoi"
+		android:entryValues="@array/vdthoi2"
+		
+		/>
+    
+
+
+</PreferenceScreen>

@@ -149,4 +149,17 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	public Boolean delete(Boolean removeFromDisk) {
 		return getDao().delete(this, removeFromDisk);
 	}
+	public Integer getLevel()
+	{
+		return getAbsPath().split("/").length;
+	}
+	public String getLevelString(String delimiter)
+	{
+		String re="";
+		for(int i=0;i<getLevel();i++)
+		{
+			re+=delimiter;
+		}
+		return re;
+	}
 }

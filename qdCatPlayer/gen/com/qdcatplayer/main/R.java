@@ -8,10 +8,19 @@
 package com.qdcatplayer.main;
 
 public final class R {
+    public static final class array {
+        public static final int imageValues=0x7f050002;
+        public static final int pref_example_list_titles=0x7f050003;
+        public static final int pref_example_list_values=0x7f050004;
+        public static final int pref_sync_frequency_titles=0x7f050005;
+        public static final int pref_sync_frequency_values=0x7f050006;
+        public static final int vdthoi=0x7f050000;
+        public static final int vdthoi2=0x7f050001;
+    }
     public static final class attr {
     }
     public static final class color {
-        public static final int header_blue_bg=0x7f060000;
+        public static final int header_blue_bg=0x7f080000;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -20,8 +29,8 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f040000;
-        public static final int activity_vertical_margin=0x7f040001;
+        public static final int activity_horizontal_margin=0x7f060000;
+        public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
         public static final int header_bg=0x7f020000;
@@ -53,44 +62,102 @@ public final class R {
         public static final int shuffle_touch=0x7f02001a;
     }
     public static final class id {
-        public static final int FrameLayout1=0x7f090007;
-        public static final int action_settings=0x7f090015;
-        public static final int header_info_bottom=0x7f09000f;
-        public static final int header_info_midle=0x7f09000d;
-        public static final int header_info_top=0x7f09000b;
-        public static final int horizontalScrollView_bottom=0x7f09000e;
-        public static final int horizontalScrollView_midle=0x7f09000c;
-        public static final int horizontalScrollView_top=0x7f09000a;
-        public static final int imageButton_back=0x7f090008;
-        public static final int imageButton_list=0x7f090010;
-        public static final int imageButton_next=0x7f090014;
-        public static final int imageButton_play=0x7f090013;
-        public static final int imageButton_prev=0x7f090012;
-        public static final int imageButton_repeat=0x7f090002;
-        public static final int imageButton_shuffle=0x7f090006;
-        public static final int imageButton_songname=0x7f090009;
-        public static final int imageView_music_tone=0x7f090011;
-        public static final int root_layout=0x7f090000;
-        public static final int seekBar_duration=0x7f090004;
-        public static final int textView_last_duration=0x7f090001;
-        public static final int textView_remain_duration=0x7f090005;
-        public static final int textView_song_index=0x7f090003;
+        public static final int FrameLayout1=0x7f0b0010;
+        public static final int action_settings=0x7f0b0022;
+        public static final int checkBox=0x7f0b0021;
+        public static final int checkBox1=0x7f0b000a;
+        public static final int checkBox2=0x7f0b000c;
+        public static final int header_info_bottom=0x7f0b0018;
+        public static final int header_info_midle=0x7f0b0016;
+        public static final int header_info_top=0x7f0b0014;
+        public static final int horizontalScrollView_bottom=0x7f0b0017;
+        public static final int horizontalScrollView_midle=0x7f0b0015;
+        public static final int horizontalScrollView_top=0x7f0b0013;
+        public static final int imageButton_back=0x7f0b0011;
+        public static final int imageButton_list=0x7f0b0019;
+        public static final int imageButton_next=0x7f0b001d;
+        public static final int imageButton_play=0x7f0b001c;
+        public static final int imageButton_prev=0x7f0b001b;
+        public static final int imageButton_repeat=0x7f0b0004;
+        public static final int imageButton_shuffle=0x7f0b0008;
+        public static final int imageButton_songname=0x7f0b0012;
+        public static final int imageView_icon=0x7f0b001e;
+        public static final int imageView_music_tone=0x7f0b001a;
+        public static final int linearLayout1=0x7f0b001f;
+        public static final int radioButton1=0x7f0b000b;
+        public static final int root_layout=0x7f0b0000;
+        public static final int seekBar1=0x7f0b000d;
+        public static final int seekBar_duration=0x7f0b0006;
+        public static final int setting_detail=0x7f0b0009;
+        public static final int setting_detail_container=0x7f0b0001;
+        public static final int setting_list=0x7f0b0002;
+        public static final int textView1=0x7f0b000e;
+        public static final int textView2=0x7f0b000f;
+        public static final int textView_folderName=0x7f0b0020;
+        public static final int textView_last_duration=0x7f0b0003;
+        public static final int textView_remain_duration=0x7f0b0007;
+        public static final int textView_song_index=0x7f0b0005;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int duration_seekbar=0x7f030001;
-        public static final int header=0x7f030002;
-        public static final int midle_song=0x7f030003;
-        public static final int prev_pause_next=0x7f030004;
-        public static final int volume_seekbar=0x7f030005;
+        public static final int activity_setting_detail=0x7f030001;
+        /** 
+    Layout alias to replace the single-pane version of the layout with a
+    two-pane version on Large screens.
+
+    For more on layout aliases, see:
+    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
+    
+
+    Layout alias to replace the single-pane version of the layout with a
+    two-pane version on Large screens.
+
+    For more on layout aliases, see:
+    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
+    
+         */
+        public static final int activity_setting_list=0x7f030002;
+        public static final int activity_setting_twopane=0x7f030003;
+        public static final int duration_seekbar=0x7f030004;
+        public static final int fragment_setting_detail=0x7f030005;
+        public static final int fragment_setting_detail_2=0x7f030006;
+        public static final int header=0x7f030007;
+        public static final int midle_song=0x7f030008;
+        public static final int prev_pause_next=0x7f030009;
+        public static final int setting_folder_chooser=0x7f03000a;
+        public static final int volume_seekbar=0x7f03000b;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
+        public static final int main=0x7f0a0000;
     }
     public static final class string {
-        public static final int action_settings=0x7f050001;
-        public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050002;
+        public static final int action_settings=0x7f070001;
+        public static final int app_name=0x7f070000;
+        public static final int hello_world=0x7f070002;
+        public static final int pref_default_display_name=0x7f07000a;
+        public static final int pref_description_social_recommendations=0x7f070008;
+        /**  Example settings for Data & Sync 
+         */
+        public static final int pref_header_data_sync=0x7f07000c;
+        /**  Strings related to Settings 
+ Example General settings 
+         */
+        public static final int pref_header_general=0x7f070006;
+        /**  Example settings for Notifications 
+         */
+        public static final int pref_header_notifications=0x7f07000f;
+        public static final int pref_ringtone_silent=0x7f070012;
+        public static final int pref_title_add_friends_to_messages=0x7f07000b;
+        public static final int pref_title_display_name=0x7f070009;
+        public static final int pref_title_new_message_notifications=0x7f070010;
+        public static final int pref_title_ringtone=0x7f070011;
+        public static final int pref_title_social_recommendations=0x7f070007;
+        public static final int pref_title_sync_frequency=0x7f07000d;
+        public static final int pref_title_system_sync_settings=0x7f07000e;
+        public static final int pref_title_vibrate=0x7f070013;
+        public static final int title_activity_settings=0x7f070005;
+        public static final int title_setting_detail=0x7f070004;
+        public static final int title_setting_list=0x7f070003;
     }
     public static final class style {
         /** 
@@ -114,10 +181,15 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f070000;
+        public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f070001;
+        public static final int AppTheme=0x7f090001;
+    }
+    public static final class xml {
+        public static final int setting_detail1=0x7f040000;
+        public static final int setting_detail2=0x7f040001;
+        public static final int setting_header=0x7f040002;
     }
 }

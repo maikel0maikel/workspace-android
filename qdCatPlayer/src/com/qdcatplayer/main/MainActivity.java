@@ -15,6 +15,8 @@ import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
 import com.qdcatplayer.main.FileSystem.MyFolderChanges;
+import com.qdcatplayer.main.Setting.SettingListActivity;
+import com.qdcatplayer.main.Setting2.SettingsActivity;
 import com.qdcatplayer.main.entities.MyAlbum;
 import com.qdcatplayer.main.entities.MyArtist;
 import com.qdcatplayer.main.entities.MyFolder;
@@ -26,8 +28,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -39,12 +43,12 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-		
+		/*
 		MyDBManager mn=new MyDBManager();
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
-		
-		LoadToDB();
+		*/
+		//LoadToDB();
 		
 		/*
 		MyAlbumDAO dao = new MyAlbumDAO(getApplicationContext(), null);
@@ -57,7 +61,12 @@ public class MainActivity extends Activity {
 		obj.getSongs();
 		obj.getName();
 		*/
-
+		//SettingListActivity m = new SettingListActivity();
+		
+		
+		Intent setting = new Intent(MainActivity.this, SettingsActivity.class);
+		startActivity(setting);
+		
 	}
 	private void getSongsFromFolderId()
 	{
@@ -111,7 +120,13 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		
+		return true;
+		
+	}
 	class Vd extends AsyncTask<String, String, String>
 	{
 

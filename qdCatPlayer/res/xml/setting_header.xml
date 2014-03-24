@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:icon="@drawable/ic_launcher"
+        android:fragment="com.qdcatplayer.main.Setting2.SettingTab1"
+        android:summary="TAB1 summary"
+        android:title="TAB1" >
+        <extra
+            android:name="settings 1"
+            android:value="DIVE 1" />
+    </header>
+    <header
+        android:fragment="com.qdcatplayer.main.Setting2.SettingTab2"
+        android:summary="TAB1 summary"
+        android:title="TAB2" >
+        <extra
+            android:name="settings 2"
+            android:value="DIVE 2" />
+    </header>
+
+</preference-headers>

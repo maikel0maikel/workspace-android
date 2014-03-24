@@ -9,6 +9,5 @@
         android:defaultValue="20"
         android:key="limit_rows"
         />
-    
 
 </PreferenceScreen>

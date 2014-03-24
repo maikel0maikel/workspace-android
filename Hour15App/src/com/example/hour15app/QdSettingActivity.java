@@ -15,5 +15,4 @@ public class QdSettingActivity extends Activity {
         .commit();
 	}
 
-
 }

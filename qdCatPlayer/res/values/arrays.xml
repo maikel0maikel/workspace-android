@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="vdthoi">
+        <item >item1</item>
+        <item >Item2</item>
+    </string-array>
+    <string-array name="vdthoi2">
+        <item >1</item>
+        <item >2</item>
+    </string-array>
+    <array name="imageValues">
+		<item>@drawable/ic_launcher</item>
+		<item>@drawable/ic_launcher</item>
+		<item>@drawable/ic_launcher</item>
+	</array>
+    
+</resources>
