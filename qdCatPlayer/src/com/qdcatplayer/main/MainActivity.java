@@ -43,13 +43,13 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-		/*
+		
 		MyDBManager mn=new MyDBManager();
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
-		*/
-		//LoadToDB();
 		
+		LoadToDB();
+		//what the fuck
 		/*
 		MyAlbumDAO dao = new MyAlbumDAO(getApplicationContext(), null);
 		dao.setSource(MySource.DB_SOURCE);
