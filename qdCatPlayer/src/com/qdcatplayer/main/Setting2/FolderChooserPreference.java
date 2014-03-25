@@ -20,6 +20,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.res.TypedArray;
 
 import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
 
 import android.util.AttributeSet;
 import android.util.Log;
@@ -78,7 +79,6 @@ public class FolderChooserPreference extends ListPreference {
 		// Order matters.
 		
 		builder.setAdapter(listAdapter, this);
-		
 		super.onPrepareDialogBuilder(builder);
 	}
 	@Override

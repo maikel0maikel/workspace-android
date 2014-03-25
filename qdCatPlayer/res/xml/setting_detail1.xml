@@ -19,7 +19,6 @@
 		android:summary="Summary"
 		android:entries="@array/vdthoi"
 		android:entryValues="@array/vdthoi2"
-		
 		/>
     
 
