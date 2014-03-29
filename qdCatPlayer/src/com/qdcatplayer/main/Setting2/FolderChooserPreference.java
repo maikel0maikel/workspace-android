@@ -68,7 +68,7 @@ public class FolderChooserPreference extends ListPreference {
 		ArrayList<MyFolder> folders = fd.getChildFolders();
 		
 		ListAdapter listAdapter = new FolderArrayAdapter(getContext(),
-			R.layout.setting_folder_chooser, folders, null, fd, new MyItemClickListener() {
+			R.layout.setting_folder_chooser_item, folders, null, fd, new MyItemClickListener() {
 				
 				@Override
 				public void onClick(String absPath) {

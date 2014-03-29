@@ -128,8 +128,9 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 		MyFolder fd=folders.get(position);
 		if(convertView==null)
 		{
-			LayoutInflater inflater = ((Activity)getContext()).getLayoutInflater();
-			convertView = inflater.inflate(R.layout.setting_folder_chooser, parent, false);
+			//LayoutInflater inflater = ((Activity)getContext()).getLayoutInflater();//may be fail in some circumstance
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(R.layout.setting_folder_chooser_item, parent, false);
 			
 			cb = (CheckBox)convertView.findViewById(
 				R.id.checkBox);

@@ -9,5 +9,10 @@
 
     <string name="title_setting_list">Setting</string>
     <string name="title_setting_detail">Setting Detail</string>
+    <string name="title_activity_settings">Setting</string>
+    <string name="library_album_label">Albums</string>
+    <string name="library_artist_label">Artists</string>
+    <string name="library_folder_label">Folders</string>
+    <string name="library_allsongs_label">All songs</string>
 
 </resources>

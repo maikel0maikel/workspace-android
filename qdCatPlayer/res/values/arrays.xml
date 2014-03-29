@@ -13,5 +13,19 @@
 		<item>@drawable/ic_launcher</item>
 		<item>@drawable/ic_launcher</item>
 	</array>
+    <string-array name="library_item_id_array">
+        <item >ALLSONGS_ITEM</item>
+        <item >ALBUMS_ITEM</item>
+        <item >ARTISTS_ITEM</item>
+        <item >FOLDERS_ITEM</item>
+        <item >PLAYLIST_ITEM</item>
+    </string-array>
+    <string-array name="library_item_value_array">
+        <item >All songs</item>
+        <item >Albums</item>
+        <item >Artists</item>
+        <item >Folders</item>
+        <item >Playlists</item>
+    </string-array>
     
 </resources>

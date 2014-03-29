@@ -20,26 +20,26 @@
 		   android:layout_height="0dp"
 		   android:layout_weight=".15"
 		   android:layout_margin="0dp"
-		   layout="@layout/header" />
+		   layout="@layout/player_main_header" />
         <include
 		   android:layout_width="fill_parent"
 		   android:layout_height="0dp"
 		   android:layout_weight=".15"
 		   android:layout_margin="0dp"
-		   layout="@layout/duration_seekbar" />
+		   layout="@layout/player_main_duration_seekbar" />
         <include
 		   android:layout_width="fill_parent"
 		   android:layout_height="0dp"
 		   android:layout_weight=".40"
 		   android:layout_margin="0dp"
-		   layout="@layout/midle_song" />
+		   layout="@layout/player_main_midle_song" />
         <include
 		   android:layout_width="fill_parent"
 		   android:layout_height="0dp"
 		   android:layout_weight=".15"
 		   android:layout_margin="0dp"
 		   
-		   layout="@layout/prev_pause_next" />
+		   layout="@layout/player_main_navigate" />
         <include
 		   android:layout_width="fill_parent"
 		   android:layout_height="0dp"

@@ -1,47 +1,39 @@
 package com.qdcatplayer.main;
 
-import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.j256.ormlite.dao.ForeignCollection;
-import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.DAOs.MyAlbumDAO;
-import com.qdcatplayer.main.DAOs.MyArtistDAO;
-import com.qdcatplayer.main.DAOs.MyFolderDAO;
-import com.qdcatplayer.main.DAOs.MySongDAO;
-import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.DBHelper.MyDBManager;
-import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
-import com.qdcatplayer.main.FileSystem.MyFolderChanges;
-import com.qdcatplayer.main.Setting.SettingListActivity;
-import com.qdcatplayer.main.Setting2.SettingsActivity;
-import com.qdcatplayer.main.entities.MyAlbum;
-import com.qdcatplayer.main.entities.MyArtist;
-import com.qdcatplayer.main.entities.MyFolder;
-import com.qdcatplayer.main.entities.MyPath;
-import com.qdcatplayer.main.entities.MySong;
-import com.qdcatplayer.main.libraries.MyMD5;
-
+import android.app.Activity;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.FileObserver;
-import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.widget.Toast;
+
+import com.qdcatplayer.main.DAOs.MyFolderDAO;
+import com.qdcatplayer.main.DAOs.MySongDAO;
+import com.qdcatplayer.main.DAOs.MySource;
+import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
+import com.qdcatplayer.main.FileSystem.MyFolderChanges;
+import com.qdcatplayer.main.GUI.MyLibraryListFragment;
+import com.qdcatplayer.main.GUI.MyLibraryListFragment.MyLibraryClickListener;
+import com.qdcatplayer.main.Setting2.SettingsActivity;
+import com.qdcatplayer.main.entities.MyFolder;
+import com.qdcatplayer.main.entities.MySong;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements MyLibraryClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.player_main);
+		
+		
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		/*
 		setContentView(R.layout.activity_main);
 		
 		MyDBManager mn=new MyDBManager();
@@ -49,6 +41,7 @@ public class MainActivity extends Activity {
 		h.getWritableDatabase();
 		
 		LoadToDB();
+		*/
 		//what the fuck
 		/*
 		MyAlbumDAO dao = new MyAlbumDAO(getApplicationContext(), null);
@@ -64,9 +57,21 @@ public class MainActivity extends Activity {
 		//SettingListActivity m = new SettingListActivity();
 		
 		
+		
+		
+	}
+	private void showLibrary()
+	{
+		MyLibraryListFragment mFragment = new MyLibraryListFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.root_layout, mFragment);
+        ft.addToBackStack("MyLibraryListFragment");
+        ft.commit();
+	}
+	private void callSetting()
+	{
 		Intent setting = new Intent(MainActivity.this, SettingsActivity.class);
 		startActivity(setting);
-		
 	}
 	private void getSongsFromFolderId()
 	{
@@ -147,5 +152,9 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 		}
+	}
+	@Override
+	public void onItemClick(String itemId) {
+		Log.w("qd", itemId);
 	}
 }
