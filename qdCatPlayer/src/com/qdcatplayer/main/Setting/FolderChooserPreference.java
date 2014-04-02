@@ -34,9 +34,13 @@ import android.widget.ListAdapter;
  */
 public class FolderChooserPreference extends ListPreference {
 	public interface MyItemClickListener {
-		public void onClick(String absPath);
+		public void onClick(MyFolder fd,Boolean isChecked);
 	}
-	HashMap<MyFolder, Boolean> map =new HashMap<MyFolder, Boolean>();
+	/**
+	 * Luu ds cac folder duoc chon khi co su thay doi tu ng dung
+	 * Sau do khi click OK thi se su dung de lay ds cac Folder duoc chon cuoi cung
+	 */
+	HashMap<String, MyFolder> chooseResult =new HashMap<String, MyFolder>();
 	public FolderChooserPreference(Context arg0) {
 		super(arg0);
 	}
@@ -71,18 +75,51 @@ public class FolderChooserPreference extends ListPreference {
 			R.layout.setting_folder_chooser_item, folders, null, fd, new MyItemClickListener() {
 				
 				@Override
-				public void onClick(String absPath) {
-					Log.w("qd", absPath);
+				public void onClick(MyFolder fd, Boolean isChecked) {
+					String absPath = fd.getAbsPath();
+					if(isChecked)
+					{
+						if(!chooseResult.containsKey(absPath))
+						{
+							chooseResult.put(absPath, fd);
+							Log.w("qd", "Put "+absPath);
+						}
+					}
+					else
+					{
+						if(chooseResult.containsKey(absPath))
+						{
+							chooseResult.remove(absPath);
+							Log.w("qd", "Remove "+absPath);
+						}
+					}
 				}
 			});
 		
 		// Order matters.
 		
 		builder.setAdapter(listAdapter, this);
-		super.onPrepareDialogBuilder(builder);
+		builder.setPositiveButton("OK", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				Log.w("qd", "OK clicked");
+				//FINISH
+				for(MyFolder tmp:chooseResult.values())
+				{
+					Log.w("qd", tmp.getAbsPath());
+				}
+				//clear after success
+				chooseResult.clear();
+			}
+		});
+		//do not call super or OK button will never appear
+		//super.onPrepareDialogBuilder(builder);
 	}
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		super.onDialogClosed(positiveResult);
 	}
+	
 }

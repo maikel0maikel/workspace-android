@@ -148,6 +148,7 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 					//becareful because depening on layout
 					//switch to use onclick is not nice
 					ViewHolder holder = (ViewHolder)((View) buttonView.getParent()).getTag();
+					MyFolder fd = holder.getFd();
 					/**
 					 * Muc dich la de biet hien tai cac fd nao duoc check
 					 */
@@ -161,15 +162,20 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 						checkedMap.remove(holder.getFd().getAbsPath());
 					}
 					tickFolder(holder.getFd(), isChecked);
+					//send to controller
+					mListener.onClick(fd, isChecked);
 				}
 			});
 			cb.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
-					//ViewHolder holder = (ViewHolder)((View)arg0.getParent()).getTag();
+					ViewHolder holder = (ViewHolder)((View)arg0.getParent()).getTag();
+					MyFolder fd = holder.getFd();
 					//set tick dong bo
 					//tickFolder(holder.getFd(), ((CheckBox)arg0).isChecked());
+					CheckBox tmpCb = (CheckBox)arg0;
+					
 				}
 			});
 			convertView.setOnClickListener(new View.OnClickListener() {
