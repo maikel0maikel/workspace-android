@@ -1,14 +1,14 @@
 /**
  * Copyright CMW Mobile.com, 2010. 
  */
-package com.qdcatplayer.main.Setting2;
+package com.qdcatplayer.main.Setting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.Setting2.FolderChooserPreference.MyItemClickListener;
-import com.qdcatplayer.main.entities.MyFolder;
+import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Setting.FolderChooserPreference.MyItemClickListener;
 
 import android.R.integer;
 import android.app.Activity;

@@ -7,10 +7,10 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.entities.MyAlbum;
-import com.qdcatplayer.main.entities.MyBitrate;
-import com.qdcatplayer.main.entities.MyFormat;
-import com.qdcatplayer.main.entities.MyPath;
+import com.qdcatplayer.main.Entities.MyAlbum;
+import com.qdcatplayer.main.Entities.MyBitrate;
+import com.qdcatplayer.main.Entities.MyFormat;
+import com.qdcatplayer.main.Entities.MyPath;
 
 public class MyFormatDAO extends _MyDAOAbstract<MyFormatDAO, MyFormat>
 implements _MyDAOInterface<MyFormatDAO, MyFormat>

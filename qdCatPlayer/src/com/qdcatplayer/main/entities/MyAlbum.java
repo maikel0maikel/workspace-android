@@ -1,4 +1,4 @@
-package com.qdcatplayer.main.entities;
+package com.qdcatplayer.main.Entities;
 
 import java.util.ArrayList;
 

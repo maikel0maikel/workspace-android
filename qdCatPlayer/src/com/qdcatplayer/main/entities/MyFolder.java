@@ -1,4 +1,4 @@
-package com.qdcatplayer.main.entities;
+package com.qdcatplayer.main.Entities;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MyPathDAO;
 import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.libraries.MyFileHelper;
+import com.qdcatplayer.main.Libraries.MyFileHelper;
 
 @DatabaseTable(tableName = "MyFolders")
 public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {

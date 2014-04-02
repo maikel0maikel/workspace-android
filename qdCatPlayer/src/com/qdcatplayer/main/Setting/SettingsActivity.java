@@ -1,4 +1,4 @@
-package com.qdcatplayer.main.Setting2;
+package com.qdcatplayer.main.Setting;
 
 import android.annotation.TargetApi;
 import android.content.Context;

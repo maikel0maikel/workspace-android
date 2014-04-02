@@ -1,4 +1,4 @@
-package com.qdcatplayer.main.entities;
+package com.qdcatplayer.main.Entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.qdcatplayer.main.DAOs.GlobalDAO;

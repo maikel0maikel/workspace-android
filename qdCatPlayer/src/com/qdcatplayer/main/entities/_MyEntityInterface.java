@@ -1,4 +1,4 @@
-package com.qdcatplayer.main.entities;
+package com.qdcatplayer.main.Entities;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,7 @@ import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs._MyDAOInterface;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.Entities.MySong;
 
 import android.content.Context;
 

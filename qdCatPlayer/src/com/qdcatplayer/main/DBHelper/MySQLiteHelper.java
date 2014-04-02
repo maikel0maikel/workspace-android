@@ -11,13 +11,13 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.qdcatplayer.main.entities.MyAlbum;
-import com.qdcatplayer.main.entities.MyArtist;
-import com.qdcatplayer.main.entities.MyBitrate;
-import com.qdcatplayer.main.entities.MyFolder;
-import com.qdcatplayer.main.entities.MyFormat;
-import com.qdcatplayer.main.entities.MyPath;
-import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.Entities.MyAlbum;
+import com.qdcatplayer.main.Entities.MyArtist;
+import com.qdcatplayer.main.Entities.MyBitrate;
+import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Entities.MyFormat;
+import com.qdcatplayer.main.Entities.MyPath;
+import com.qdcatplayer.main.Entities.MySong;
 
 public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 	private static final String DATABASE_NAME = "QDCATPLAYER_DB";

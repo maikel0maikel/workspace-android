@@ -13,7 +13,7 @@
         
 
     </PreferenceCategory>
-    <com.qdcatplayer.main.Setting2.FolderChooserPreference
+    <com.qdcatplayer.main.Setting.FolderChooserPreference
 		android:key="imageList"
 		android:title="Title"
 		android:summary="Summary"

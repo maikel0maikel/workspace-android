@@ -7,10 +7,10 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.entities.MyAlbum;
-import com.qdcatplayer.main.entities.MyArtist;
-import com.qdcatplayer.main.entities.MyBitrate;
-import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.Entities.MyAlbum;
+import com.qdcatplayer.main.Entities.MyArtist;
+import com.qdcatplayer.main.Entities.MyBitrate;
+import com.qdcatplayer.main.Entities.MySong;
 
 public class MyArtistDAO extends _MyDAOAbstract<MyArtistDAO, MyArtist>
 implements _MyDAOInterface<MyArtistDAO, MyArtist>

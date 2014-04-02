@@ -1,10 +1,10 @@
-package com.qdcatplayer.main.entities;
+package com.qdcatplayer.main.Entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyPathDAO;
 import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.libraries.MyFileHelper;
+import com.qdcatplayer.main.Libraries.MyFileHelper;
 
 @DatabaseTable(tableName = "MyPaths")
 public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {

@@ -9,7 +9,7 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.qdcatplayer.main.libraries.MyMD5;
+import com.qdcatplayer.main.Libraries.MyMD5;
 
 public class MyFolderChanges {
 	private String path = null;

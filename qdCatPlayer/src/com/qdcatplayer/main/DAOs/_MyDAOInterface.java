@@ -6,8 +6,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.entities.MySong;
-import com.qdcatplayer.main.entities._MyEntityAbstract;
+import com.qdcatplayer.main.Entities.MySong;
+import com.qdcatplayer.main.Entities._MyEntityAbstract;
 
 import android.content.Context;
 

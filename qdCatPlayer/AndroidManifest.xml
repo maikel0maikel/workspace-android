@@ -25,26 +25,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        
         <activity
-            android:name="com.qdcatplayer.main.Setting.SettingListActivity"
-            android:label="@string/title_setting_list" >
-        </activity>
-        <activity
-            android:name="com.qdcatplayer.main.Setting.SettingDetailActivityActivity"
-            android:label="@string/title_setting_detail"
-            android:parentActivityName="com.qdcatplayer.main.Setting.SettingListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SettingListActivity" />
-        </activity>
-        <activity
-            android:name="com.qdcatplayer.main.Setting2.SettingsActivity"
+            android:name="com.qdcatplayer.main.Setting.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
-        <activity
-            android:name="com.qdcatplayer.main.Setting2.Vdthoi"
-            android:label="@string/title_activity_settings" >
-        </activity>
+        
     </application>
 
 </manifest>

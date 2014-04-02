@@ -11,16 +11,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
+import com.qdcatplayer.main.DBHelper.MyDBManager;
+import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
+import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
 import com.qdcatplayer.main.FileSystem.MyFolderChanges;
 import com.qdcatplayer.main.GUI.MyLibraryListFragment;
 import com.qdcatplayer.main.GUI.MyLibraryListFragment.MyLibraryClickListener;
-import com.qdcatplayer.main.Setting2.SettingsActivity;
-import com.qdcatplayer.main.entities.MyFolder;
-import com.qdcatplayer.main.entities.MySong;
+import com.qdcatplayer.main.Setting.SettingsActivity;
 
 
 public class MainActivity extends Activity implements MyLibraryClickListener {
@@ -30,18 +33,17 @@ public class MainActivity extends Activity implements MyLibraryClickListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.player_main);
-		
+		//LoadToDB();
 		
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		/*
-		setContentView(R.layout.activity_main);
+		
 		
 		MyDBManager mn=new MyDBManager();
 		MySQLiteHelper h=mn.getHelper(getApplicationContext());
 		h.getWritableDatabase();
 		
 		LoadToDB();
-		*/
+		//callSetting();
 		//what the fuck
 		/*
 		MyAlbumDAO dao = new MyAlbumDAO(getApplicationContext(), null);
@@ -128,7 +130,7 @@ public class MainActivity extends Activity implements MyLibraryClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
-		
+		callSetting();
 		return true;
 		
 	}

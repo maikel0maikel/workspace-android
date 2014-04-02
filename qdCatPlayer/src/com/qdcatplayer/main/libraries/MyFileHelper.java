@@ -1,4 +1,4 @@
-package com.qdcatplayer.main.libraries;
+package com.qdcatplayer.main.Libraries;
 
 import java.io.File;
 

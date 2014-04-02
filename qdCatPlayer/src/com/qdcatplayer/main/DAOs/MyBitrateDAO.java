@@ -7,9 +7,9 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.entities.MyArtist;
-import com.qdcatplayer.main.entities.MyBitrate;
-import com.qdcatplayer.main.entities.MyFolder;
+import com.qdcatplayer.main.Entities.MyArtist;
+import com.qdcatplayer.main.Entities.MyBitrate;
+import com.qdcatplayer.main.Entities.MyFolder;
 
 public class MyBitrateDAO extends _MyDAOAbstract<MyBitrateDAO, MyBitrate>
 implements _MyDAOInterface<MyBitrateDAO, MyBitrate>

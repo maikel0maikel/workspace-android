@@ -7,10 +7,10 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.entities.MyFolder;
-import com.qdcatplayer.main.entities.MyPath;
-import com.qdcatplayer.main.entities.MySong;
-import com.qdcatplayer.main.libraries.MyFileHelper;
+import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Entities.MyPath;
+import com.qdcatplayer.main.Entities.MySong;
+import com.qdcatplayer.main.Libraries.MyFileHelper;
 
 public class MyPathDAO extends _MyDAOAbstract<MyPathDAO, MyPath>
 implements _MyDAOInterface<MyPathDAO, MyPath>

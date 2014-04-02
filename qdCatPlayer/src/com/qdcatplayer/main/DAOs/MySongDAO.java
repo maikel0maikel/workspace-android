@@ -12,14 +12,14 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
-import com.qdcatplayer.main.entities.MyAlbum;
-import com.qdcatplayer.main.entities.MyArtist;
-import com.qdcatplayer.main.entities.MyBitrate;
-import com.qdcatplayer.main.entities.MyFormat;
-import com.qdcatplayer.main.entities.MyPath;
-import com.qdcatplayer.main.entities.MySong;
-import com.qdcatplayer.main.libraries.MyFileHelper;
-import com.qdcatplayer.main.libraries.MyNumberHelper;
+import com.qdcatplayer.main.Entities.MyAlbum;
+import com.qdcatplayer.main.Entities.MyArtist;
+import com.qdcatplayer.main.Entities.MyBitrate;
+import com.qdcatplayer.main.Entities.MyFormat;
+import com.qdcatplayer.main.Entities.MyPath;
+import com.qdcatplayer.main.Entities.MySong;
+import com.qdcatplayer.main.Libraries.MyFileHelper;
+import com.qdcatplayer.main.Libraries.MyNumberHelper;
 
 /**
  * Lam viec truc tiep voi doi tuong MySong

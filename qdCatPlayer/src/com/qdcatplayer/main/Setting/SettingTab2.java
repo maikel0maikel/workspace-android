@@ -1,4 +1,4 @@
-package com.qdcatplayer.main.Setting2;
+package com.qdcatplayer.main.Setting;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
