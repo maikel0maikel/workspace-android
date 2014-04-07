@@ -34,6 +34,10 @@ implements _MyDAOInterface<MySongDAO,MySong>
 	public MySongDAO(Context ctx, GlobalDAO g) {
     	super(ctx,g);
 	}
+	/**
+	 * Get all song in DB
+	 * Only support DB SOURCE at this time
+	 */
     @Override
     public ArrayList<MySong> getAll()
 	{

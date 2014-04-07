@@ -46,7 +46,7 @@
 		   android:layout_weight=".15"
 		   android:layout_margin="0dp"
 		   
-		   layout="@layout/volume_seekbar" />
+		   layout="@layout/player_main_volume_seekbar" />
         
     </LinearLayout>
 

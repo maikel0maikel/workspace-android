@@ -27,10 +27,20 @@ public class MyLibraryListFragment extends ListFragment {
 		private class ViewHolder {
 			private ImageView img = null;
 			private TextView tv = null;
+			private String itemId=null;
 
-			public ViewHolder(ImageView img, TextView tv) {
+			public String getItemId() {
+				return itemId;
+			}
+
+			public void setItemId(String itemId) {
+				this.itemId = itemId;
+			}
+
+			public ViewHolder(ImageView img, TextView tv, String itemId) {
 				this.img = img;
 				this.tv = tv;
+				this.itemId = itemId;
 			}
 
 			public ImageView getImg() {
@@ -76,14 +86,15 @@ public class MyLibraryListFragment extends ListFragment {
 
 					@Override
 					public void onClick(View v) {
-						mListener.onItemClick("wtf");
+						ViewHolder holder=(ViewHolder)v.getTag();
+						mListener.onLibraryItemClick(holder.getItemId());
 					}
 				});
 				img = (ImageView) convertView
 						.findViewById(R.id.library_item_imageView);
 				tv = (TextView) convertView
 						.findViewById(R.id.library_item_textView);
-				holder = new ViewHolder(img, tv);
+				holder = new ViewHolder(img, tv, ids[position]);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 				img = holder.getImg();
@@ -98,13 +109,18 @@ public class MyLibraryListFragment extends ListFragment {
 	}
 
 	public interface MyLibraryClickListener {
-		public void onItemClick(String itemId);
+		public void onLibraryItemClick(String itemId);
 	}
 
 	public String[] ids = null;
 	public HashMap<String, String> map = null;
 	private MyLibraryClickListener mListener = null;
 	public String[] values = null;
+
+	public MyLibraryListFragment()
+	{
+		
+	}
 
 	private void loadResource() {
 		ids = getResources().getStringArray(R.array.library_item_id_array);
@@ -128,8 +144,9 @@ public class MyLibraryListFragment extends ListFragment {
 				R.layout.library_listview_item, values, new MyLibraryClickListener() {
 					
 					@Override
-					public void onItemClick(String itemId) {
-						mListener.onItemClick(itemId);
+					public void onLibraryItemClick(String itemId) {
+						//send message to parent activity
+						mListener.onLibraryItemClick(itemId);
 					}
 				});
 		
@@ -156,7 +173,7 @@ public class MyLibraryListFragment extends ListFragment {
 		View v = inflater.inflate(R.layout.library_listview, container, false);
 		return v;
 	}
-	public MyLibraryListFragment()
+	private void callLibrarySongsFragment()
 	{
 		
 	}

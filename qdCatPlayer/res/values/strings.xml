@@ -14,5 +14,6 @@
     <string name="library_artist_label">Artists</string>
     <string name="library_folder_label">Folders</string>
     <string name="library_allsongs_label">All songs</string>
+    <string name="title_activity_my_library">MyLibraryActivity</string>
 
 </resources>
