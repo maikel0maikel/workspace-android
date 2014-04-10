@@ -2,6 +2,8 @@ package com.qdcatplayer.main.DAOs;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import android.content.Context;
 
@@ -32,14 +34,23 @@ implements _MyDAOInterface<MyArtistDAO, MyArtist>
 
 	@Override
 	public ArrayList<MyArtist> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<MyArtist> re = new ArrayList<MyArtist>();
+        List<MyArtist> tmp = getDao().queryForAll();
+        for(MyArtist item:tmp)
+        {
+        	item.setDao(this);
+        	item.setLoaded(true);
+        }
+        re.addAll(tmp);
+        return re;
 	}
 
 	@Override
 	public MyArtist getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		MyArtist re = getDao().queryForId(id);
+		re.setDao(this);
+		re.setLoaded(true);//very importance
+		return re;
 	}
 
 	@Override
@@ -71,5 +82,31 @@ implements _MyDAOInterface<MyArtistDAO, MyArtist>
 			}
 		}
 		return -1;
+	}
+
+	public ArrayList<MySong> getSongs(MyArtist obj) {
+		ArrayList<MySong> re = new ArrayList<MySong>();
+		if(getSource()==MySource.DB_SOURCE)
+		{
+			try {
+				/*List<MySong> tmp = getGlobalDAO().getMySongDAO().getDao()
+						.queryBuilder().where().eq(MySong.ALBUM_ID, obj.getId())
+						.query();*/
+				List<MySong> tmp = getGlobalDAO().getMySongDAO().getDao().queryForEq(MySong.ARTIST_ID, obj.getId());
+				for(MySong item:tmp)
+				{
+					item.setDao(getGlobalDAO().getMySongDAO());
+					item.setLoaded(true);
+					re.add(item);
+				}
+				return re;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		//do not support DISK SOURCE
+		return re;
 	}
 }

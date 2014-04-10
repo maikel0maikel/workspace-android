@@ -29,6 +29,8 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 	 */
 	public static final String PATH_ID = "path_id";
 
+	public static final String ARTIST_ID = "artist_id";
+
 	@DatabaseField(canBeNull = true, foreign = true)
 	private MyAlbum album = null;
 

@@ -38,8 +38,15 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 
 	@Override
 	public ArrayList<MyAlbum> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<MyAlbum> re = new ArrayList<MyAlbum>();
+        List<MyAlbum> tmp = getDao().queryForAll();
+        for(MyAlbum item:tmp)
+        {
+        	item.setDao(this);
+        	item.setLoaded(true);
+        }
+        re.addAll(tmp);
+        return re;
 	}
 
 	@Override

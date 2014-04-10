@@ -20,7 +20,7 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 	private Bitmap cover = null;
 	@DatabaseField(unique = true)
 	private String name = null;
-
+	
 	private ArrayList<MySong> songs = null;
 	
 	public MyAlbum() {
@@ -77,4 +77,5 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 		setLoaded(true);
 		return super.insert();
 	}
+
 }

@@ -46,6 +46,7 @@ implements _MyDAOInterface<MySongDAO,MySong>
         for(MySong item:tmp)
         {
         	item.setDao(this);
+        	item.setLoaded(true);//very importance
         }
         re.addAll(tmp);
         return re;

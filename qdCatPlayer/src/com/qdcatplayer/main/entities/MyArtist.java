@@ -1,5 +1,8 @@
 package com.qdcatplayer.main.Entities;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -10,11 +13,15 @@ import com.qdcatplayer.main.DAOs.MyArtistDAO;
 public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 	public static final String NAME_F = "name";
 
-	@ForeignCollectionField
-	private ForeignCollection<MySong> songs = null;
-
 	@DatabaseField(unique = true)
 	private String name = "";// never null
+
+	/**
+	 * KHÔNG dùng ForeignCollection, vì một vài lý do như
+	 * setDao
+	 * setLoaded
+	 */
+	private ArrayList<MySong> songs = null;
 
 	public MyArtist() {
 
@@ -24,29 +31,20 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 		setName(name);
 	}
 
-	public ForeignCollection<MySong> getSongs() {
-		super.load();
-		return songs;
-	}
-
 	public String getName() {
+		super.load();
 		return name;
 	}
 
-
-	@Override
-	public void reset() {
-		super.reset();
-		name = null;
+	public ArrayList<MySong> getSongs() {
+		if(songs==null)
+		{
+			songs = getDao().getSongs(this);
+		}
+		return songs;
 	}
 
-	public void setMySongs(ForeignCollection<MySong> mySongs) {
-		this.songs = mySongs;
-	}
 
-	public void setName(String name_) {
-		name = name_ == null ? "" : name_;
-	}
 	@Override
 	public Integer insert() {
 		//very importance
@@ -56,6 +54,15 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 		//then all data pre-loaded will swiped out
 		setLoaded(true);
 		return super.insert();
+	}
+
+	@Override
+	public void reset() {
+		super.reset();
+		name = null;
+	}
+	public void setName(String name_) {
+		name = name_ == null ? "" : name_;
 	}
 
 }

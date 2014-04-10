@@ -22,22 +22,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Set songs (ArrayList<MySong>) over bundle by
+ * using bundle.setSerializable(MyLibrarySongsFragment.SONGS, songs)
+ * @author admin
+ *
+ */
 public class MyLibrarySongsFragment extends ListFragment {
+	public static String SONGS = "SONGS";
+	public interface MyLibrarySongItemClickListener {
+		public void onLibrarySongItemClick(MySong current, ArrayList<MySong> playlist);
+	}
+
 	private class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 		private class ViewHolder {
-			private TextView tv_title = null;
+			private MySong song = null;
+			private TextView tv_album = null;
 			private TextView tv_artist = null;
 			private TextView tv_duration = null;
-			private TextView tv_album = null;
-			private MySong song = null;
-
-			public MySong getSong() {
-				return song;
-			}
-
-			public void setSong(MySong song) {
-				this.song = song;
-			}
+			private TextView tv_title = null;
 
 			public ViewHolder(MySong song, TextView tv_title,
 					TextView tv_artist, TextView tv_duration,TextView tv_album) {
@@ -45,51 +48,59 @@ public class MyLibrarySongsFragment extends ListFragment {
 				this.tv_artist= tv_artist;
 				this.tv_duration = tv_duration;
 				this.tv_album = tv_album;
-				
+				this.song = song;
 			}
 
-			public TextView getTv_title() {
-				return tv_title;
-			}
-
-			public void setTv_title(TextView tv_title) {
-				this.tv_title = tv_title;
-			}
-
-			public TextView getTv_artist() {
-				return tv_artist;
-			}
-
-			public void setTv_artist(TextView tv_artist) {
-				this.tv_artist = tv_artist;
-			}
-
-			public TextView getTv_duration() {
-				return tv_duration;
-			}
-
-			public void setTv_duration(TextView tv_duration) {
-				this.tv_duration = tv_duration;
+			public MySong getSong() {
+				return song;
 			}
 
 			public TextView getTv_album() {
 				return tv_album;
 			}
 
+			public TextView getTv_artist() {
+				return tv_artist;
+			}
+
+			public TextView getTv_duration() {
+				return tv_duration;
+			}
+
+			public TextView getTv_title() {
+				return tv_title;
+			}
+
+			public void setSong(MySong song) {
+				this.song = song;
+			}
+
 			public void setTv_album(TextView tv_album) {
 				this.tv_album = tv_album;
 			}
 
+			public void setTv_artist(TextView tv_artist) {
+				this.tv_artist = tv_artist;
+			}
+
+			public void setTv_duration(TextView tv_duration) {
+				this.tv_duration = tv_duration;
+			}
+
+			public void setTv_title(TextView tv_title) {
+				this.tv_title = tv_title;
+			}
+
 		}
 
-		private ArrayList<MySong> items = null;
 		private MyLibrarySongItemClickListener mListener = null;
+		private ArrayList<MySong> songs = null;
 
 		public MyLibrarySongsAdapter(Context context, int textViewResourceId,
 				ArrayList<MySong> objects, MyLibrarySongItemClickListener listener) {
 
 			super(context, textViewResourceId, objects);
-			items = objects;
+			songs = objects;
 			mListener = listener;
 		}
 
@@ -100,7 +111,7 @@ public class MyLibrarySongsFragment extends ListFragment {
 			TextView tv_duration;
 			TextView tv_album;
 			ViewHolder holder;
-			MySong song = items.get(position);
+			MySong song = songs.get(position);
 			if (convertView == null) {
 				/*LayoutInflater inflater = ((Activity) getContext())
 						.getLayoutInflater();*/
@@ -113,7 +124,7 @@ public class MyLibrarySongsFragment extends ListFragment {
 					public void onClick(View v) {
 						ViewHolder holder = (ViewHolder) v.getTag();
 						MySong song = holder.getSong();
-						mListener.onLibrarySongItemClick(song, items);
+						mListener.onLibrarySongItemClick(song, songs);
 					}
 				});
 				tv_title = (TextView) convertView
@@ -143,18 +154,10 @@ public class MyLibrarySongsFragment extends ListFragment {
 		}
 	}
 
-	public interface MyLibrarySongItemClickListener {
-		public void onLibrarySongItemClick(MySong current, ArrayList<MySong> playlist);
-	}
-
-	public String[] ids = null;
-	public HashMap<String, String> map = null;
 	private MyLibrarySongItemClickListener mListener = null;
-	public ArrayList<MySong> values = null;
+	public ArrayList<MySong> songs = null;
 
-	public MyLibrarySongsFragment()
-	{
-		
+	public MyLibrarySongsFragment(){	
 	}
 
 	@Override
@@ -162,12 +165,15 @@ public class MyLibrarySongsFragment extends ListFragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		MySongDAO dao= new MySongDAO(getActivity().getApplicationContext(), null);
-		dao.setSource(MySource.DB_SOURCE);
-		values = dao.getAll();
+		Bundle data = getArguments();
+		songs = (ArrayList<MySong>) data.getSerializable(MyLibrarySongsFragment.SONGS);
+		if(songs==null)
+		{
+			songs = new ArrayList<MySong>();//by default
+		}
 		
 		MyLibrarySongsAdapter adp = new MyLibrarySongsAdapter(getActivity().getApplicationContext(),
-				R.layout.library_songs_listview_item, values, new MyLibrarySongItemClickListener() {
+				R.layout.library_songs_listview_item, songs, new MyLibrarySongItemClickListener() {
 					@Override
 					public void onLibrarySongItemClick(MySong current, ArrayList<MySong> playlist) {
 						// TODO Auto-generated method stub

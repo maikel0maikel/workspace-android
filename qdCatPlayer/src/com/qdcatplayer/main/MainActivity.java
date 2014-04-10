@@ -12,11 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.DAOs.MyArtistDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
+import com.qdcatplayer.main.Entities.MyArtist;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
