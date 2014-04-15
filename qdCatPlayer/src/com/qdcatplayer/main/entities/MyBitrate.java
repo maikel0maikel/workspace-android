@@ -9,8 +9,6 @@ import com.qdcatplayer.main.DAOs.MyBitrateDAO;
 @DatabaseTable(tableName="MyBitrates")
 public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO, MyBitrate> {
 	public static final String VALUE_F = "value";
-	@ForeignCollectionField
-	private ForeignCollection<MySong> songs = null;
 	@DatabaseField(unique=true, canBeNull=false)
 	private Long value=0l;//never null
 	public MyBitrate() {
@@ -38,10 +36,6 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO, MyBitrate> {
 			value = 0l;
 		}
 	}
-
-	public ForeignCollection<MySong> getMySongs() {
-		return songs;
-	}
 	public Long getValue()
 	{
 		return value;
@@ -50,11 +44,7 @@ public class MyBitrate extends _MyEntityAbstract<MyBitrateDAO, MyBitrate> {
 	@Override
 	public void reset() {
 		value = null;
-		songs = null;
 		super.reset();
-	}
-	public void setMySongs(ForeignCollection<MySong> mySongs) {
-		this.songs = mySongs;
 	}
 	public Long setValue()
 	{

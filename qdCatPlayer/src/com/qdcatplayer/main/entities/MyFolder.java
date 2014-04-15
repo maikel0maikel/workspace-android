@@ -32,9 +32,8 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	// so, we need to declare new Boolean varible to separate meaning
 	// of 2 concept: "no parent" and "not ready yet"
 	private Boolean parentFolder_ready = false;
-	@ForeignCollectionField
-	private ForeignCollection<MyPath> paths = null;
-
+	
+	private ArrayList<MySong> allRecursiveSongs=null;
 	public MyFolder() {
 
 	}
@@ -57,7 +56,11 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	 * @return
 	 */
 	public ArrayList<MySong> getAllRecursiveSongs() {
-		return getDao().getAllRecursiveSongs(this);
+		if(allRecursiveSongs==null)
+		{
+			allRecursiveSongs = getDao().getAllRecursiveSongs(this); 
+		}
+		return allRecursiveSongs;
 	}
 
 	public ArrayList<MyFolder> getChildFolders() {
@@ -82,10 +85,13 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	}
 
 	public String getFolderName() {
+		/*
 		if (folderName != null) {
 			return folderName;
 		}
 		folderName = MyFileHelper.getFolderName(getAbsPath());
+		*/
+		super.load();
 		return folderName;
 	}
 
@@ -110,11 +116,6 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 		return parentFolder;
 	}
 
-	public ForeignCollection<MyPath> getPaths() {
-		return paths;
-	}
-
-
 	@Override
 	public void reset() {
 		super.reset();
@@ -122,8 +123,8 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 		parentFolder = null;
 		parentFolder_ready = false;
 		folderName = null;
-		paths = null;
 		childsSong = null;
+		allRecursiveSongs=null;
 		//do not reset absPath
 	}
 
@@ -139,9 +140,6 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 		parentFolder = parentFolder_;
 	}
 
-	public void setPaths(ForeignCollection<MyPath> paths) {
-		this.paths = paths;
-	}
 	public Boolean isOnDisk()
 	{
 		return MyFileHelper.isExist(getAbsPath());
