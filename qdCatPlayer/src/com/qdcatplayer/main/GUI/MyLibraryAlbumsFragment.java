@@ -207,4 +207,9 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 		View v = inflater.inflate(R.layout.library_albums_listview, container, false);
 		return v;
 	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+	}
 }
