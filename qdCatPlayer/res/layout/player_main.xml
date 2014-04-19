@@ -21,32 +21,41 @@
 		   android:layout_weight=".15"
 		   android:layout_margin="0dp"
 		   layout="@layout/player_main_header" />
+
+     <!--   <LinearLayout
+            android:id="@+id/middle_layout"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_margin="0dp"
+            android:layout_weight="0.40"
+            android:orientation="horizontal" > --> 
+
         <include
-		   android:layout_width="fill_parent"
-		   android:layout_height="0dp"
-		   android:layout_weight=".15"
-		   android:layout_margin="0dp"
-		   layout="@layout/player_main_duration_seekbar" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            layout="@layout/player_main_midle_song" />
+        
+<!--         <include -->
+<!--            android:layout_height="fill_parent" -->
+<!-- 		   android:layout_weight=".15" -->
+<!-- 		   android:layout_margin="0dp" -->
+<!--            layout="@layout/volume_seekbar" /> -->
+
+   <!--      </LinearLayout> -->
+    
         <include
-		   android:layout_width="fill_parent"
-		   android:layout_height="0dp"
-		   android:layout_weight=".40"
-		   android:layout_margin="0dp"
-		   layout="@layout/player_main_midle_song" />
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            layout="@layout/player_main_duration_seekbar" />
+
         <include
-		   android:layout_width="fill_parent"
-		   android:layout_height="0dp"
-		   android:layout_weight=".15"
-		   android:layout_margin="0dp"
-		   
-		   layout="@layout/player_main_navigate" />
-        <include
-		   android:layout_width="fill_parent"
-		   android:layout_height="0dp"
-		   android:layout_weight=".15"
-		   android:layout_margin="0dp"
-		   
-		   layout="@layout/player_main_volume_seekbar" />
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_margin="0dp"
+            android:layout_weight="0.15"
+            layout="@layout/player_main_navigate" />
         
     </LinearLayout>
 

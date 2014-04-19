@@ -2,14 +2,17 @@ package com.qdcatplayer.main;
 
 import java.util.ArrayList;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.app.ActionBar.Tab;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.DAOs.MyArtistDAO;
@@ -24,6 +27,7 @@ import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
 import com.qdcatplayer.main.FileSystem.MyFolderChanges;
 import com.qdcatplayer.main.GUI.MyLibraryActivity;
+import com.qdcatplayer.main.GUI.MainPlayerFragment;
 import com.qdcatplayer.main.GUI.MyLibraryListFragment;
 import com.qdcatplayer.main.GUI.MyLibraryListFragment.MyLibraryClickListener;
 import com.qdcatplayer.main.Setting.SettingsActivity;
@@ -35,7 +39,16 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.player_main);
+		setContentView(R.layout.main_layout);
+		final ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		Tab mTab1= actionBar.newTab().setText("List").setTabListener(new KimTabListener());
+		Tab mTab2= actionBar.newTab().setText("Music Player").setTabListener(new KimTabListener());
+		Tab mTab3= actionBar.newTab().setText("Setting").setTabListener(new KimTabListener());
+		actionBar.addTab(mTab1);
+		actionBar.addTab(mTab2);
+		actionBar.addTab(mTab3);
+		
 		//LoadToDB();
 		
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -61,8 +74,42 @@ public class MainActivity extends Activity {
 		*/
 		//SettingListActivity m = new SettingListActivity();
 		
-		
 		showLibraryActivity();
+		
+		//Xong roi do, gio chinh giao dien gi do di
+		//Chung nao xong het roi commit qua tui luon
+	}
+	private class KimTabListener implements ActionBar.TabListener{
+
+		@Override
+		public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub
+			Toast toast=Toast.makeText(getApplicationContext(), "tab", Toast.LENGTH_SHORT);
+			if(tab.getText().equals("Music Player")){
+				MainPlayerFragment fm=new MainPlayerFragment();
+				FragmentTransaction frt=getFragmentManager().beginTransaction();
+				frt.replace(R.id.layout_container, fm);
+				frt.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+				frt.commit();
+			}
+			else{
+				
+				toast.setText("The others");
+				toast.show();
+			}
+		}
+
+		@Override
+		public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 	private void showLibraryActivity()
