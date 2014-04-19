@@ -10,6 +10,7 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.Where;
+import com.qdcatplayer.main.Entities.MyAlbum;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MyFormat;
 import com.qdcatplayer.main.Entities.MyPath;
@@ -33,11 +34,17 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 		}
 		return null;
 	}
-
 	@Override
 	public ArrayList<MyFolder> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<MyFolder> re = new ArrayList<MyFolder>();
+        List<MyFolder> tmp = getDao().queryForAll();
+        for(MyFolder item:tmp)
+        {
+        	item.setDao(this);
+        	item.setLoaded(true);
+        }
+        re.addAll(tmp);
+        return re;
 	}
 
 	@Override

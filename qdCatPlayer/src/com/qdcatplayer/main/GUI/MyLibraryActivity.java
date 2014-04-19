@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -15,9 +16,11 @@ import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.Entities.MyAlbum;
 import com.qdcatplayer.main.Entities.MyArtist;
+import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.GUI.MyLibraryAlbumsFragment.MyLibraryAlbumItemClickListener;
 import com.qdcatplayer.main.GUI.MyLibraryArtistsFragment.MyLibraryArtistItemClickListener;
+import com.qdcatplayer.main.GUI.MyLibraryFoldersFragment.MyLibraryFolderItemClickListener;
 import com.qdcatplayer.main.GUI.MyLibraryListFragment.MyLibraryClickListener;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
 import com.qdcatplayer.main.Setting.SettingsActivity;
@@ -33,8 +36,13 @@ implements
 	MyLibraryClickListener,
 	MyLibrarySongItemClickListener,
 	MyLibraryAlbumItemClickListener,
-	MyLibraryArtistItemClickListener
+	MyLibraryArtistItemClickListener,
+	MyLibraryFolderItemClickListener
 {
+	/**
+	 * For cached
+	 */
+	private ArrayList<MyFolder> allFolders = null;
 	/**
 	 * Shared DAO accross Activity Live
 	 */
@@ -52,11 +60,10 @@ implements
         //when app not swap fragment yet
         if(addToBackStack)
         {
-        	ft.addToBackStack("MyLibraryAlbumsFragment");//very importance
+        	ft.addToBackStack(MyLibraryAlbumsFragment.class.getName());//very importance
         }
         ft.commit();
 	}
-	
 	private void callLibraryArtistsFragment(Boolean addToBackStack, ArrayList<MyArtist> artists) {
 		MyLibraryArtistsFragment mFragment = new MyLibraryArtistsFragment();
 		Bundle bundle = new Bundle();
@@ -74,6 +81,24 @@ implements
         }
         ft.commit();
 	}
+	
+	private void callLibraryFoldersFragment(Boolean addToBackStack, ArrayList<MyFolder> folders) {
+		MyLibraryFoldersFragment mFragment = new MyLibraryFoldersFragment();
+		Bundle bundle = new Bundle();
+		//set data
+		bundle.putSerializable(MyLibraryFoldersFragment.FOLDERS, folders);
+		//set arg
+		mFragment.setArguments(bundle);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.library_main_placeholder, mFragment);
+        //since addToBackStacl allow user to navigate to blank screen
+        //when app not swap fragment yet
+        if(addToBackStack)
+        {
+        	ft.addToBackStack(MyLibraryFoldersFragment.class.getName());//very importance
+        }
+        ft.commit();
+	}
 	private void callLibraryListFragment()
 	{
 		MyLibraryListFragment mFragment = new MyLibraryListFragment();
@@ -82,7 +107,6 @@ implements
         //since addToBackStacl allow user to navigate to blank screen
         //when app not swap fragment yet
         //ft.addToBackStack("MyLibraryListFragment");//very importance
-        
         ft.commit();
 	}
 	/**
@@ -104,7 +128,8 @@ implements
         //when app not swap fragment yet
         if(addToBackStack)
         {
-        	ft.addToBackStack("MyLibrarySongsFragment");//very importance
+        	ft.addToBackStack(MyLibrarySongsFragment.class.getName());//very importance
+        	//Log.w("qd",MyLibrarySongsFragment.class.getName());
         }
         ft.commit();
 	}
@@ -118,7 +143,6 @@ implements
 		//View by default
 		callLibraryListFragment();
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -132,11 +156,18 @@ implements
 		//Display songs of album
 		callLibrarySongsFragment(true, current.getSongs());
 	}
+
 	@Override
 	public void onLibraryArtistItemClick(MyArtist current,
 			ArrayList<MyArtist> artists) {
 		//Display songs of artist
 		callLibrarySongsFragment(true, current.getSongs());
+	}
+	@Override
+	public void onLibraryFolderItemClick(MyFolder current,
+			ArrayList<MyFolder> folders) {
+		//Display all recursive songs of folder
+		callLibrarySongsFragment(true, current.getAllRecursiveSongs());
 	}
 
 	@Override
@@ -155,6 +186,16 @@ implements
 		else if(itemId.toUpperCase().equals("ARTISTS_ITEM"))
 		{
 			callLibraryArtistsFragment(true, gDAOs.getMyArtistDAO().getAll());
+			return;
+		}
+		else if(itemId.toUpperCase().equals("FOLDERS_ITEM"))
+		{
+			//cached because of time to load allrecursive song for count
+			if(allFolders==null)
+			{
+				allFolders = gDAOs.getMyFolderDAO().getAll();
+			}
+			callLibraryFoldersFragment(true, allFolders);//be careful because of cache
 			return;
 		}
 		//default
@@ -179,5 +220,30 @@ implements
 		startActivity(setting);
 		return true;
 	}
-	
+
+	private void resetCached()
+	{
+		allFolders = null;
+	}
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		//do not call super or error may occur
+		//when be in MyLibrarySongsFragment and minimize or switch to other activity
+		//may be ormLite
+		//super.onSaveInstanceState(outState);
+	}
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		//super.onRestoreInstanceState(savedInstanceState);
+	}
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+	}
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
 }

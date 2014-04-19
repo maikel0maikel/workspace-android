@@ -16,9 +16,6 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 	@DatabaseField(canBeNull = false)
 	private String mimeType = "audio/mp3";
 
-	@ForeignCollectionField
-	private ForeignCollection<MySong> songs = null;
-
 	public MyFormat() {
 	}
 
@@ -37,20 +34,12 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 		return mimeType;
 	}
 
-	public ForeignCollection<MySong> getMySongs() {
-		super.load();
-		return songs;
-	}
-
-
 	@Override
 	public void reset() {
 		super.reset();
 		
 		extension = null;
-		mimeType = null;
-		songs = null;
-		
+		mimeType = null;		
 	}
 
 	public void setExtension(String extension) {
@@ -61,9 +50,6 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 		this.mimeType = mimeType;
 	}
 
-	public void setMySongs(ForeignCollection<MySong> mySongs) {
-		this.songs = mySongs;
-	}
 	@Override
 	public Integer insert() {
 		//very importance
