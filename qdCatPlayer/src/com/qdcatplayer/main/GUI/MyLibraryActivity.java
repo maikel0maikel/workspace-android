@@ -39,6 +39,9 @@ implements
 	MyLibraryArtistItemClickListener,
 	MyLibraryFolderItemClickListener
 {
+	public MyLibraryActivity() {
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * For cached
 	 */
@@ -234,7 +237,7 @@ implements
 	}
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		//super.onRestoreInstanceState(savedInstanceState);
+		super.onRestoreInstanceState(savedInstanceState);
 	}
 	@Override
 	protected void onRestart() {

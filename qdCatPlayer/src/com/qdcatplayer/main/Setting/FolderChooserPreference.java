@@ -34,13 +34,13 @@ import android.widget.ListAdapter;
  */
 public class FolderChooserPreference extends ListPreference {
 	public interface MyItemClickListener {
-		public void onClick(MyFolder fd,Boolean isChecked);
+		public void onClick(String absPath,Boolean isChecked);
 	}
 	/**
 	 * Luu ds cac folder duoc chon khi co su thay doi tu ng dung
 	 * Sau do khi click OK thi se su dung de lay ds cac Folder duoc chon cuoi cung
 	 */
-	HashMap<String, MyFolder> chooseResult =new HashMap<String, MyFolder>();
+	HashMap<String, Boolean> chooseResult =new HashMap<String, Boolean>();
 	public FolderChooserPreference(Context arg0) {
 		super(arg0);
 	}
@@ -66,7 +66,7 @@ public class FolderChooserPreference extends ListPreference {
 	protected void onPrepareDialogBuilder(Builder builder) {
 		MyFolderDAO dao = new MyFolderDAO(getContext(), null);
 		dao.setSource(MySource.DISK_SOURCE);
-		MyFolder fd = new MyFolder("/sdcard/music");
+		MyFolder fd = new MyFolder("/mnt");
 		fd.setDao(dao);
 		
 		ArrayList<MyFolder> folders = fd.getChildFolders();
@@ -75,23 +75,16 @@ public class FolderChooserPreference extends ListPreference {
 			R.layout.setting_folder_chooser_item, folders, null, fd, new MyItemClickListener() {
 				
 				@Override
-				public void onClick(MyFolder fd, Boolean isChecked) {
-					String absPath = fd.getAbsPath();
+				public void onClick(String absPath, Boolean isChecked) {
 					if(isChecked)
 					{
-						if(!chooseResult.containsKey(absPath))
-						{
-							chooseResult.put(absPath, fd);
-							Log.w("qd", "Put "+absPath);
-						}
+						chooseResult.put(absPath, true);
+						Log.w("qd", "Put "+absPath);
 					}
 					else
 					{
-						if(chooseResult.containsKey(absPath))
-						{
-							chooseResult.remove(absPath);
-							Log.w("qd", "Remove "+absPath);
-						}
+						chooseResult.remove(absPath);
+						Log.w("qd", "Remove "+absPath);
 					}
 				}
 			});
@@ -106,9 +99,10 @@ public class FolderChooserPreference extends ListPreference {
 				// TODO Auto-generated method stub
 				Log.w("qd", "OK clicked");
 				//FINISH
-				for(MyFolder tmp:chooseResult.values())
+		
+				for(String tmp:chooseResult.keySet())
 				{
-					Log.w("qd", tmp.getAbsPath());
+					Log.w("qd", tmp);
 				}
 				//clear after success
 				chooseResult.clear();
