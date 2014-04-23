@@ -25,7 +25,10 @@ public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 	public MySQLiteHelper(Context ctx) {
 		super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
 	}
-	
+	public void resetDB()
+	{
+		onUpgrade(getWritableDatabase(), getConnectionSource(), DATABASE_VERSION, DATABASE_VERSION+1);
+	}
 	@Override
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		try {
@@ -134,13 +137,16 @@ public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 	}
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		super.close();
+		//very importance because àter close there are no way to get it open again
+		//not tested all yet but at current time, do not call super.close or you
+		//might be encountred illegalExcaption when reset DB via upgrade
+		//super.close();
 		_myArtistDAO=null;
 		_myBitrateDAO=null;
 		_myFolderDAO=null;
 		_myFormatDAO=null;
 		_myPathDAO=null;
 		_mySongDAO=null;
+		_myAlbumDAO=null;
 	}
 }

@@ -61,6 +61,7 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 	 * List id of pre checked item
 	 */
 	private Integer[] selected = null;
+	private Integer minus_prefix = 0;
 	public FolderArrayAdapter(Context context, int textViewResourceId,
 			ArrayList<MyFolder> folders, Integer[] selected, MyFolder root, MyItemClickListener from) {
 		super(context, textViewResourceId, folders);
@@ -72,6 +73,7 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 		this.viewHolderMap = new HashMap<String, ViewHolder>();
 		this.checkedMap = new HashMap<String, Boolean>();
 		treeMap = new HashMap<String, Boolean>();
+		minus_prefix = root.getLevel()+1;
 	}
 	@Override
 	public MyFolder getItem(int position) {
@@ -153,6 +155,7 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 					CheckBox tmpCb = (CheckBox)arg0;
 					//dang thu nghiem
 					tickFolder(holder.getFd(), tmpCb.isChecked());
+					mListener.onClick(fd, tmpCb.isChecked());
 				}
 			});
 			convertView.setOnClickListener(new View.OnClickListener() {
@@ -196,7 +199,7 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 			cb.setChecked(false);
 		}
 		
-		tv.setText(fd.getAbsPath().replace(fd.getParentFolder().getAbsPath(), fd.getLevelString("-")));
+		tv.setText(fd.getLevelName("    ", minus_prefix));
 		//khong can thiet lam do co the goi qua getParent de lay
 		//cb.setTag(holder);//to know which folder related to this checkbox is checked or not
 		convertView.setTag(holder);
@@ -264,12 +267,10 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 	private void putToCheckedMap(String absPath)
 	{
 		checkedMap.put(absPath, true);
-		//mListener.onClick(absPath, true);
 	}
 	private void removeFromCheckedMap(String absPath)
 	{
 		checkedMap.remove(absPath);
-		//mListener.onClick(absPath, false);
 	}
 	
 	public class ViewHolder

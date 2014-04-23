@@ -14,12 +14,14 @@
 
     </PreferenceCategory>
     <com.qdcatplayer.main.Setting.FolderChooserPreference
-		android:key="imageList"
-		android:title="Title"
-		android:summary="Summary"
+		android:key="folderList"
+		android:title="@string/setting_choose_folder_title"
+		android:summary="@string/setting_choose_folder_summary"
 		android:entries="@array/vdthoi"
 		android:entryValues="@array/vdthoi2"
 		/>
+    <Preference android:summary="2222222" android:key="loading_state" android:icon="@drawable/ic_launcher" android:title="1111"/>
+    
     
 
 

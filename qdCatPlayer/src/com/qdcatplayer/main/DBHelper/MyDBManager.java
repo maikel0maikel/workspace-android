@@ -26,7 +26,8 @@ public class MyDBManager {
     public void releaseHelper()
     {
         if (_dbHelper != null) {
-            OpenHelperManager.releaseHelper();
+            _dbHelper.close();
+        	OpenHelperManager.releaseHelper();
             _dbHelper = null;
         }
     }

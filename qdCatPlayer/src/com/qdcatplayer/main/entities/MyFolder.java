@@ -151,13 +151,15 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	{
 		return getAbsPath().split("/").length;
 	}
-	public String getLevelString(String delimiter)
+	public String getLevelName(String delimiter, Integer minus_prefix)
 	{
 		String re="";
-		for(int i=0;i<getLevel();i++)
+		Integer level = getLevel() - minus_prefix;
+		if(level<0) level=0;
+		for(int i=0;i<level;i++)
 		{
 			re+=delimiter;
 		}
-		return re;
+		return re+getFolderName();
 	}
 }

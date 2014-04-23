@@ -145,6 +145,10 @@ public final class R {
         public static final int library_allsongs_label=0x7f070009;
         public static final int library_artist_label=0x7f070007;
         public static final int library_folder_label=0x7f070008;
+        public static final int setting_choose_folder_summary=0x7f07000c;
+        /**  Khu vực dành cho Setting  
+         */
+        public static final int setting_choose_folder_title=0x7f07000b;
         public static final int title_activity_my_library=0x7f07000a;
         public static final int title_activity_settings=0x7f070005;
         public static final int title_setting_detail=0x7f070004;

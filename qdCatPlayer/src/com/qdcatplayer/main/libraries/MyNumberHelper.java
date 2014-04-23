@@ -29,6 +29,10 @@ public class MyNumberHelper {
 			return tmp;
 		}
 	}
+	public static Double round(Double number)
+	{
+		return Double.parseDouble(String.valueOf(Math.round(number)));
+	}
 	public static Time toTime(Long milisecs)
 	{
 		Time tmp = new Time();

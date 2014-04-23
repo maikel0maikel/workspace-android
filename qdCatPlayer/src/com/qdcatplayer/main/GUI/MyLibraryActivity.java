@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,8 @@ import com.qdcatplayer.main.GUI.MyLibraryArtistsFragment.MyLibraryArtistItemClic
 import com.qdcatplayer.main.GUI.MyLibraryFoldersFragment.MyLibraryFolderItemClickListener;
 import com.qdcatplayer.main.GUI.MyLibraryListFragment.MyLibraryClickListener;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
+import com.qdcatplayer.main.Setting.FolderChooserPreference;
+import com.qdcatplayer.main.Setting.FolderChooserPreference.OnFolderChooserFinishListener;
 import com.qdcatplayer.main.Setting.SettingsActivity;
 /**
  * Library main/root controller
@@ -37,7 +40,8 @@ implements
 	MyLibrarySongItemClickListener,
 	MyLibraryAlbumItemClickListener,
 	MyLibraryArtistItemClickListener,
-	MyLibraryFolderItemClickListener
+	MyLibraryFolderItemClickListener,
+	OnFolderChooserFinishListener
 {
 	public MyLibraryActivity() {
 		// TODO Auto-generated constructor stub
@@ -141,7 +145,7 @@ implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.library_main);
 		//init DB DAOs
-		gDAOs = new GlobalDAO(getApplicationContext());
+		gDAOs = new GlobalDAO(this);
 		gDAOs.setSource(MySource.DB_SOURCE);//only work on DB SOURCE
 		//View by default
 		callLibraryListFragment();
@@ -188,7 +192,7 @@ implements
 		}
 		else if(itemId.toUpperCase().equals("ARTISTS_ITEM"))
 		{
-			callLibraryArtistsFragment(true, gDAOs.getMyArtistDAO().getAll());
+			callLibraryArtistsFragment(true, gDAOs.getMyArtistDAO().getAll());//do the bi dung do voi MySQLiteHelper.close()
 			return;
 		}
 		else if(itemId.toUpperCase().equals("FOLDERS_ITEM"))
@@ -219,14 +223,43 @@ implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		Intent setting = new Intent(getApplicationContext(), SettingsActivity.class);
-		startActivity(setting);
+		Intent setting = new Intent(this, SettingsActivity.class);
+		/*
+		Bundle bunble = new Bundle();
+		OnFolderFinishHolder holder = new OnFolderFinishHolder(this);
+		bunble.putSerializable(FolderChooserPreference.ONFINISH_LISTENER_KEY,holder);
+		setting.putExtras(bunble);
+		*/
+		startActivityForResult(setting, 1);
+		//startActivity(setting);
 		return true;
 	}
-
-	private void resetCached()
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		//Log.w("qd",this.getClass().getName());
+		if(data==null)
+		{
+			return;
+		}
+		Boolean changed=data.getBooleanExtra(FolderChooserPreference.FOLDER_CHANGED_KEY, false);
+		if(changed)
+		{
+			//backto root GUI first
+			callLibraryListFragment();
+			//reset all cached member related to DB
+			resetDBState();
+		}
+		return;
+	}
+	private void resetDBState()
 	{
 		allFolders = null;
+		gDAOs.release();
+		gDAOs=null;
+		gDAOs = new GlobalDAO(this);
+		gDAOs.setSource(MySource.DB_SOURCE);
 	}
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -237,7 +270,7 @@ implements
 	}
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
+		//super.onRestoreInstanceState(savedInstanceState);
 	}
 	@Override
 	protected void onRestart() {
@@ -249,4 +282,10 @@ implements
 		// TODO Auto-generated method stub
 		super.onResume();
 	}
+	@Override
+	public void OnFolderChooserFinish() {
+		// TODO Auto-generated method stub
+		Log.w("qd","wtf");
+	}
+	
 }

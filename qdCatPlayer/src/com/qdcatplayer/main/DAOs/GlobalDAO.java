@@ -134,4 +134,34 @@ public class GlobalDAO {
 	public void setSource(Integer source) {
 		this.source = source;
 	}
+	public void release() {
+		if(_myAlbumDAO!=null)
+		{
+			_myAlbumDAO.release();
+		}
+		if(_myArtistDAO!=null)
+		{
+			_myArtistDAO.release();
+		}
+		if(_myBitrateDAO!=null)
+		{
+			_myBitrateDAO.release();
+		}
+		if(_myFolderDAO!=null)
+		{
+			_myFolderDAO.release();
+		}
+		if(_myFormatDAO!=null)
+		{
+			_myFormatDAO.release();
+		}
+		if(_myPathDAO!=null)
+		{
+			_myPathDAO.release();
+		}
+		if(_mySongDAO!=null)
+		{
+			_mySongDAO.release();
+		}
+	}
 }

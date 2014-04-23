@@ -3,44 +3,60 @@
  */
 package com.qdcatplayer.main.Setting;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.BackgroundTasks.MyLibraryUpdateTask;
+import com.qdcatplayer.main.BackgroundTasks.MyLibraryUpdateTask.OnBGTaskWorkingListener;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Libraries.MyNumberHelper;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog.Builder;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import android.content.res.TypedArray;
 
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
+import android.preference.PreferenceManager;
 
 import android.util.AttributeSet;
 import android.util.Log;
 
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 /**
  * The ImageListPreference class responsible for displaying an image for each
  * item within the list.
  * @author Casper Wakkers
  */
-public class FolderChooserPreference extends ListPreference {
+public class FolderChooserPreference extends ListPreference{
+	
+	public interface OnFolderChooserFinishListener {
+		public void OnFolderChooserFinish();
+	}
+	public static final String ONFINISH_LISTENER_KEY = "onfinish_listener";
+	public static final String FOLDER_CHANGED_KEY = "folder_changed";
 	public interface MyItemClickListener {
-		public void onClick(String absPath,Boolean isChecked);
+		public void onClick(MyFolder fd,Boolean isChecked);
 	}
 	/**
 	 * Luu ds cac folder duoc chon khi co su thay doi tu ng dung
 	 * Sau do khi click OK thi se su dung de lay ds cac Folder duoc chon cuoi cung
 	 */
-	HashMap<String, Boolean> chooseResult =new HashMap<String, Boolean>();
+	HashMap<String, MyFolder> chooseResult =new HashMap<String, MyFolder>();
 	public FolderChooserPreference(Context arg0) {
 		super(arg0);
 	}
@@ -64,6 +80,7 @@ public class FolderChooserPreference extends ListPreference {
 	 */
 	
 	protected void onPrepareDialogBuilder(Builder builder) {
+		
 		MyFolderDAO dao = new MyFolderDAO(getContext(), null);
 		dao.setSource(MySource.DISK_SOURCE);
 		MyFolder fd = new MyFolder("/mnt");
@@ -75,16 +92,16 @@ public class FolderChooserPreference extends ListPreference {
 			R.layout.setting_folder_chooser_item, folders, null, fd, new MyItemClickListener() {
 				
 				@Override
-				public void onClick(String absPath, Boolean isChecked) {
+				public void onClick(MyFolder fd, Boolean isChecked) {
 					if(isChecked)
 					{
-						chooseResult.put(absPath, true);
-						Log.w("qd", "Put "+absPath);
+						chooseResult.put(fd.getAbsPath(), fd);
+						Log.w("qd", "Put "+fd.getAbsPath());
 					}
 					else
 					{
-						chooseResult.remove(absPath);
-						Log.w("qd", "Remove "+absPath);
+						chooseResult.remove(fd.getAbsPath());
+						Log.w("qd", "Remove "+fd.getAbsPath());
 					}
 				}
 			});
@@ -96,24 +113,68 @@ public class FolderChooserPreference extends ListPreference {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				Log.w("qd", "OK clicked");
-				//FINISH
-		
-				for(String tmp:chooseResult.keySet())
+				if(chooseResult.size()<=0)
 				{
-					Log.w("qd", tmp);
+					Toast.makeText(getContext(), "Nothing changed", 300).show();
+					return;
 				}
-				//clear after success
-				chooseResult.clear();
+				//FINISH
+				ArrayList<MyFolder> list_tmp = new ArrayList<MyFolder>();
+				list_tmp.addAll(chooseResult.values());
+				MyLibraryUpdateTask tsk=new MyLibraryUpdateTask(
+						list_tmp,
+						getContext(),
+						new OnBGTaskWorkingListener() {
+							
+							@Override
+							public void onFinish() {
+								//clear after success
+								chooseResult.clear();
+								//stop progress bar...
+								/*
+								SharedPreferences pref = getPreferenceManager().getSharedPreferences();
+								Editor edit = pref.edit();
+								edit.remove("key").commit();//van con bi double event
+								*/
+								Log.w("qd","Folder changed");
+								getSharedPreferences().edit().putBoolean(FOLDER_CHANGED_KEY, true).commit();
+								//unlock asynctask wait
+								//aSyncTaskFinish=true;
+								setSummary(summary_bk);
+							}
+
+							@Override
+							public void onProgressUpdating(Integer total,
+									Integer current) {
+								Log.w("qd",current+"/"+total);
+								setSummary("Progress: "+current+"/"+total+" ("+(MyNumberHelper.round((double)current/total*100))+"%)");
+							}
+						});
+				tsk.start();
+				
+				summary_bk = String.valueOf(getSummary());
+				setSummary("Waiting...");
 			}
 		});
 		//do not call super or OK button will never appear
 		//super.onPrepareDialogBuilder(builder);
+		
 	}
+	private String summary_bk = "";
+	private Boolean aSyncTaskFinish=false;
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		super.onDialogClosed(positiveResult);
 	}
-	
+	@Override
+	protected void onAttachedToActivity() {
+		// TODO Auto-generated method stub
+		super.onAttachedToActivity();
+	}
+	@Override
+	public void onDismiss(DialogInterface dialog) {
+		// TODO Auto-generated method stub
+		super.onDismiss(dialog);
+	}
 }
