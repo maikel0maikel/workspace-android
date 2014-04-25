@@ -140,7 +140,7 @@ public class MyLibraryArtistsFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		Bundle data = getArguments();
-		artists = (ArrayList<MyArtist>) data.getSerializable(MyLibraryArtistsFragment.ARTISTS);
+		artists = ((_MyLibaryDataProvider)getActivity()).getArtists();
 		if(artists==null)
 		{
 			artists = new ArrayList<MyArtist>();//by default

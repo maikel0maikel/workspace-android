@@ -154,7 +154,7 @@ public class MyLibraryFoldersFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		Bundle data = getArguments();
-		folders = (ArrayList<MyFolder>) data.getSerializable(MyLibraryFoldersFragment.FOLDERS);
+		folders = ((_MyLibaryDataProvider)getActivity()).getFolders();
 		if(folders==null)
 		{
 			folders = new ArrayList<MyFolder>();//by default

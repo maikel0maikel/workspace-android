@@ -166,7 +166,7 @@ public class MyLibrarySongsFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		Bundle data = getArguments();
-		songs = (ArrayList<MySong>) data.getSerializable(MyLibrarySongsFragment.SONGS);
+		songs = ((_MyLibaryDataProvider)getActivity()).getSongs();
 		if(songs==null)
 		{
 			songs = new ArrayList<MySong>();//by default

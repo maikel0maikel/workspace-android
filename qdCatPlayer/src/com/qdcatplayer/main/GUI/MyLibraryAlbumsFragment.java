@@ -16,12 +16,14 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.qdcatplayer.main.GUI._MyLibaryDataProvider;
 
 /**
  * Set albums (ArrayList<MyAlbum>) over bundle by
@@ -167,7 +169,7 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		Bundle data = getArguments();
-		albums = (ArrayList<MyAlbum>) data.getSerializable(MyLibraryAlbumsFragment.ALBUMS);
+		albums = ((_MyLibaryDataProvider)getActivity()).getAlbums();
 		if(albums==null)
 		{
 			albums = new ArrayList<MyAlbum>();//by default
