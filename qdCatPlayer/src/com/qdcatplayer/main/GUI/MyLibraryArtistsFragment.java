@@ -139,7 +139,6 @@ public class MyLibraryArtistsFragment extends ListFragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		Bundle data = getArguments();
 		artists = ((_MyLibaryDataProvider)getActivity()).getArtists();
 		if(artists==null)
 		{

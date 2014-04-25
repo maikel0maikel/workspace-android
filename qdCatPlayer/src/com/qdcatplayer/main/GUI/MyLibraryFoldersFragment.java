@@ -153,7 +153,6 @@ public class MyLibraryFoldersFragment extends ListFragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		Bundle data = getArguments();
 		folders = ((_MyLibaryDataProvider)getActivity()).getFolders();
 		if(folders==null)
 		{
