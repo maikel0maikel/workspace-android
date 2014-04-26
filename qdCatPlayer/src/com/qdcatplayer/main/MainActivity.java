@@ -19,12 +19,14 @@ import com.qdcatplayer.main.BackgroundTasks.MyLibraryUpdateTask;
 import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MyArtistDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
+import com.qdcatplayer.main.DAOs.MyPlayListDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.Entities.MyArtist;
 import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Entities.MyPlayList;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
 import com.qdcatplayer.main.FileSystem.MyFolderChanges;
@@ -42,6 +44,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.main_layout);
+		MyDBManager mn=new MyDBManager();
+		mn.getHelper(this).getWritableDatabase();
+		
+		
 		/*
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -69,6 +75,7 @@ public class MainActivity extends Activity {
 		dao.getMySongDAO().getAll();
 		*/
 		showLibraryActivity();
+		
 	}
 	private class KimTabListener implements ActionBar.TabListener{
 

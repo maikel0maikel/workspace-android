@@ -18,14 +18,14 @@
         <item >ALBUMS_ITEM</item>
         <item >ARTISTS_ITEM</item>
         <item >FOLDERS_ITEM</item>
-        <item >PLAYLIST_ITEM</item>
+        <item >PLAYLISTS_ITEM</item>
     </string-array>
     <string-array name="library_item_value_array">
         <item >All songs</item>
         <item >Albums</item>
         <item >Artists</item>
         <item >Folders</item>
-        <item >Playlists</item>
+        <item >PlayLists</item>
     </string-array>
     
 </resources>

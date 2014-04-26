@@ -3,12 +3,14 @@ package com.qdcatplayer.main.GUI;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.qdcatplayer.main.R;
@@ -17,12 +19,15 @@ import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.Entities.MyAlbum;
 import com.qdcatplayer.main.Entities.MyArtist;
 import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Entities.MyPlayList;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.GUI.MyLibraryAlbumsFragment.MyLibraryAlbumItemClickListener;
 import com.qdcatplayer.main.GUI.MyLibraryArtistsFragment.MyLibraryArtistItemClickListener;
 import com.qdcatplayer.main.GUI.MyLibraryFoldersFragment.MyLibraryFolderItemClickListener;
 import com.qdcatplayer.main.GUI.MyLibraryListFragment.MyLibraryClickListener;
+import com.qdcatplayer.main.GUI.MyLibraryPlayListsFragment.MyLibraryPlayListItemClickListener;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
+import com.qdcatplayer.main.GUI.CtxDialog.MyLibrarySongsCtxDialog;
 import com.qdcatplayer.main.Setting.FolderChooserPreference;
 import com.qdcatplayer.main.Setting.FolderChooserPreference.OnFolderChooserFinishListener;
 import com.qdcatplayer.main.Setting.SettingsActivity;
@@ -40,6 +45,7 @@ implements
 	MyLibraryAlbumItemClickListener,
 	MyLibraryArtistItemClickListener,
 	MyLibraryFolderItemClickListener,
+	MyLibraryPlayListItemClickListener,
 	OnFolderChooserFinishListener,
 	_MyLibaryDataProvider
 {
@@ -50,6 +56,7 @@ implements
 	private ArrayList<MyArtist> _artistsProvider=null;
 	private ArrayList<MyFolder> _foldersProvider = null;
 	private ArrayList<MySong> _songsProvider=null;
+	private ArrayList<MyPlayList> _playListsProvider=null;
 	/**
 	 * For All items cached
 	 */
@@ -57,10 +64,11 @@ implements
 	private ArrayList<MyArtist> _artistsAll=null;
 	private ArrayList<MyFolder> _foldersAll = null;
 	private ArrayList<MySong> _songsAll=null;
+	private ArrayList<MyPlayList> _playListsAll=null;
 	/**
 	 * Shared DAO accross Activity Live
 	 */
-	private GlobalDAO gDAOs = null;
+	private GlobalDAO _gDAOs = null;
 	public MyLibraryActivity() {
 		// TODO Auto-generated constructor stub
 
@@ -137,6 +145,23 @@ implements
         }
         ft.commit();
 	}
+	private void callLibraryPlayListsFragment(Boolean addToBackStack, ArrayList<MyPlayList> playLists)
+	{
+		MyLibraryPlayListsFragment mFragment = new MyLibraryPlayListsFragment();
+		//khong nen dung bundle.serialize de pass data, khi saveinstance rat de bi loi
+		//set temp song first
+		_playListsProvider = playLists;//very importance
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.library_main_placeholder, mFragment);
+        //since addToBackStacl allow user to navigate to blank screen
+        //when app not swap fragment yet
+        if(addToBackStack)
+        {
+        	ft.addToBackStack(MyLibraryPlayListsFragment.class.getName());//very importance
+        	//Log.w("qd",MyLibrarySongsFragment.class.getName());
+        }
+        ft.commit();
+	}
 	@Override
 	public ArrayList<MyAlbum> getAlbums() {
 		// TODO Auto-generated method stub
@@ -186,6 +211,11 @@ implements
 		resetDBState();
 		//View by default
 		callLibraryListFragment();
+		
+		
+		MyLibrarySongsCtxDialog dag = new MyLibrarySongsCtxDialog(this);
+		dag.setTitle("Title...");
+		dag.show();
 	}
 
 	@Override
@@ -219,6 +249,12 @@ implements
 		callLibrarySongsFragment(true, current.getAllRecursiveSongs());
 	}
 	@Override
+	public void onLibraryPlayListItemClick(MyPlayList current,
+			ArrayList<MyPlayList> playlists) {
+		//Display all recursive songs of playList
+		callLibrarySongsFragment(true, current.getSongs());
+	}
+	@Override
 	public void onLibraryItemClick(String itemId) {
 		//see R.array.library_item_id_array for values of itemId can be
 		if(itemId.toUpperCase().equals("ALLSONGS_ITEM"))
@@ -226,7 +262,7 @@ implements
 			//cached because of time to load allrecursive song for count
 			if(_songsAll==null)
 			{
-				_songsAll = gDAOs.getMySongDAO().getAll();
+				_songsAll = _gDAOs.getMySongDAO().getAll();
 			}
 			callLibrarySongsFragment(true, _songsAll);
 			return;
@@ -236,7 +272,7 @@ implements
 			//cached because of time to load allrecursive song for count
 			if(_albumsAll==null)
 			{
-				_albumsAll = gDAOs.getMyAlbumDAO().getAll();
+				_albumsAll = _gDAOs.getMyAlbumDAO().getAll();
 			}
 			callLibraryAlbumsFragment(true, _albumsAll);
 			return;
@@ -246,7 +282,7 @@ implements
 			//cached because of time to load allrecursive song for count
 			if(_artistsAll==null)
 			{
-				_artistsAll = gDAOs.getMyArtistDAO().getAll();
+				_artistsAll = _gDAOs.getMyArtistDAO().getAll();
 			}
 			callLibraryArtistsFragment(true, _artistsAll);//do the bi dung do voi MySQLiteHelper.close()
 			return;
@@ -256,9 +292,19 @@ implements
 			//cached because of time to load allrecursive song for count
 			if(_foldersAll==null)
 			{
-				_foldersAll = gDAOs.getMyFolderDAO().getAll();
+				_foldersAll = _gDAOs.getMyFolderDAO().getAll();
 			}
 			callLibraryFoldersFragment(true, _foldersAll);//be careful because of cache
+			return;
+		}
+		else if(itemId.toUpperCase().equals("PLAYLISTS_ITEM"))
+		{
+			//cached because of time to load allrecursive song for count
+			if(_playListsAll==null)
+			{
+				_playListsAll = _gDAOs.getMyPlayListDAO().getAll();
+			}
+			callLibraryPlayListsFragment(true, _playListsAll);//be careful because of cache
 			return;
 		}
 		//default
@@ -298,19 +344,31 @@ implements
 		_albumsProvider=null;
 		_artistsProvider=null;
 		_songsProvider=null;
+		_playListsProvider=null;
 		
 		_foldersAll = null;
 		_albumsAll=null;
 		_artistsAll=null;
 		_songsAll=null;
+		_playListsAll=null;
 		
-		if(gDAOs!=null)
+		if(_gDAOs!=null)
 		{
-			gDAOs.release();
-			gDAOs=null;
+			_gDAOs.release();
+			_gDAOs=null;
 		}
-		gDAOs = new GlobalDAO(this);
-		gDAOs.setSource(MySource.DB_SOURCE);
+		_gDAOs = new GlobalDAO(this);
+		_gDAOs.setSource(MySource.DB_SOURCE);
 	}
+	@Override
+	public ArrayList<MyPlayList> getPlayLists() {
+		return _playListsProvider;
+	}
+	@Override
+	public void onLibrarySongItemLongClick(MySong current,
+			ArrayList<MySong> songs) {
+		Toast.makeText(this, "onLibrarySongItemLongClick", 300).show();
+	}
+
 	
 }

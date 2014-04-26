@@ -90,19 +90,15 @@ public abstract class _MyDAOAbstract<T,K> implements _MyDAOInterface<T,K>, _Glob
 		{
 			return -1;
 		}
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try{
-				getDao().create(obj);
-				return 1;
-			}catch(Exception e){
-				//object co truong name trung voi record trong CSDL do unique
-				//insert khong duoc return ma loi
-				e.printStackTrace();
-				return -1;
-			}
+		try{
+			getDao().create(obj);
+			return 1;
+		}catch(Exception e){
+			//object co truong name trung voi record trong CSDL do unique
+			//insert khong duoc return ma loi
+			e.printStackTrace();
+			return -1;
 		}
-		return -1;
 	}
 	@Override
 	public void setSource(Integer source_) {

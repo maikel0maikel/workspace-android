@@ -31,7 +31,8 @@ import android.widget.TextView;
 public class MyLibrarySongsFragment extends ListFragment {
 	public static String SONGS = "SONGS";
 	public interface MyLibrarySongItemClickListener {
-		public void onLibrarySongItemClick(MySong current, ArrayList<MySong> playlist);
+		public void onLibrarySongItemClick(MySong current, ArrayList<MySong> songs);
+		public void onLibrarySongItemLongClick(MySong current, ArrayList<MySong> songs);
 	}
 
 	private class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
@@ -118,6 +119,9 @@ public class MyLibrarySongsFragment extends ListFragment {
 				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflater.inflate(R.layout.library_songs_listview_item,
 						parent, false);
+				/*
+				 * Trung tâm bắt sự kiện đầu tiên 
+				 */
 				convertView.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -127,6 +131,17 @@ public class MyLibrarySongsFragment extends ListFragment {
 						mListener.onLibrarySongItemClick(song, songs);
 					}
 				});
+				convertView.setOnLongClickListener(new View.OnLongClickListener() {
+					
+					@Override
+					public boolean onLongClick(View v) {
+						ViewHolder holder = (ViewHolder) v.getTag();
+						MySong song = holder.getSong();
+						mListener.onLibrarySongItemLongClick(song, songs);
+						return true;
+					}
+				});
+				
 				tv_title = (TextView) convertView
 						.findViewById(R.id.song_title);
 				tv_artist = (TextView) convertView
@@ -175,8 +190,13 @@ public class MyLibrarySongsFragment extends ListFragment {
 				R.layout.library_songs_listview_item, songs, new MyLibrarySongItemClickListener() {
 					@Override
 					public void onLibrarySongItemClick(MySong current, ArrayList<MySong> playlist) {
-						// TODO Auto-generated method stub
 						mListener.onLibrarySongItemClick(current, playlist);
+					}
+
+					@Override
+					public void onLibrarySongItemLongClick(MySong current,
+							ArrayList<MySong> songs) {
+						mListener.onLibrarySongItemLongClick(current, songs);
 					}
 				});
 		
