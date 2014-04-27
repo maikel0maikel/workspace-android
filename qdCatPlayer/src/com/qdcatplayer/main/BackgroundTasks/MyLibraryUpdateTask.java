@@ -2,19 +2,15 @@ package com.qdcatplayer.main.BackgroundTasks;
 
 import java.util.ArrayList;
 
-import com.qdcatplayer.main.DAOs.GlobalDAO;
-import com.qdcatplayer.main.DAOs.MyFolderDAO;
-import com.qdcatplayer.main.DAOs.MySongDAO;
-import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.DBHelper.MyDBManager;
-import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.Entities.MyFolder;
-import com.qdcatplayer.main.Entities.MySong;
-
-import android.R.integer;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.qdcatplayer.main.DAOs.MyFolderDAO;
+import com.qdcatplayer.main.DAOs.MySource;
+import com.qdcatplayer.main.DBHelper.MyDBManager;
+import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Entities.MySong;
 
 public class MyLibraryUpdateTask {
 	private ArrayList<MyFolder> folders = null;

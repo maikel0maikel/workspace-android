@@ -1,11 +1,8 @@
 package com.qdcatplayer.main.Entities;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyArtistDAO;
 

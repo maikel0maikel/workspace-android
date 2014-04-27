@@ -3,9 +3,18 @@
  */
 package com.qdcatplayer.main.Setting;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.preference.ListPreference;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.BackgroundTasks.MyLibraryUpdateTask;
@@ -14,28 +23,6 @@ import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Libraries.MyNumberHelper;
-
-import android.app.ActivityManager;
-import android.app.AlertDialog.Builder;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-
-import android.content.res.TypedArray;
-
-import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
-import android.preference.PreferenceManager;
-
-import android.util.AttributeSet;
-import android.util.Log;
-
-import android.widget.ListAdapter;
-import android.widget.Toast;
 
 /**
  * The ImageListPreference class responsible for displaying an image for each

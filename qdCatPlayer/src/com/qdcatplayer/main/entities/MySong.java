@@ -1,12 +1,9 @@
 package com.qdcatplayer.main.Entities;
 
-import android.media.MediaMetadataRetriever;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.Libraries.MyNumberHelper;
 
 /**
  * Dinh nghia luon lop My...DAO tuong ung lam viec truc tiep voi class MySong

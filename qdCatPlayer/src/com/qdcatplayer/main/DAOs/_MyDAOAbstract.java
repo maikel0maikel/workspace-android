@@ -1,17 +1,10 @@
 package com.qdcatplayer.main.DAOs;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import android.content.Context;
 
-import com.j256.ormlite.dao.Dao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.Entities.MyAlbum;
-import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.Entities._MyEntityAbstract;
-import com.qdcatplayer.main.Entities._MyEntityInterface;
 
 public abstract class _MyDAOAbstract<T,K> implements _MyDAOInterface<T,K>, _GlobalDAOInterface {
 	/**

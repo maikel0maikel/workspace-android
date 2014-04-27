@@ -6,29 +6,20 @@ package com.qdcatplayer.main.Setting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.Entities.MyFolder;
-import com.qdcatplayer.main.Setting.FolderChooserPreference.MyItemClickListener;
-
-import android.R.integer;
-import android.app.Activity;
-
 import android.content.Context;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Setting.FolderChooserPreference.MyItemClickListener;
 
 /**
  * The ImageArrayAdapter is the array adapter used for displaying an additional

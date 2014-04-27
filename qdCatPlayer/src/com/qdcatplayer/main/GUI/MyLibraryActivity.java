@@ -3,14 +3,12 @@ package com.qdcatplayer.main.GUI;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.qdcatplayer.main.R;
@@ -216,6 +214,21 @@ implements
 		MyLibrarySongsCtxDialog dag = new MyLibrarySongsCtxDialog(this);
 		dag.setTitle("Title...");
 		dag.show();
+		
+		test();
+	}
+	private void test()
+	{
+		GlobalDAO dao = new GlobalDAO(this);
+		dao.setSource(MySource.DB_SOURCE);
+		MySong item = dao.getMySongDAO().getById(1);
+		{
+			item.getAlbum().setName("alo");
+			item.getArtist().setName("ola");
+			item.setTitle("heo");
+			item.update();
+		}
+
 	}
 
 	@Override

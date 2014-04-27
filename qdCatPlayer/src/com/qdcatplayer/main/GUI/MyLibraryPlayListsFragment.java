@@ -169,7 +169,7 @@ public class MyLibraryPlayListsFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.library_playlists_listview, container, false);
+		View v = inflater.inflate(R.layout.library_listview, container, false);
 		return v;
 	}
 }

@@ -1,17 +1,12 @@
 package com.qdcatplayer.main.DAOs;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
 
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.Entities.MyAlbum;
 import com.qdcatplayer.main.Entities.MyArtist;
-import com.qdcatplayer.main.Entities.MyBitrate;
 import com.qdcatplayer.main.Entities.MySong;
 
 public class MyArtistDAO extends _MyDAOAbstract<MyArtistDAO, MyArtist>

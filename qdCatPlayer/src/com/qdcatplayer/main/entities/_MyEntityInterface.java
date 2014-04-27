@@ -1,15 +1,5 @@
 package com.qdcatplayer.main.Entities;
 
-import java.util.ArrayList;
-
-import com.j256.ormlite.dao.Dao;
-import com.qdcatplayer.main.DAOs.GlobalDAO;
-import com.qdcatplayer.main.DAOs._MyDAOInterface;
-import com.qdcatplayer.main.DBHelper.MyDBManager;
-import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.Entities.MySong;
-
-import android.content.Context;
 
 public interface _MyEntityInterface<T,K> {
 	public Integer getId();

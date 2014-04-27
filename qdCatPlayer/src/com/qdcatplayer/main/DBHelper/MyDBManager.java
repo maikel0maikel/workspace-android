@@ -1,8 +1,8 @@
 package com.qdcatplayer.main.DBHelper;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import android.content.Context;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 public class MyDBManager {
     private MySQLiteHelper _dbHelper = null;
     public MySQLiteHelper getHelper()

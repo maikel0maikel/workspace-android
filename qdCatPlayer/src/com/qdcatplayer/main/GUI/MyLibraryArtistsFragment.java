@@ -1,28 +1,19 @@
 package com.qdcatplayer.main.GUI;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.DAOs.MySongDAO;
-import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.Entities.MyAlbum;
-import com.qdcatplayer.main.Entities.MyArtist;
-import com.qdcatplayer.main.Entities.MyFolder;
-import com.qdcatplayer.main.Entities.MySong;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.Entities.MyArtist;
 
 /**
  * Set albums (ArrayList<MyAlbum>) over bundle by
@@ -178,7 +169,7 @@ public class MyLibraryArtistsFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.library_artists_listview, container, false);
+		View v = inflater.inflate(R.layout.library_listview, container, false);
 		return v;
 	}
 }

@@ -1,11 +1,11 @@
 package com.qdcatplayer.main.GUI.CtxDialog;
 
-import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.Entities.MySong;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+
+import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.Entities.MySong;
 
 public class MyLibrarySongsCtxDialog extends Dialog {
 	public interface MyLibrarySongsCtxItemListener {
@@ -26,7 +26,7 @@ public class MyLibrarySongsCtxDialog extends Dialog {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.player_main_navigate);
+		setContentView(R.layout.library_ctx_dialog_songs);
 	}
 
 }

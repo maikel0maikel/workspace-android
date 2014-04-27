@@ -1,26 +1,13 @@
 package com.qdcatplayer.main.Setting;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.Setting.FolderChooserPreference.OnFolderChooserFinishListener;
 
 public class SettingTab1 extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 	@Override
