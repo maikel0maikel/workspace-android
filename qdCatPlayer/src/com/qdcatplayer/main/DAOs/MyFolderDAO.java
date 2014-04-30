@@ -68,9 +68,7 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 	}
 	@Override
 	public Integer insert(MyFolder obj) {
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try{
+		try{
 				//kiem tra xem folder nay co trong he thong chua
 				//neu co roi thi chi cap nhat id
 				MyFolder tontai = getDao().queryBuilder().where().
@@ -97,8 +95,7 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		return -1;
+		
 	}
 	public ArrayList<MySong> getAllRecursiveSongs(MyFolder obj)
 	{

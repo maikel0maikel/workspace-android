@@ -105,20 +105,31 @@ implements _MyDAOInterface<MySongDAO,MySong>
 		}
         return -1;
 	}
-	/*
-	 * Need to fix 
-	 * @see com.qdcatplayer.main.DAOs._MyDAOAbstract#update(java.lang.Object)
+	/**
+	 * 
 	 */
 	@Override
 	public Boolean update(MySong obj)
     {
-		//edit tag
-		File src = new File(obj.getPath().getAbsPath());
+		//backup source state
+		Integer bk_source = obj.getGlobalDAO().getSource();
+		//first change to DB_SOURCE first to ensure mp3 file not deleted
+		obj.getGlobalDAO().setSource(MySource.DB_SOURCE);
+		//get tmp info for preservation
+		String absPath = obj.getPath().getAbsPath();
+		String album = obj.getAlbum().getName();
+		String artist = obj.getArtist().getName();
+		String title = obj.getTitle();
+		//force to insert FK first
+		obj.getAlbum().insert();
+		obj.getArtist().insert();
+		//call update to DB
+		int re = getDao().update(obj);
+		//update tag info to mp3 file on disk
+		File src = new File(absPath);
 		MusicMetadataSet src_set;
 		try {
-			//first update to DB
-			getDao().update(obj);//do not use this way
-			//read metaset
+			//read metaset for holder
 			src_set = new MyID3().read(src);
 			if (src_set == null) // perhaps no metadata
 			{
@@ -128,18 +139,69 @@ implements _MyDAOInterface<MySongDAO,MySong>
 			{
 				//create metavalues
 				MusicMetadata metadata = new MusicMetadata("");
-				metadata.setArtist(obj.getArtist().getName());
-				metadata.setAlbum(obj.getAlbum().getName());
-				metadata.setSongTitle(obj.getTitle());
+				metadata.setArtist(artist);
+				metadata.setAlbum(album);
+				metadata.setSongTitle(title);
 				new MyID3().update(src, src_set, metadata);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
-		} // read metadata
-        
+		}
 		return true;
+		
+		//-----------------------------------update but clone new id
+		/*
+		//backup source state
+		Integer bk_source = obj.getGlobalDAO().getSource();
+		//first change to DB_SOURCE first to ensure mp3 file not deleted
+		obj.getGlobalDAO().setSource(MySource.DB_SOURCE);
+		//get tmp info for preservation
+		String absPath = obj.getPath().getAbsPath();
+		String album = obj.getAlbum().getName();
+		String artist = obj.getArtist().getName();
+		String title = obj.getTitle();
+		//update tag info to mp3 file on disk
+		File src = new File(obj.getPath().getAbsPath());
+		MusicMetadataSet src_set;
+		try {
+			//read metaset for holder
+			src_set = new MyID3().read(src);
+			if (src_set == null) // perhaps no metadata
+			{
+				return false;
+			}
+			else
+			{
+				//create metavalues
+				MusicMetadata metadata = new MusicMetadata("");
+				metadata.setArtist(artist);
+				metadata.setAlbum(album);
+				metadata.setSongTitle(title);
+				new MyID3().update(src, src_set, metadata);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		//delete current in DB, do not remove from disk
+		obj.delete();
+		
+		//clone new one for clean insert
+		//	switch to DISK SOURCE and then load mp3 file agian => re-insert to DB
+		MySong new_obj = new MySong();
+		new_obj.setDao(this);
+		new_obj.getGlobalDAO().setSource(MySource.DISK_SOURCE);
+		new_obj.setPath(absPath);
+		new_obj.insert();
+		//copy source from obj=>new_obj
+		new_obj.getGlobalDAO().setSource(bk_source);
+		obj = new_obj;
+		return true;
+		*/
     }
 	@Override
 	public Boolean delete(MySong obj)

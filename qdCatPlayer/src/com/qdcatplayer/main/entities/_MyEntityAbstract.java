@@ -51,28 +51,13 @@ public abstract class _MyEntityAbstract<T,K> implements _MyEntityInterface<T,K>,
 		return id;
 	}
 	/**
-	 * Only support DISK SOURCE
+	 * support DISK SOURCE and DB SOURCE
 	 */
 	@Override
 	public Integer insert() {
-		if(getGlobalDAO().getSource()==MySource.DISK_SOURCE)
-		{
-			/*
-			//Reset to force to load all properties first
-			//because somthing may be lazy or not loaded at all when
-			//build from other DAO class such as MyFolderDAO (only Id attached)
-			if(!isLoaded())
-			{
-				//will call devired class methof if Override declare
-				reset();
-				//will call devired class methof if Override declare
-				load();
-			}
-			//will call devired class methof if Override declare
-			*/
-			return ((_MyDAOAbstract<T, K>)getDao()).insert((K)this);
-		}
-		return -1;
+		//clear id first => force insert
+		setId(null);
+		return ((_MyDAOAbstract<T, K>)getDao()).insert((K)this);
 	}
 	/**
 	 * Neu da load roi thi khi goi ham nay se
@@ -114,6 +99,7 @@ public abstract class _MyEntityAbstract<T,K> implements _MyEntityInterface<T,K>,
 	public void setLoaded(Boolean loaded) {
 		this.loaded = loaded;
 	}
+	
 	@Override
 	public Boolean update() {
 		return ((_MyDAOAbstract<T, K>)getDao()).update((K)this);

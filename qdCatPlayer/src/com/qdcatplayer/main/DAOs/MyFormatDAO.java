@@ -41,9 +41,7 @@ implements _MyDAOInterface<MyFormatDAO, MyFormat>
 	@Override
 	public Integer insert(MyFormat obj) {
 		//neu object chua co trong DB thi goi super insert
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try {
+		try {
 				MyFormat tmp = getDao().queryBuilder().where().eq(MyFormat.EXTENSION_F, obj.getExtension()).queryForFirst();
 				if(tmp==null)
 				{
@@ -58,7 +56,7 @@ implements _MyDAOInterface<MyFormatDAO, MyFormat>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		return -1;
+		
+		
 	}
 }

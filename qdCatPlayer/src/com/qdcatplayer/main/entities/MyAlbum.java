@@ -35,6 +35,11 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 	}
 
 	public String getName() {
+		//de phong truong hop setName bang tay
+		if(name!=null)
+		{
+			return name;
+		}
 		super.load();
 		return name;
 	}
@@ -72,6 +77,7 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 		//if not force to set loaded=true then
 		//new load script will be acted and reset will be called
 		//then all data pre-loaded will swiped out
+		
 		setLoaded(true);
 		return super.insert();
 	}

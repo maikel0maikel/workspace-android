@@ -123,6 +123,11 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 	}
 
 	public String getTitle() {
+		//de phong truong hop setTitle bang tay khi edit Tag => update
+		if(title!=null)
+		{
+			return title;
+		}
 		super.load();
 		return title;
 

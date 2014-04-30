@@ -9,7 +9,7 @@ public class MyNumberHelper {
 			return Long.parseLong(input);
 		}catch(NumberFormatException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return 0l;
 		}
 	}

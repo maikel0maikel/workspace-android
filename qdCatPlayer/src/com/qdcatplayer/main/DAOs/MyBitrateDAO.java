@@ -45,9 +45,7 @@ implements _MyDAOInterface<MyBitrateDAO, MyBitrate>
 	@Override
 	public Integer insert(MyBitrate obj) {
 		//neu object chua co trong DB thi goi super insert
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try {
+		try {
 				MyBitrate tmp = getDao().queryBuilder().where().eq(MyBitrate.VALUE_F, obj.getValue()).queryForFirst();
 				if(tmp==null)
 				{
@@ -63,7 +61,5 @@ implements _MyDAOInterface<MyBitrateDAO, MyBitrate>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		return -1;
 	}
 }

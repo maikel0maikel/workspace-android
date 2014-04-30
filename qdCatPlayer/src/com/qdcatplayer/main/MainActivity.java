@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
+import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.Entities.MyFolder;
@@ -69,11 +70,28 @@ public class MainActivity extends Activity {
 		dao.getMySongDAO().setSource(MySource.DB_SOURCE);
 		dao.getMySongDAO().getAll();
 		*/
+		
+		
 		showLibraryActivity();
 		
 		
 	}
-	
+	private void update_sample()
+	{
+		try
+		{
+			MySongDAO dao=new MySongDAO(this, null);
+			dao.setSource(MySource.DB_SOURCE);
+			MySong obj = dao.getAll().get(0);
+			obj.getAlbum().setName("album3");
+			obj.getArtist().setName("artist3");
+			obj.setTitle("title3");
+			obj.update();
+		}catch(Exception e)
+		{
+			
+		}
+	}
 	private class KimTabListener implements ActionBar.TabListener{
 
 		@Override

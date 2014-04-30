@@ -215,7 +215,7 @@ implements
 		dag.setTitle("Title...");
 		dag.show();
 		
-		test();
+		//test();
 	}
 	private void test()
 	{

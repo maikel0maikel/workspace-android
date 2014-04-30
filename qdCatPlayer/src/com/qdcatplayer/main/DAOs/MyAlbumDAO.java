@@ -59,9 +59,7 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 	@Override
 	public Integer insert(MyAlbum obj) {
 		//neu object chua co trong DB thi goi super insert
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try {
+		try {
 				MyAlbum tmp = getDao().queryBuilder().where().eq(MyAlbum.NAME_F, obj.getName()).queryForFirst();
 				if(tmp==null)
 				{
@@ -77,9 +75,6 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		//DO NOT SUPPORT DB SOURCE
-		return -1;
 	}
 
 	public ArrayList<MySong> getSongs(MyAlbum obj) {

@@ -46,9 +46,7 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 		{
 			return -1;
 		}
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try{
+		try{
 				//neu path co roi trong he thong thi khong add
 				if(obj.getId() != null && obj.getId() > 0)
 				{
@@ -75,8 +73,8 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		return -1;
+		
+		
 	}
 
 	@Override
