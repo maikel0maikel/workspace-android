@@ -62,10 +62,45 @@ public class FolderChooserPreference extends ListPreference{
 	public FolderChooserPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
+	private Boolean pushToChooser(MyFolder obj)
+	{
+		chooseResult.put(obj.getAbsPath(), obj);
+		return true;
+	}
+	private Boolean removeFromChooser(MyFolder obj)
+	{
+		chooseResult.remove(obj.getAbsPath());
+		return true;
+	}
+	private HashMap<String, MyFolder> validateChooser(HashMap<String, MyFolder> input)
+	{
+		//kiem tra coi folder co parent nam trong list hay chua
+		Boolean needed = null;
+		HashMap<String, MyFolder> finalChooserResult=new HashMap<String, MyFolder>();
+		for(MyFolder item:input.values())
+		{
+			needed = true;
+			for(MyFolder item2:input.values())
+			{
+				if(item.getAbsPath().equals(item2.getAbsPath()))
+				{
+					continue;
+				}
+				if(item.isSubFolderOf(item2)){
+					needed=false;
+					break;
+				}
+			}
+			if(needed)
+			{
+				finalChooserResult.put(item.getAbsPath(), item);
+			}
+		}
+		return finalChooserResult;
+	}
 	/**
 	 * khi click moi bat dau chay
 	 */
-	
 	protected void onPrepareDialogBuilder(Builder builder) {
 		
 		MyFolderDAO dao = new MyFolderDAO(getContext(), null);
@@ -82,12 +117,14 @@ public class FolderChooserPreference extends ListPreference{
 				public void onClick(MyFolder fd, Boolean isChecked) {
 					if(isChecked)
 					{
-						chooseResult.put(fd.getAbsPath(), fd);
+						//chooseResult.put(fd.getAbsPath(), fd);
+						pushToChooser(fd);
 						Log.w("qd", "Put "+fd.getAbsPath());
 					}
 					else
 					{
-						chooseResult.remove(fd.getAbsPath());
+						//chooseResult.remove(fd.getAbsPath());
+						removeFromChooser(fd);
 						Log.w("qd", "Remove "+fd.getAbsPath());
 					}
 				}
@@ -101,6 +138,19 @@ public class FolderChooserPreference extends ListPreference{
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Log.w("qd", "OK clicked");
+				Log.w("qd","Chooder folder list before validate:");
+				for(MyFolder item:chooseResult.values())
+				{
+					Log.w("qd", item.getAbsPath());
+				}
+				//validate first
+				chooseResult= validateChooser(chooseResult);
+				Log.w("qd","Final folder list to fetch after validate:");
+				for(MyFolder item:chooseResult.values())
+				{
+					Log.w("qd", item.getAbsPath());
+				}
+				
 				if(chooseResult.size()<=0)
 				{
 					Toast.makeText(getContext(), "Nothing changed", 300).show();

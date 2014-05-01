@@ -75,6 +75,7 @@ public class MainActivity extends Activity {
 		showLibraryActivity();
 		
 		
+		
 	}
 	private void update_sample()
 	{

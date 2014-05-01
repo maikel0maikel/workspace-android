@@ -11,6 +11,8 @@ import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MySong;
+import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
+import com.qdcatplayer.main.FileSystem.MyFolderChanges;
 
 public class MyLibraryUpdateTask {
 	private ArrayList<MyFolder> folders = null;
@@ -64,6 +66,18 @@ public class MyLibraryUpdateTask {
 					Log.w("qd", "Inserted song:"+song.getPath().getAbsPath());
 				}
 			}
+			//update tracking hash, switch to DB_SOURCE first
+			dao.setSource(MySource.DB_SOURCE);
+			/*
+			for(MyFolder item:folders)
+			{
+				MyFolder new_obj = dao.getByAbsPath(item.getAbsPath());
+				if(new_obj!=null)
+				{
+					
+				}
+			}
+			*/
 			dao.release();
 			return "";
 		}

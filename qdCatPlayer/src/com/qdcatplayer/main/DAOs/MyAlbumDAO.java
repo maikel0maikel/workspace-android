@@ -7,6 +7,7 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.Entities.MyAlbum;
+import com.qdcatplayer.main.Entities.MyArtist;
 import com.qdcatplayer.main.Entities.MySong;
 
 public class MyAlbumDAO extends _MyDAOAbstract<MyAlbumDAO, MyAlbum>
@@ -46,8 +47,10 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 
 	@Override
 	public MyAlbum getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		MyAlbum re = getDao().queryForId(id);
+		re.setDao(this);
+		re.setLoaded(true);//very importance
+		return re;
 	}
 	
 	@Override

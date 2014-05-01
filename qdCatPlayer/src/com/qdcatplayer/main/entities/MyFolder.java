@@ -20,6 +20,8 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 
 	@DatabaseField(canBeNull = true)
 	private String folderName = null;
+	@DatabaseField(canBeNull = true)
+	private String trackingHash = null;
 	@DatabaseField(canBeNull = true, foreign = true)
 	private MyFolder parentFolder = null;
 
@@ -47,6 +49,7 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 
 	/**
 	 * Lay tat ca SONG de quy ke tu root
+	 * Ho tro cached
 	 * 
 	 * @return
 	 */
@@ -156,5 +159,23 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 			re+=delimiter;
 		}
 		return re+getFolderName();
+	}
+	public Boolean isSubFolderOf(MyFolder ancestor)
+	{
+		//parent always has higher level
+		if(getLevel()<=ancestor.getLevel())
+		{
+			return false;
+		}
+		MyFolder parent_mp = getParentFolder();
+		while(parent_mp!=null)
+		{
+			if(parent_mp.getAbsPath().equals(ancestor.getAbsPath()))
+			{
+				return true;
+			}
+			parent_mp = parent_mp.getParentFolder();
+		}
+		return false;
 	}
 }

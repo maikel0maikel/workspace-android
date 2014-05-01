@@ -8,6 +8,7 @@ import java.util.List;
 import android.content.Context;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.qdcatplayer.main.Entities.MyBitrate;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MyPath;
 import com.qdcatplayer.main.Entities.MySong;
@@ -45,14 +46,29 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 
 	@Override
 	public MyFolder getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		MyFolder re = getDao().queryForId(id);
+		re.setDao(this);
+		re.setLoaded(true);//very importance
+		return re;
+	}
+	public MyFolder getByAbsPath(String absPath) {
+		MyFolder obj;
+		try {
+			obj = getDao().queryBuilder().where().eq(MyFolder.ABSPATH_F, absPath).queryForFirst();
+			obj.setLoaded(true);
+			obj.setDao(this);
+			return obj;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
 	public Boolean update(MyFolder obj) {
-		// TODO Auto-generated method stub
-		return null;
+		getDao().update(obj);
+		return true;
 	}
 
 	public MyFolder getParentFolder(MyFolder myFolder) {
