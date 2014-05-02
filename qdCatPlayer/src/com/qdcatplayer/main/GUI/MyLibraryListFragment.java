@@ -170,8 +170,4 @@ public class MyLibraryListFragment extends ListFragment {
 		View v = inflater.inflate(R.layout.library_listview, container, false);
 		return v;
 	}
-	private void callLibrarySongsFragment()
-	{
-		
-	}
 }

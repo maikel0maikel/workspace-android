@@ -19,5 +19,7 @@
     <string name="setting_choose_folder_title">Chọn thư mục</string>
     <string name="setting_choose_folder_summary">Chọn thư mục chứa các bài hát, hệ thống sẽ xóa toàn bộ CSDL cũ và cập nhật lại CSDL mới</string>
     <string name="ctx_songs_ADD_TO_QUEUE">Add to queue</string>
+    <!-- Khu vuc setting -->
+    <string name="library_item_selector">@android:drawable/list_selector_background</string>
 
 </resources>

@@ -76,49 +76,48 @@ public final class R {
         public static final int shuffle_touch=0x7f02002a;
     }
     public static final class id {
-        public static final int TextView01=0x7f0b0020;
-        public static final int action_settings=0x7f0b002a;
-        public static final int add_to_queue=0x7f0b0029;
+        public static final int TextView01=0x7f0b001e;
+        public static final int action_settings=0x7f0b0029;
+        public static final int add_to_queue=0x7f0b0028;
         public static final int album_artist=0x7f0b0002;
         public static final int album_image=0x7f0b0000;
         public static final int album_name=0x7f0b0001;
         public static final int album_totalSongs=0x7f0b0003;
         public static final int artist_name=0x7f0b0005;
         public static final int artist_totalSongs=0x7f0b0006;
-        public static final int checkBox=0x7f0b0028;
-        public static final int folder_absPath=0x7f0b000b;
-        public static final int folder_name=0x7f0b000a;
-        public static final int folder_totalSongs=0x7f0b000c;
-        public static final int imageButton_favorite=0x7f0b001a;
-        public static final int imageButton_next=0x7f0b0024;
-        public static final int imageButton_play=0x7f0b0023;
-        public static final int imageButton_prev=0x7f0b0022;
-        public static final int imageButton_repeat=0x7f0b001b;
-        public static final int imageButton_shuffle=0x7f0b0019;
-        public static final int imageView_icon=0x7f0b0025;
-        public static final int imageView_music_tone=0x7f0b0021;
-        public static final int layout_container=0x7f0b0017;
-        public static final int library_item_imageView=0x7f0b000e;
-        public static final int library_item_textView=0x7f0b000f;
-        public static final int library_listview=0x7f0b000d;
-        public static final int library_main_navigation=0x7f0b0011;
-        public static final int library_main_placeholder=0x7f0b0010;
-        public static final int linearLayout1=0x7f0b0026;
-        public static final int playList_name=0x7f0b0012;
-        public static final int playList_totalSongs=0x7f0b0013;
-        public static final int root_layout=0x7f0b0018;
-        public static final int seekBar_duration=0x7f0b001c;
+        public static final int checkBox=0x7f0b0027;
+        public static final int folder_absPath=0x7f0b0009;
+        public static final int folder_name=0x7f0b0008;
+        public static final int folder_totalSongs=0x7f0b000a;
+        public static final int imageButton_favorite=0x7f0b0018;
+        public static final int imageButton_next=0x7f0b0023;
+        public static final int imageButton_play=0x7f0b0022;
+        public static final int imageButton_prev=0x7f0b0021;
+        public static final int imageButton_repeat=0x7f0b0019;
+        public static final int imageButton_shuffle=0x7f0b0017;
+        public static final int imageView_icon=0x7f0b0024;
+        public static final int imageView_music_tone=0x7f0b0020;
+        public static final int layout_container=0x7f0b0015;
+        public static final int library_ctx_songs_listView=0x7f0b0007;
+        public static final int library_item_imageView=0x7f0b000c;
+        public static final int library_item_textView=0x7f0b000d;
+        public static final int library_listview=0x7f0b000b;
+        public static final int library_main_navigation=0x7f0b000f;
+        public static final int library_main_placeholder=0x7f0b000e;
+        public static final int linearLayout1=0x7f0b0025;
+        public static final int playList_name=0x7f0b0010;
+        public static final int playList_totalSongs=0x7f0b0011;
+        public static final int root_layout=0x7f0b0016;
+        public static final int seekBar_duration=0x7f0b001a;
         public static final int song_album=0x7f0b0004;
-        public static final int song_artist=0x7f0b0015;
-        public static final int song_duration=0x7f0b0016;
-        public static final int song_title=0x7f0b0014;
-        public static final int textView1=0x7f0b0007;
-        public static final int textView2=0x7f0b0008;
-        public static final int textView3=0x7f0b0009;
-        public static final int textView_folderName=0x7f0b0027;
-        public static final int textView_last_duration=0x7f0b001d;
-        public static final int textView_remain_duration=0x7f0b001f;
-        public static final int textView_song_index=0x7f0b001e;
+        public static final int song_artist=0x7f0b0013;
+        public static final int song_duration=0x7f0b0014;
+        public static final int song_title=0x7f0b0012;
+        public static final int textView1=0x7f0b001f;
+        public static final int textView_folderName=0x7f0b0026;
+        public static final int textView_last_duration=0x7f0b001b;
+        public static final int textView_remain_duration=0x7f0b001d;
+        public static final int textView_song_index=0x7f0b001c;
     }
     public static final class layout {
         public static final int library_albums_listview_item=0x7f030000;
@@ -153,6 +152,9 @@ public final class R {
         public static final int library_allsongs_label=0x7f070009;
         public static final int library_artist_label=0x7f070007;
         public static final int library_folder_label=0x7f070008;
+        /**  Khu vuc setting 
+         */
+        public static final int library_item_selector=0x7f07000e;
         public static final int setting_choose_folder_summary=0x7f07000c;
         /**  Khu vực dành cho Setting  
          */
