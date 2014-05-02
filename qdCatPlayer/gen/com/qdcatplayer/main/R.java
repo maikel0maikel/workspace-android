@@ -10,6 +10,8 @@ package com.qdcatplayer.main;
 public final class R {
     public static final class array {
         public static final int imageValues=0x7f050002;
+        public static final int library_ctx_songs_id_array=0x7f050005;
+        public static final int library_ctx_songs_value_array=0x7f050006;
         public static final int library_item_id_array=0x7f050003;
         public static final int library_item_value_array=0x7f050004;
         public static final int vdthoi=0x7f050000;

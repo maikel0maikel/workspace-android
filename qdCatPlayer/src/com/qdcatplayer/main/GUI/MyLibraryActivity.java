@@ -210,12 +210,6 @@ implements
 		//View by default
 		callLibraryListFragment();
 		
-		
-		MyLibrarySongsCtxDialog dag = new MyLibrarySongsCtxDialog(this);
-		dag.setTitle("Title...");
-		dag.show();
-		
-		//test();
 	}
 	private void test()
 	{
@@ -377,10 +371,35 @@ implements
 	public ArrayList<MyPlayList> getPlayLists() {
 		return _playListsProvider;
 	}
+	MyLibrarySongsCtxDialog songs_ctx_dialog = null;
 	@Override
 	public void onLibrarySongItemLongClick(MySong current,
 			ArrayList<MySong> songs) {
-		Toast.makeText(this, "onLibrarySongItemLongClick", 300).show();
+		//Toast.makeText(this, "onLibrarySongItemLongClick", 300).show();
+		songs_ctx_dialog = new MyLibrarySongsCtxDialog(this, new MySong(), new MyLibrarySongsCtxDialog.MyLibrarySongsCtxItemListener() {
+			
+			@Override
+			public void OnLibrarySongsCtxClick_EDIT_TAG(MySong obj) {
+				// TODO Auto-generated method stub
+				Log.w("qd", "edit tag clicked"+getClass().getName());
+				songs_ctx_dialog.dismiss();
+			}
+			
+			@Override
+			public void OnLibrarySongsCtxClick_ADD_TO_PLAYLIST(MySong obj) {
+				// TODO Auto-generated method stub
+				Log.w("qd", "add to playlist clicked"+getClass().getName());
+				songs_ctx_dialog.dismiss();
+			}
+			
+			@Override
+			public void OnLibrarySongsCtxClick_ADD_TO_ENQUEUE(MySong obj) {
+				Log.w("qd", "add to enqueue clicked"+getClass().getName());
+				songs_ctx_dialog.dismiss();
+			}
+		});
+		songs_ctx_dialog.setTitle("Context dialog");
+		songs_ctx_dialog.show();
 	}
 
 	

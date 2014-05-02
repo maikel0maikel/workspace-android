@@ -27,5 +27,15 @@
         <item >Folders</item>
         <item >PlayLists</item>
     </string-array>
+    <string-array name="library_ctx_songs_id_array">
+        <item >ADD_TO_ENQUEUE</item>
+        <item >ADD_TO_PLAYLIST</item>
+        <item >EDIT_TAG</item>
+    </string-array>
+    <string-array name="library_ctx_songs_value_array">
+        <item >Add to enqueue</item>
+        <item >Add to playlist</item>
+        <item >Edit tag</item>
+    </string-array>
     
 </resources>
