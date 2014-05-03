@@ -78,7 +78,6 @@ public final class R {
         public static final int shuffle_touch=0x7f02002a;
     }
     public static final class id {
-        public static final int TextView01=0x7f0b001e;
         public static final int action_settings=0x7f0b0029;
         public static final int add_to_queue=0x7f0b0028;
         public static final int album_artist=0x7f0b0002;
@@ -115,11 +114,12 @@ public final class R {
         public static final int song_artist=0x7f0b0013;
         public static final int song_duration=0x7f0b0014;
         public static final int song_title=0x7f0b0012;
-        public static final int textView1=0x7f0b001f;
+        public static final int textView_SongName=0x7f0b001f;
         public static final int textView_folderName=0x7f0b0026;
         public static final int textView_last_duration=0x7f0b001b;
         public static final int textView_remain_duration=0x7f0b001d;
         public static final int textView_song_index=0x7f0b001c;
+        public static final int textview_Artist=0x7f0b001e;
     }
     public static final class layout {
         public static final int library_albums_listview_item=0x7f030000;

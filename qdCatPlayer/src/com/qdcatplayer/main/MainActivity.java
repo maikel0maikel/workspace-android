@@ -29,6 +29,7 @@ import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
 import com.qdcatplayer.main.FileSystem.MyFolderChanges;
+//import com.qdcatplayer.main.GUI.MyLibraryActivity;
 import com.qdcatplayer.main.GUI.MainPlayerFragment;
 import com.qdcatplayer.main.GUI.MyLibraryActivity;
 import com.qdcatplayer.main.Setting.SettingsActivity;
@@ -106,7 +107,8 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			Toast toast=Toast.makeText(getApplicationContext(), "tab", Toast.LENGTH_SHORT);
 			if(tab.getText().equals("Music Player")){
-				MainPlayerFragment fm=new MainPlayerFragment();
+				MainPlayerFragment fm=new MainPlayerFragment() {
+				};
 				FragmentTransaction frt=getFragmentManager().beginTransaction();
 				frt.replace(R.id.layout_container, fm);
 				frt.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -128,8 +130,8 @@ public class MainActivity extends Activity {
 	}
 	private void showLibraryActivity()
 	{
-		Intent itt = new Intent(MainActivity.this, MyLibraryActivity.class);
-		startActivity(itt);
+	//	Intent itt = new Intent(MainActivity.this, MyLibraryActivity.class);
+		//startActivity(itt);
 	}
 	
 	private void callSetting()
