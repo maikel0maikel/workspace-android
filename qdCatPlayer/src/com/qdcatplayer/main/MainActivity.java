@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 		MyDBManager mn=new MyDBManager();
 		mn.getHelper(this).getWritableDatabase();
 		//--
-		/*
+		
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		Tab mTab1= actionBar.newTab().setText("List").setTabListener(new KimTabListener());
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 		actionBar.addTab(mTab1);
 		actionBar.addTab(mTab2);
 		actionBar.addTab(mTab3);
-		*/
+		
 		//LoadToDB();
 		
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
