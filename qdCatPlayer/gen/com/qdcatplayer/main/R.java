@@ -73,7 +73,10 @@ public final class R {
         public static final int shuffle_touch=0x7f020027;
     }
     public static final class id {
+<<<<<<< HEAD
         public static final int TextView01=0x7f0b001b;
+=======
+>>>>>>> FETCH_HEAD
         public static final int action_settings=0x7f0b0025;
         public static final int album_artist=0x7f0b0003;
         public static final int album_image=0x7f0b0001;
@@ -106,11 +109,19 @@ public final class R {
         public static final int song_artist=0x7f0b0010;
         public static final int song_duration=0x7f0b0011;
         public static final int song_title=0x7f0b000f;
+<<<<<<< HEAD
         public static final int textView1=0x7f0b001c;
+=======
+        public static final int textView_SongName=0x7f0b001c;
+>>>>>>> FETCH_HEAD
         public static final int textView_folderName=0x7f0b0023;
         public static final int textView_last_duration=0x7f0b0018;
         public static final int textView_remain_duration=0x7f0b001a;
         public static final int textView_song_index=0x7f0b0019;
+<<<<<<< HEAD
+=======
+        public static final int textview_Artist=0x7f0b001b;
+>>>>>>> FETCH_HEAD
     }
     public static final class layout {
         public static final int library_albums_listview=0x7f030000;
