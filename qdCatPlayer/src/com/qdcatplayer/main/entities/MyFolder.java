@@ -1,15 +1,10 @@
 package com.qdcatplayer.main.Entities;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
-import com.qdcatplayer.main.DAOs.MyPathDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.Libraries.MyFileHelper;
 
@@ -25,6 +20,8 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 
 	@DatabaseField(canBeNull = true)
 	private String folderName = null;
+	@DatabaseField(canBeNull = true)
+	private String trackingHash = null;
 	@DatabaseField(canBeNull = true, foreign = true)
 	private MyFolder parentFolder = null;
 
@@ -52,6 +49,7 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 
 	/**
 	 * Lay tat ca SONG de quy ke tu root
+	 * Ho tro cached
 	 * 
 	 * @return
 	 */
@@ -151,13 +149,33 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	{
 		return getAbsPath().split("/").length;
 	}
-	public String getLevelString(String delimiter)
+	public String getLevelName(String delimiter, Integer minus_prefix)
 	{
 		String re="";
-		for(int i=0;i<getLevel();i++)
+		Integer level = getLevel() - minus_prefix;
+		if(level<0) level=0;
+		for(int i=0;i<level;i++)
 		{
 			re+=delimiter;
 		}
-		return re;
+		return re+getFolderName();
+	}
+	public Boolean isSubFolderOf(MyFolder ancestor)
+	{
+		//parent always has higher level
+		if(getLevel()<=ancestor.getLevel())
+		{
+			return false;
+		}
+		MyFolder parent_mp = getParentFolder();
+		while(parent_mp!=null)
+		{
+			if(parent_mp.getAbsPath().equals(ancestor.getAbsPath()))
+			{
+				return true;
+			}
+			parent_mp = parent_mp.getParentFolder();
+		}
+		return false;
 	}
 }

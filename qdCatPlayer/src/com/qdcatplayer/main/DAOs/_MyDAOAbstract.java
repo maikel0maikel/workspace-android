@@ -1,17 +1,10 @@
 package com.qdcatplayer.main.DAOs;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import android.content.Context;
 
-import com.j256.ormlite.dao.Dao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.Entities.MyAlbum;
-import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.Entities._MyEntityAbstract;
-import com.qdcatplayer.main.Entities._MyEntityInterface;
 
 public abstract class _MyDAOAbstract<T,K> implements _MyDAOInterface<T,K>, _GlobalDAOInterface {
 	/**
@@ -90,19 +83,15 @@ public abstract class _MyDAOAbstract<T,K> implements _MyDAOInterface<T,K>, _Glob
 		{
 			return -1;
 		}
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try{
-				getDao().create(obj);
-				return 1;
-			}catch(Exception e){
-				//object co truong name trung voi record trong CSDL do unique
-				//insert khong duoc return ma loi
-				e.printStackTrace();
-				return -1;
-			}
+		try{
+			getDao().create(obj);
+			return 1;
+		}catch(Exception e){
+			//object co truong name trung voi record trong CSDL do unique
+			//insert khong duoc return ma loi
+			e.printStackTrace();
+			return -1;
 		}
-		return -1;
 	}
 	@Override
 	public void setSource(Integer source_) {

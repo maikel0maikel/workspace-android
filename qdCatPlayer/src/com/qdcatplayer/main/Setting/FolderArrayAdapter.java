@@ -6,29 +6,20 @@ package com.qdcatplayer.main.Setting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.Entities.MyFolder;
-import com.qdcatplayer.main.Setting.FolderChooserPreference.MyItemClickListener;
-
-import android.R.integer;
-import android.app.Activity;
-
 import android.content.Context;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Setting.FolderChooserPreference.MyItemClickListener;
 
 /**
  * The ImageArrayAdapter is the array adapter used for displaying an additional
@@ -61,6 +52,7 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 	 * List id of pre checked item
 	 */
 	private Integer[] selected = null;
+	private Integer minus_prefix = 0;
 	public FolderArrayAdapter(Context context, int textViewResourceId,
 			ArrayList<MyFolder> folders, Integer[] selected, MyFolder root, MyItemClickListener from) {
 		super(context, textViewResourceId, folders);
@@ -72,6 +64,7 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 		this.viewHolderMap = new HashMap<String, ViewHolder>();
 		this.checkedMap = new HashMap<String, Boolean>();
 		treeMap = new HashMap<String, Boolean>();
+		minus_prefix = root.getLevel()+1;
 	}
 	@Override
 	public MyFolder getItem(int position) {
@@ -83,21 +76,26 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 	 */
 	private void collapseNode(MyFolder obj)
 	{
-		//remove direct childs first
-		for(MyFolder tmp:obj.getChildFolders())
+		for(MyFolder item:obj.getChildFolders())
 		{
-			remove(tmp);
-			//remove from hashmap too
-			viewHolderMap.remove(tmp.getAbsPath());//very importance
-		}
-		//check valid to remove all deep-level
-		for(int i=0;i<folders.size();i++)
-		{
-			if(!isValid(folders.get(i)))
-			{
-				remove(folders.get(i));
-				viewHolderMap.remove(folders.get(i).getAbsPath());//very importance
+			if(!folders.contains(item)){
+				//tricky
+				Log.w("qd","Folder: "+item.getAbsPath()+" khong co trong list, bo qua nhanh: "+obj.getAbsPath());
+				break;//very importance to reduce time
+				//continue;
 			}
+			//call recursive collapse for child
+			Boolean m= treeMap.get(item.getAbsPath());
+			if(m!=null && m==true)
+			{
+				collapseNode(item);
+			}
+			
+			//then remove
+			//remove from hashmap too
+			viewHolderMap.remove(item.getAbsPath());//very importance
+			removeFromCheckedMap(item.getAbsPath());
+			remove(item);
 		}
 	}
 	/**
@@ -138,34 +136,6 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 			
 			holder = new ViewHolder(tv, null, cb, fd, position );
 			
-			
-			cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					
-					//mListener.onClick("Checkbox");
-					//becareful because depening on layout
-					//switch to use onclick is not nice
-					ViewHolder holder = (ViewHolder)((View) buttonView.getParent()).getTag();
-					MyFolder fd = holder.getFd();
-					/**
-					 * Muc dich la de biet hien tai cac fd nao duoc check
-					 */
-					//ViewHolder holder = (ViewHolder)((View) buttonView.getParent()).getTag();
-					if(isChecked)
-					{
-						checkedMap.put(holder.getFd().getAbsPath(), true);
-					}
-					else
-					{
-						checkedMap.remove(holder.getFd().getAbsPath());
-					}
-					tickFolder(holder.getFd(), isChecked);
-					//send to controller
-					mListener.onClick(fd, isChecked);
-				}
-			});
 			cb.setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -173,9 +143,10 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 					ViewHolder holder = (ViewHolder)((View)arg0.getParent()).getTag();
 					MyFolder fd = holder.getFd();
 					//set tick dong bo
-					//tickFolder(holder.getFd(), ((CheckBox)arg0).isChecked());
 					CheckBox tmpCb = (CheckBox)arg0;
-					
+					//dang thu nghiem
+					tickFolder(holder.getFd(), tmpCb.isChecked());
+					mListener.onClick(fd, tmpCb.isChecked());
 				}
 			});
 			convertView.setOnClickListener(new View.OnClickListener() {
@@ -205,32 +176,21 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 			holder.setPos(position);
 			
 			tv = holder.getTv();
-			cb = (CheckBox)convertView.findViewById(R.id.checkBox);
+			cb = holder.getCb();//(CheckBox)convertView.findViewById(R.id.checkBox);
+			//holder.setCb(cb);
 			
-			if(checkedMap.get(fd.getAbsPath())!=null)
-			{
-				cb.setChecked(true);
-			}
-			else
-			{
-				cb.setChecked(false);
-			}
+		}
+		//Cập nhật check state cho checkbox từ checkedMap
+		if(checkedMap.get(fd.getAbsPath())!=null)
+		{
+			cb.setChecked(true);
+		}
+		else
+		{
+			cb.setChecked(false);
 		}
 		
-		
-		tv.setText(fd.getAbsPath().replace(fd.getParentFolder().getAbsPath(), fd.getLevelString("-")));
-		/**
-		 * Set listener for checkbox
-		 */
-		
-		/**
-		 * Set listener for TextView
-		 */
-		
-		
-		/**
-		 * Set ViewHolder for other gate using
-		 */
+		tv.setText(fd.getLevelName("    ", minus_prefix));
 		//khong can thiet lam do co the goi qua getParent de lay
 		//cb.setTag(holder);//to know which folder related to this checkbox is checked or not
 		convertView.setTag(holder);
@@ -238,25 +198,41 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 		return convertView;
 		
 	}
-	private void tickFolder(MyFolder root, Boolean checked) {
+	private void tickFolder(MyFolder fd, Boolean checked) {
+		
 		//get holder that present for current root folder
-		ViewHolder holder = viewHolderMap.get(root.getAbsPath());//
-		//check valid
+		ViewHolder holder = viewHolderMap.get(fd.getAbsPath());
+		//Cập nhật vào checkedMap
+		if(checked)
+		{
+			putToCheckedMap(fd.getAbsPath());
+		}
+		else
+		{
+			removeFromCheckedMap(fd.getAbsPath());
+		}
+		//check valid for working with checkbox
 		if(holder==null)
 		{
 			return;
 		}
-		MyFolder fd = holder.getFd();
+		//very importance
+		if(holder.getFd().getAbsPath().equals(fd.getAbsPath()))
+		{
+			holder.getCb().setChecked(checked);
+		}
+		else
+		{
+			Log.w("qd","Bat dong bo giua checkbox va Folder");
+		}
 		//tick tat ca cac con
 		for(MyFolder tmp:fd.getChildFolders())
 		{
-			ViewHolder holder2 = viewHolderMap.get(tmp.getAbsPath());//
-			//check valid
-			if(holder2==null)
-			{
-				return;
+			if(!folders.contains(tmp)) {
+				//Log.w("qd","Folder khong co trong list, khong can phai tick theo");
+				continue;
 			}
-			holder2.getCb().setChecked(checked);
+			tickFolder(tmp, checked);
 		}
 	}
 	private void expandNode(MyFolder obj) {
@@ -265,19 +241,27 @@ public class FolderArrayAdapter extends ArrayAdapter<MyFolder> {
 		//load all childs of folder
 		for(MyFolder item:obj.getChildFolders())
 		{
-			//holderHashMap will refresh via getView because id changed
-			insert(item, pos+1);
+			//push to checked map first
 			//check parent then childs will add too
 			if(checked!=null)
 			{
-				checkedMap.put(item.getAbsPath(), true);
+				putToCheckedMap(item.getAbsPath());
 			}
 			else
 			{
-				checkedMap.remove(item.getAbsPath());
+				removeFromCheckedMap(item.getAbsPath());
 			}
+			//holderHashMap will refresh via getView because id changed
+			insert(item, pos+1);
 		}
-		//must call validate to ensure tick logical		
+	}
+	private void putToCheckedMap(String absPath)
+	{
+		checkedMap.put(absPath, true);
+	}
+	private void removeFromCheckedMap(String absPath)
+	{
+		checkedMap.remove(absPath);
 	}
 	
 	public class ViewHolder

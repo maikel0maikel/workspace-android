@@ -1,16 +1,20 @@
 package com.qdcatplayer.main.DAOs;
 
 import java.io.File;
-import java.sql.SQLException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.cmc.music.metadata.IMusicMetadata;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+import org.cmc.music.myid3.MyID3v1;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.Entities.MyAlbum;
 import com.qdcatplayer.main.Entities.MyArtist;
@@ -101,13 +105,103 @@ implements _MyDAOInterface<MySongDAO,MySong>
 		}
         return -1;
 	}
+	/**
+	 * 
+	 */
 	@Override
 	public Boolean update(MySong obj)
     {
-    	
-		getDao().update(obj);
-    	return true;
-        
+		//backup source state
+		Integer bk_source = obj.getGlobalDAO().getSource();
+		//first change to DB_SOURCE first to ensure mp3 file not deleted
+		obj.getGlobalDAO().setSource(MySource.DB_SOURCE);
+		//get tmp info for preservation
+		String absPath = obj.getPath().getAbsPath();
+		String album = obj.getAlbum().getName();
+		String artist = obj.getArtist().getName();
+		String title = obj.getTitle();
+		//force to insert FK first
+		obj.getAlbum().insert();
+		obj.getArtist().insert();
+		//call update to DB
+		int re = getDao().update(obj);
+		//update tag info to mp3 file on disk
+		File src = new File(absPath);
+		MusicMetadataSet src_set;
+		try {
+			//read metaset for holder
+			src_set = new MyID3().read(src);
+			if (src_set == null) // perhaps no metadata
+			{
+				return false;
+			}
+			else
+			{
+				//create metavalues
+				MusicMetadata metadata = new MusicMetadata("");
+				metadata.setArtist(artist);
+				metadata.setAlbum(album);
+				metadata.setSongTitle(title);
+				new MyID3().update(src, src_set, metadata);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+		//-----------------------------------update but clone new id
+		/*
+		//backup source state
+		Integer bk_source = obj.getGlobalDAO().getSource();
+		//first change to DB_SOURCE first to ensure mp3 file not deleted
+		obj.getGlobalDAO().setSource(MySource.DB_SOURCE);
+		//get tmp info for preservation
+		String absPath = obj.getPath().getAbsPath();
+		String album = obj.getAlbum().getName();
+		String artist = obj.getArtist().getName();
+		String title = obj.getTitle();
+		//update tag info to mp3 file on disk
+		File src = new File(obj.getPath().getAbsPath());
+		MusicMetadataSet src_set;
+		try {
+			//read metaset for holder
+			src_set = new MyID3().read(src);
+			if (src_set == null) // perhaps no metadata
+			{
+				return false;
+			}
+			else
+			{
+				//create metavalues
+				MusicMetadata metadata = new MusicMetadata("");
+				metadata.setArtist(artist);
+				metadata.setAlbum(album);
+				metadata.setSongTitle(title);
+				new MyID3().update(src, src_set, metadata);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		//delete current in DB, do not remove from disk
+		obj.delete();
+		
+		//clone new one for clean insert
+		//	switch to DISK SOURCE and then load mp3 file agian => re-insert to DB
+		MySong new_obj = new MySong();
+		new_obj.setDao(this);
+		new_obj.getGlobalDAO().setSource(MySource.DISK_SOURCE);
+		new_obj.setPath(absPath);
+		new_obj.insert();
+		//copy source from obj=>new_obj
+		new_obj.getGlobalDAO().setSource(bk_source);
+		obj = new_obj;
+		return true;
+		*/
     }
 	@Override
 	public Boolean delete(MySong obj)
@@ -188,46 +282,83 @@ implements _MyDAOInterface<MySongDAO,MySong>
 	 */
 	@Override
 	public void load(MySong obj) {
+		Boolean ID3_NATIVE_ANDROID = false;
 		if(getSource()==MySource.DB_SOURCE)
 		{
 			super.load(obj);
 		}
 		else if(getSource()==MySource.DISK_SOURCE)
 		{
-			//load tat ca thong tin tu DISK len
-			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-			retriever.setDataSource(obj.getPath().getAbsPath());
-			
-			String tmp = retriever
-					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-			obj.setDuration(
-					MyNumberHelper.stringToLong(tmp)
-					);
-			
-			tmp = retriever
-					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-			MyAlbum album = new MyAlbum(tmp);
-			obj.setAlbum(album);
-			
-			tmp = retriever
-					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-			obj.setTitle(tmp);
-			
-			tmp = retriever
-					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-			MyArtist artist = new MyArtist(tmp);
-			obj.setArtist(artist);
-			
-			//tmp = retriever
-			//		.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
-			MyBitrate bitrate = new MyBitrate("128");
-			obj.setBitrate(bitrate);
-			
-			MyFormat format = new MyFormat("MP3");
-			obj.setFormat(format);
-			
-			//DONE
-			obj.setLoaded(true);
+			if(ID3_NATIVE_ANDROID)
+			{
+				//load tat ca thong tin tu DISK len
+				MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+				retriever.setDataSource(obj.getPath().getAbsPath());
+				
+				String tmp = retriever
+						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+				obj.setDuration(
+						MyNumberHelper.stringToLong(tmp)
+						);
+	
+				tmp = retriever
+						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+				MyAlbum album = new MyAlbum(tmp);
+				obj.setAlbum(album);
+				
+				tmp = retriever
+						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+				obj.setTitle(tmp);
+				
+				tmp = retriever
+						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+				MyArtist artist = new MyArtist(tmp);
+				obj.setArtist(artist);
+				
+				//tmp = retriever
+				//		.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
+				MyBitrate bitrate = new MyBitrate("128");
+				obj.setBitrate(bitrate);
+				
+				MyFormat format = new MyFormat("MP3");
+				obj.setFormat(format);
+				
+				//DONE
+				obj.setLoaded(true);
+			}
+			//use external myID3 library
+			else
+			{
+				File src = new File(obj.getPath().getAbsPath());
+				MusicMetadataSet src_set;
+				try {
+					src_set = new MyID3().read(src);
+					if (src_set == null) // perhaps no metadata
+					{
+						obj.setTitle("");
+						obj.setAlbum(new MyAlbum(""));
+						obj.setArtist(new MyArtist(""));
+						obj.setBitrate(new MyBitrate("128"));
+						obj.setFormat(new MyFormat("MP3"));
+						obj.setDuration(0l);
+					}
+					else
+					{
+						IMusicMetadata metadata = src_set.getSimplified();
+						obj.setArtist(new MyArtist(metadata.getArtist()));
+						obj.setAlbum(new MyAlbum(metadata.getAlbum()));
+						obj.setBitrate(new MyBitrate("128"));
+						obj.setFormat(new MyFormat("MP3"));
+						obj.setTitle(metadata.getSongTitle());
+						obj.setDuration(
+								MyNumberHelper.stringToLong(metadata.getDurationSeconds())
+						);
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} // read metadata
+			}
 		}
 	}
 	/**

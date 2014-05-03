@@ -1,35 +1,37 @@
 package com.qdcatplayer.main;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.cmc.music.metadata.IMusicMetadata;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.*;
+
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.app.ActionBar.Tab;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.DAOs.MyArtistDAO;
+import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
-import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.Entities.MyArtist;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
 import com.qdcatplayer.main.FileSystem.MyFolderChanges;
 //import com.qdcatplayer.main.GUI.MyLibraryActivity;
 import com.qdcatplayer.main.GUI.MainPlayerFragment;
-import com.qdcatplayer.main.GUI.MyLibraryListFragment;
-import com.qdcatplayer.main.GUI.MyLibraryListFragment.MyLibraryClickListener;
+import com.qdcatplayer.main.GUI.MyLibraryActivity;
 import com.qdcatplayer.main.Setting.SettingsActivity;
 
 
@@ -40,6 +42,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.main_layout);
+		MyDBManager mn=new MyDBManager();
+		mn.getHelper(this).getWritableDatabase();
+		//--
+		/*
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		Tab mTab1= actionBar.newTab().setText("List").setTabListener(new KimTabListener());
@@ -48,36 +54,45 @@ public class MainActivity extends Activity {
 		actionBar.addTab(mTab1);
 		actionBar.addTab(mTab2);
 		actionBar.addTab(mTab3);
-		
+		*/
 		//LoadToDB();
 		
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
-		
-		MyDBManager mn=new MyDBManager();
-		MySQLiteHelper h=mn.getHelper(getApplicationContext());
-		h.getWritableDatabase();
-		
-		LoadToDB();
-		//callSetting();
-		//what the fuck
 		/*
-		MyAlbumDAO dao = new MyAlbumDAO(getApplicationContext(), null);
+		GlobalDAO dao = new GlobalDAO(this);
 		dao.setSource(MySource.DB_SOURCE);
-		MyAlbum obj=new MyAlbum();
-		obj.setId(2);
-		obj.setDao(dao);
-		obj.load();
+		dao.getMySongDAO().getAll();
+		dao.getMySongDAO().getHelper().resetDB();
+		dao.getMySongDAO().getAll();
+		dao.release();
 		
-		obj.getSongs();
-		obj.getName();
+		dao=new GlobalDAO(this);
+		dao.getMySongDAO().setSource(MySource.DB_SOURCE);
+		dao.getMySongDAO().getAll();
 		*/
-		//SettingListActivity m = new SettingListActivity();
+		
 		
 		//showLibraryActivity();
 		
-		//Xong roi do, gio chinh giao dien gi do di
-		//Chung nao xong het roi commit qua tui luon
+		
+		
+	}
+	private void update_sample()
+	{
+		try
+		{
+			MySongDAO dao=new MySongDAO(this, null);
+			dao.setSource(MySource.DB_SOURCE);
+			MySong obj = dao.getAll().get(0);
+			obj.getAlbum().setName("album3");
+			obj.getArtist().setName("artist3");
+			obj.setTitle("title3");
+			obj.update();
+		}catch(Exception e)
+		{
+			
+		}
 	}
 	private class KimTabListener implements ActionBar.TabListener{
 
@@ -181,28 +196,6 @@ public class MainActivity extends Activity {
 		
 		callSetting();
 		return true;
-		
-	}
-	class Vd extends AsyncTask<String, String, String>
-	{
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			// TODO Auto-generated method stub
-			MySongDAO d2=new MySongDAO(getApplicationContext(),null);
-			ArrayList<MySong> s1= d2.getAll();
-			for(MySong item:s1)
-			{
-				Log.w("qd_a", item.getTitle());
-			}
-			d2.release();
-			return null;
-		}
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-		}
 	}
 	
 }

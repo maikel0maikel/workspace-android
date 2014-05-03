@@ -1,15 +1,10 @@
 package com.qdcatplayer.main.GUI;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.qdcatplayer.main.R;
-
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.qdcatplayer.main.R;
 
 public class MyLibraryListFragment extends ListFragment {
 	public interface MyItemClickListener {
@@ -172,9 +169,5 @@ public class MyLibraryListFragment extends ListFragment {
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.library_listview, container, false);
 		return v;
-	}
-	private void callLibrarySongsFragment()
-	{
-		
 	}
 }

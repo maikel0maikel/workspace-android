@@ -1,16 +1,11 @@
 package com.qdcatplayer.main.DAOs;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.Entities.MyAlbum;
-import com.qdcatplayer.main.Entities.MyBitrate;
 import com.qdcatplayer.main.Entities.MyFormat;
-import com.qdcatplayer.main.Entities.MyPath;
 
 public class MyFormatDAO extends _MyDAOAbstract<MyFormatDAO, MyFormat>
 implements _MyDAOInterface<MyFormatDAO, MyFormat>
@@ -46,9 +41,7 @@ implements _MyDAOInterface<MyFormatDAO, MyFormat>
 	@Override
 	public Integer insert(MyFormat obj) {
 		//neu object chua co trong DB thi goi super insert
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try {
+		try {
 				MyFormat tmp = getDao().queryBuilder().where().eq(MyFormat.EXTENSION_F, obj.getExtension()).queryForFirst();
 				if(tmp==null)
 				{
@@ -63,7 +56,7 @@ implements _MyDAOInterface<MyFormatDAO, MyFormat>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		return -1;
+		
+		
 	}
 }

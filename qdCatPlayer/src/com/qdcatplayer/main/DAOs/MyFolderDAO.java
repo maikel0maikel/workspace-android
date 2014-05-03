@@ -7,12 +7,9 @@ import java.util.List;
 
 import android.content.Context;
 
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.Where;
-import com.qdcatplayer.main.Entities.MyAlbum;
+import com.qdcatplayer.main.Entities.MyBitrate;
 import com.qdcatplayer.main.Entities.MyFolder;
-import com.qdcatplayer.main.Entities.MyFormat;
 import com.qdcatplayer.main.Entities.MyPath;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.Libraries.MyFileHelper;
@@ -49,14 +46,29 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 
 	@Override
 	public MyFolder getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		MyFolder re = getDao().queryForId(id);
+		re.setDao(this);
+		re.setLoaded(true);//very importance
+		return re;
+	}
+	public MyFolder getByAbsPath(String absPath) {
+		MyFolder obj;
+		try {
+			obj = getDao().queryBuilder().where().eq(MyFolder.ABSPATH_F, absPath).queryForFirst();
+			obj.setLoaded(true);
+			obj.setDao(this);
+			return obj;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
 	public Boolean update(MyFolder obj) {
-		// TODO Auto-generated method stub
-		return null;
+		getDao().update(obj);
+		return true;
 	}
 
 	public MyFolder getParentFolder(MyFolder myFolder) {
@@ -72,9 +84,7 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 	}
 	@Override
 	public Integer insert(MyFolder obj) {
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try{
+		try{
 				//kiem tra xem folder nay co trong he thong chua
 				//neu co roi thi chi cap nhat id
 				MyFolder tontai = getDao().queryBuilder().where().
@@ -101,8 +111,7 @@ implements _MyDAOInterface<MyFolderDAO, MyFolder>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		return -1;
+		
 	}
 	public ArrayList<MySong> getAllRecursiveSongs(MyFolder obj)
 	{

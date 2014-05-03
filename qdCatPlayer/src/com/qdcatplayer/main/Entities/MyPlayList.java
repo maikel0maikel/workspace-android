@@ -2,44 +2,31 @@ package com.qdcatplayer.main.Entities;
 
 import java.util.ArrayList;
 
-import android.graphics.Bitmap;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.qdcatplayer.main.DAOs.MyAlbumDAO;
+import com.qdcatplayer.main.DAOs.MyPlayListDAO;
 
-@DatabaseTable(tableName = "MyAlbums")
-public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
+@DatabaseTable(tableName = "MyPlayLists")
+public class MyPlayList extends _MyEntityAbstract<MyPlayListDAO, MyPlayList> {
 	/**
 	 * 
 	 */
 	public static final String NAME_F = "name";
 	
-	private Bitmap cover = null;
 	@DatabaseField(unique = true)
 	private String name = null;
 	
 	private ArrayList<MySong> songs = null;
 	
-	public MyAlbum() {
+	public MyPlayList() {
 
 	}
 
-	public MyAlbum(String name) {
+	public MyPlayList(String name) {
 		setName(name);
 	}
 
-
-	public Bitmap getCover() {
-		return cover;
-	}
-
 	public String getName() {
-		//de phong truong hop setName bang tay
-		if(name!=null)
-		{
-			return name;
-		}
 		super.load();
 		return name;
 	}
@@ -54,17 +41,60 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 		}
 		return songs;
 	}
-
+	public void setSongs(ArrayList<MySong> songs) {
+		this.songs = songs;
+	}
+	/**
+	 * No duplicate allowed
+	 * @param obj
+	 */
+	public void addSong(MySong obj) {
+		if(songs==null)
+		{
+			songs=new ArrayList<MySong>();
+		}
+		if(_songExist(obj)!=null)
+		{
+			return;
+		}
+		songs.add(obj);
+	}
+	public void removeSong(MySong obj) {
+		if(songs==null)
+		{
+			return;
+		}
+		MySong tmp=_songExist(obj);
+		if(tmp!=null)
+		{
+			songs.remove(tmp);
+		}
+	}
+	/**
+	 * Kiểm tra song có trong playlist này chưa
+	 * @param obj
+	 * @return Song match
+	 */
+	private MySong _songExist(MySong obj)
+	{
+		if(songs==null)
+		{
+			return null;
+		}
+		for(MySong item:songs)
+		{
+			if(item.getId()==obj.getId())// do not need compare absPath
+			{
+				return item;
+			}
+		}
+		return null;
+	}
 	@Override
 	public void reset() {
 		super.reset();
-		cover = null;
 		name = null;
 		songs = null;
-	}
-
-	public void setCover(Bitmap cover) {
-		this.cover = cover;
 	}
 
 	public void setName(String name_) {
@@ -77,7 +107,6 @@ public class MyAlbum extends _MyEntityAbstract<MyAlbumDAO, MyAlbum> {
 		//if not force to set loaded=true then
 		//new load script will be acted and reset will be called
 		//then all data pre-loaded will swiped out
-		
 		setLoaded(true);
 		return super.insert();
 	}

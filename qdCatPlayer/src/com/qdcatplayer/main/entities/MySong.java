@@ -1,12 +1,9 @@
 package com.qdcatplayer.main.Entities;
 
-import android.media.MediaMetadataRetriever;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.Libraries.MyNumberHelper;
 
 /**
  * Dinh nghia luon lop My...DAO tuong ung lam viec truc tiep voi class MySong
@@ -126,6 +123,11 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 	}
 
 	public String getTitle() {
+		//de phong truong hop setTitle bang tay khi edit Tag => update
+		if(title!=null)
+		{
+			return title;
+		}
 		super.load();
 		return title;
 

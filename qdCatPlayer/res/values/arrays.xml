@@ -18,14 +18,24 @@
         <item >ALBUMS_ITEM</item>
         <item >ARTISTS_ITEM</item>
         <item >FOLDERS_ITEM</item>
-        <item >PLAYLIST_ITEM</item>
+        <item >PLAYLISTS_ITEM</item>
     </string-array>
     <string-array name="library_item_value_array">
         <item >All songs</item>
         <item >Albums</item>
         <item >Artists</item>
         <item >Folders</item>
-        <item >Playlists</item>
+        <item >PlayLists</item>
+    </string-array>
+    <string-array name="library_ctx_songs_id_array">
+        <item >ADD_TO_ENQUEUE</item>
+        <item >ADD_TO_PLAYLIST</item>
+        <item >EDIT_TAG</item>
+    </string-array>
+    <string-array name="library_ctx_songs_value_array">
+        <item >Add to enqueue</item>
+        <item >Add to playlist</item>
+        <item >Edit tag</item>
     </string-array>
     
 </resources>

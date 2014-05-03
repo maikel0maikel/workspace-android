@@ -1,15 +1,12 @@
 package com.qdcatplayer.main.DAOs;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.Entities.MyArtist;
+import com.qdcatplayer.main.Entities.MyAlbum;
 import com.qdcatplayer.main.Entities.MyBitrate;
-import com.qdcatplayer.main.Entities.MyFolder;
 
 public class MyBitrateDAO extends _MyDAOAbstract<MyBitrateDAO, MyBitrate>
 implements _MyDAOInterface<MyBitrateDAO, MyBitrate>
@@ -37,8 +34,10 @@ implements _MyDAOInterface<MyBitrateDAO, MyBitrate>
 
 	@Override
 	public MyBitrate getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		MyBitrate re = getDao().queryForId(id);
+		re.setDao(this);
+		re.setLoaded(true);//very importance
+		return re;
 	}
 
 	@Override
@@ -49,9 +48,7 @@ implements _MyDAOInterface<MyBitrateDAO, MyBitrate>
 	@Override
 	public Integer insert(MyBitrate obj) {
 		//neu object chua co trong DB thi goi super insert
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try {
+		try {
 				MyBitrate tmp = getDao().queryBuilder().where().eq(MyBitrate.VALUE_F, obj.getValue()).queryForFirst();
 				if(tmp==null)
 				{
@@ -67,7 +64,5 @@ implements _MyDAOInterface<MyBitrateDAO, MyBitrate>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		return -1;
 	}
 }

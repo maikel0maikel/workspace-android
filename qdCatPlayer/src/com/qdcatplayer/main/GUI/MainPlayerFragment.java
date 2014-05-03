@@ -1,4 +1,5 @@
 package com.qdcatplayer.main.GUI;
+import android.app.Fragment;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -10,13 +11,13 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
+
+import com.qdcatplayer.main.R;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SeekBar;
 import android.widget.TextView;

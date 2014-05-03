@@ -1,11 +1,8 @@
 package com.qdcatplayer.main.Entities;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyArtistDAO;
 
@@ -13,8 +10,8 @@ import com.qdcatplayer.main.DAOs.MyArtistDAO;
 public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 	public static final String NAME_F = "name";
 
-	@DatabaseField(unique = true)
-	private String name = "";// never null
+	@DatabaseField(unique = true, canBeNull=false)
+	private String name = null;
 
 	/**
 	 * KHÔNG dùng ForeignCollection, vì một vài lý do như
@@ -32,6 +29,11 @@ public class MyArtist extends _MyEntityAbstract<MyArtistDAO, MyArtist> {
 	}
 
 	public String getName() {
+		//de phong truong hop setName bang tay
+		if(name!=null)
+		{
+			return name;
+		}
 		super.load();
 		return name;
 	}

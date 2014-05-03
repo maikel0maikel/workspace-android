@@ -6,37 +6,37 @@ import java.util.List;
 import android.content.Context;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.qdcatplayer.main.Entities.MyAlbum;
-import com.qdcatplayer.main.Entities.MyArtist;
+import com.qdcatplayer.main.Entities.MyPlayList;
 import com.qdcatplayer.main.Entities.MySong;
+import com.qdcatplayer.main.Entities.MySong_MyPlayList;
 
-public class MyAlbumDAO extends _MyDAOAbstract<MyAlbumDAO, MyAlbum>
-implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
+public class MyPlayListDAO extends _MyDAOAbstract<MyPlayListDAO, MyPlayList>
+implements _MyDAOInterface<MyPlayListDAO, MyPlayList>
 {
 	/**
 	 * Neu khong chi dinh GlobalDAO thi dat g=null (se tu dong tao)
 	 * @param ctx
 	 * @param g
 	 */
-	public MyAlbumDAO(Context ctx, GlobalDAO g) {
+	public MyPlayListDAO(Context ctx, GlobalDAO g) {
 		super(ctx, g);
 	}
-
+	
 	@Override
-	public RuntimeExceptionDao<MyAlbum, Integer> getDao() {
+	public RuntimeExceptionDao<MyPlayList, Integer> getDao() {
 		// TODO Auto-generated method stub
 		if(getManager()!=null && getHelper()!=null)
 		{
-			return getHelper().getMyAlbumDAO();
+			return getHelper().getMyPlayListDAO();
 		}
 		return null;
 	}
 
 	@Override
-	public ArrayList<MyAlbum> getAll() {
-		ArrayList<MyAlbum> re = new ArrayList<MyAlbum>();
-        List<MyAlbum> tmp = getDao().queryForAll();
-        for(MyAlbum item:tmp)
+	public ArrayList<MyPlayList> getAll() {
+		ArrayList<MyPlayList> re = new ArrayList<MyPlayList>();
+        List<MyPlayList> tmp = getDao().queryForAll();
+        for(MyPlayList item:tmp)
         {
         	item.setDao(this);
         	item.setLoaded(true);
@@ -46,24 +46,24 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 	}
 
 	@Override
-	public MyAlbum getById(Integer id) {
-		MyAlbum re = getDao().queryForId(id);
+	public MyPlayList getById(Integer id) {
+		MyPlayList re = getDao().queryForId(id);
 		re.setDao(this);
 		re.setLoaded(true);//very importance
 		return re;
 	}
 	
 	@Override
-	public Boolean update(MyAlbum obj) {
+	public Boolean update(MyPlayList obj) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Integer insert(MyAlbum obj) {
+	public Integer insert(MyPlayList obj) {
 		//neu object chua co trong DB thi goi super insert
 		try {
-				MyAlbum tmp = getDao().queryBuilder().where().eq(MyAlbum.NAME_F, obj.getName()).queryForFirst();
+				MyPlayList tmp = getDao().queryBuilder().where().eq(MyPlayList.NAME_F, obj.getName()).queryForFirst();
 				if(tmp==null)
 				{
 					super.insert(obj);
@@ -80,20 +80,21 @@ implements _MyDAOInterface<MyAlbumDAO, MyAlbum>
 			}
 	}
 
-	public ArrayList<MySong> getSongs(MyAlbum obj) {
+	public ArrayList<MySong> getSongs(MyPlayList obj) {
 		ArrayList<MySong> re = new ArrayList<MySong>();
+		MySong song=null;
 		if(getSource()==MySource.DB_SOURCE)
 		{
 			try {
-				/*List<MySong> tmp = getGlobalDAO().getMySongDAO().getDao()
-						.queryBuilder().where().eq(MySong.ALBUM_ID, obj.getId())
-						.query();*/
-				List<MySong> tmp = getGlobalDAO().getMySongDAO().getDao().queryForEq(MySong.ALBUM_ID, obj.getId());
-				for(MySong item:tmp)
+				List<MySong_MyPlayList> tmp =
+						getGlobalDAO().
+						getMySong_MyPlayListDAO().getDao().queryForEq(MySong_MyPlayList.PLAYLIST_ID, obj.getId());
+				for(MySong_MyPlayList item:tmp)
 				{
-					item.setDao(getGlobalDAO().getMySongDAO());
-					item.setLoaded(true);
-					re.add(item);
+					song=item.getSong();
+					song.setDao(getGlobalDAO().getMySongDAO());
+					song.setLoaded(false);//not true because MySong_MyPlayList only load ID
+					re.add(song);
 				}
 				return re;
 			} catch (Exception e) {

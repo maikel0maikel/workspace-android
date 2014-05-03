@@ -6,33 +6,36 @@ package com.qdcatplayer.main.Setting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.DAOs.MyFolderDAO;
-import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.Entities.MyFolder;
-
 import android.app.AlertDialog.Builder;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-
-import android.content.res.TypedArray;
-
 import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
-
 import android.util.AttributeSet;
 import android.util.Log;
-
 import android.widget.ListAdapter;
+import android.widget.Toast;
+
+import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.BackgroundTasks.MyLibraryUpdateTask;
+import com.qdcatplayer.main.BackgroundTasks.MyLibraryUpdateTask.OnBGTaskWorkingListener;
+import com.qdcatplayer.main.DAOs.MyFolderDAO;
+import com.qdcatplayer.main.DAOs.MySource;
+import com.qdcatplayer.main.Entities.MyFolder;
+import com.qdcatplayer.main.Libraries.MyNumberHelper;
 
 /**
  * The ImageListPreference class responsible for displaying an image for each
  * item within the list.
  * @author Casper Wakkers
  */
-public class FolderChooserPreference extends ListPreference {
+public class FolderChooserPreference extends ListPreference{
+	
+	public interface OnFolderChooserFinishListener {
+		public void OnFolderChooserFinish();
+	}
+	public static final String ONFINISH_LISTENER_KEY = "onfinish_listener";
+	public static final String FOLDER_CHANGED_KEY = "folder_changed";
 	public interface MyItemClickListener {
 		public void onClick(MyFolder fd,Boolean isChecked);
 	}
@@ -59,14 +62,50 @@ public class FolderChooserPreference extends ListPreference {
 	public FolderChooserPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
+	private Boolean pushToChooser(MyFolder obj)
+	{
+		chooseResult.put(obj.getAbsPath(), obj);
+		return true;
+	}
+	private Boolean removeFromChooser(MyFolder obj)
+	{
+		chooseResult.remove(obj.getAbsPath());
+		return true;
+	}
+	private HashMap<String, MyFolder> validateChooser(HashMap<String, MyFolder> input)
+	{
+		//kiem tra coi folder co parent nam trong list hay chua
+		Boolean needed = null;
+		HashMap<String, MyFolder> finalChooserResult=new HashMap<String, MyFolder>();
+		for(MyFolder item:input.values())
+		{
+			needed = true;
+			for(MyFolder item2:input.values())
+			{
+				if(item.getAbsPath().equals(item2.getAbsPath()))
+				{
+					continue;
+				}
+				if(item.isSubFolderOf(item2)){
+					needed=false;
+					break;
+				}
+			}
+			if(needed)
+			{
+				finalChooserResult.put(item.getAbsPath(), item);
+			}
+		}
+		return finalChooserResult;
+	}
 	/**
 	 * khi click moi bat dau chay
 	 */
-	
 	protected void onPrepareDialogBuilder(Builder builder) {
+		
 		MyFolderDAO dao = new MyFolderDAO(getContext(), null);
 		dao.setSource(MySource.DISK_SOURCE);
-		MyFolder fd = new MyFolder("/sdcard/music");
+		MyFolder fd = new MyFolder("/mnt");
 		fd.setDao(dao);
 		
 		ArrayList<MyFolder> folders = fd.getChildFolders();
@@ -76,22 +115,17 @@ public class FolderChooserPreference extends ListPreference {
 				
 				@Override
 				public void onClick(MyFolder fd, Boolean isChecked) {
-					String absPath = fd.getAbsPath();
 					if(isChecked)
 					{
-						if(!chooseResult.containsKey(absPath))
-						{
-							chooseResult.put(absPath, fd);
-							Log.w("qd", "Put "+absPath);
-						}
+						//chooseResult.put(fd.getAbsPath(), fd);
+						pushToChooser(fd);
+						Log.w("qd", "Put "+fd.getAbsPath());
 					}
 					else
 					{
-						if(chooseResult.containsKey(absPath))
-						{
-							chooseResult.remove(absPath);
-							Log.w("qd", "Remove "+absPath);
-						}
+						//chooseResult.remove(fd.getAbsPath());
+						removeFromChooser(fd);
+						Log.w("qd", "Remove "+fd.getAbsPath());
 					}
 				}
 			});
@@ -103,23 +137,81 @@ public class FolderChooserPreference extends ListPreference {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				Log.w("qd", "OK clicked");
-				//FINISH
-				for(MyFolder tmp:chooseResult.values())
+				Log.w("qd","Chooder folder list before validate:");
+				for(MyFolder item:chooseResult.values())
 				{
-					Log.w("qd", tmp.getAbsPath());
+					Log.w("qd", item.getAbsPath());
 				}
-				//clear after success
-				chooseResult.clear();
+				//validate first
+				chooseResult= validateChooser(chooseResult);
+				Log.w("qd","Final folder list to fetch after validate:");
+				for(MyFolder item:chooseResult.values())
+				{
+					Log.w("qd", item.getAbsPath());
+				}
+				
+				if(chooseResult.size()<=0)
+				{
+					Toast.makeText(getContext(), "Nothing changed", 300).show();
+					return;
+				}
+				//FINISH
+				ArrayList<MyFolder> list_tmp = new ArrayList<MyFolder>();
+				list_tmp.addAll(chooseResult.values());
+				MyLibraryUpdateTask tsk=new MyLibraryUpdateTask(
+						list_tmp,
+						getContext(),
+						new OnBGTaskWorkingListener() {
+							
+							@Override
+							public void onFinish() {
+								//clear after success
+								chooseResult.clear();
+								//stop progress bar...
+								/*
+								SharedPreferences pref = getPreferenceManager().getSharedPreferences();
+								Editor edit = pref.edit();
+								edit.remove("key").commit();//van con bi double event
+								*/
+								Log.w("qd","Folder changed");
+								getSharedPreferences().edit().putBoolean(FOLDER_CHANGED_KEY, true).commit();
+								//unlock asynctask wait
+								//aSyncTaskFinish=true;
+								setSummary(summary_bk);
+							}
+
+							@Override
+							public void onProgressUpdating(Integer total,
+									Integer current) {
+								Log.w("qd",current+"/"+total);
+								setSummary("Progress: "+current+"/"+total+" ("+(MyNumberHelper.round((double)current/total*100))+"%)");
+							}
+						});
+				tsk.start();
+				
+				summary_bk = String.valueOf(getSummary());
+				setSummary("Waiting...");
 			}
 		});
 		//do not call super or OK button will never appear
 		//super.onPrepareDialogBuilder(builder);
+		
 	}
+	private String summary_bk = "";
+	private Boolean aSyncTaskFinish=false;
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		super.onDialogClosed(positiveResult);
 	}
-	
+	@Override
+	protected void onAttachedToActivity() {
+		// TODO Auto-generated method stub
+		super.onAttachedToActivity();
+	}
+	@Override
+	public void onDismiss(DialogInterface dialog) {
+		// TODO Auto-generated method stub
+		super.onDismiss(dialog);
+	}
 }

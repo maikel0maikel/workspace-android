@@ -9,7 +9,7 @@ public class MyNumberHelper {
 			return Long.parseLong(input);
 		}catch(NumberFormatException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return 0l;
 		}
 	}
@@ -28,6 +28,10 @@ public class MyNumberHelper {
 			tmp.set(0, 0, 0, 0, 0, 0);
 			return tmp;
 		}
+	}
+	public static Double round(Double number)
+	{
+		return Double.parseDouble(String.valueOf(Math.round(number)));
 	}
 	public static Time toTime(Long milisecs)
 	{

@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.Entities.MyArtist;
+import com.qdcatplayer.main.Entities.MyPlayList;
 
 /**
  * Set albums (ArrayList<MyAlbum>) over bundle by
@@ -21,32 +21,32 @@ import com.qdcatplayer.main.Entities.MyArtist;
  * @author admin
  *
  */
-public class MyLibraryArtistsFragment extends ListFragment {
-	public static String ARTISTS = "ARTISTS";
-	public interface MyLibraryArtistItemClickListener {
-		public void onLibraryArtistItemClick(MyArtist current, ArrayList<MyArtist> artists);
+public class MyLibraryPlayListsFragment extends ListFragment {
+	public static String PLAYLISTS = "PLAYLISTS";
+	public interface MyLibraryPlayListItemClickListener {
+		public void onLibraryPlayListItemClick(MyPlayList current, ArrayList<MyPlayList> playlists);
 	}
 
-	private class MyLibraryArtistsAdapter extends ArrayAdapter<MyArtist> {
+	private class MyLibraryPlayListsAdapter extends ArrayAdapter<MyPlayList> {
 		private class ViewHolder {
-			private MyArtist artist = null;
+			private MyPlayList playlist = null;
 			private TextView tv_name = null;
 			private TextView tv_totalSongs = null;
 
-			public ViewHolder(MyArtist artist, TextView tv_name,
+			public ViewHolder(MyPlayList playlist, TextView tv_name,
 					TextView tv_totalSongs) {
 				this.tv_name = tv_name;
 				this.tv_totalSongs = tv_totalSongs;
-				this.artist = artist;
+				this.playlist = playlist;
 				
 			}
 
-			public MyArtist getArtist() {
-				return artist;
+			public MyPlayList getPlayList() {
+				return playlist;
 			}
 
-			public void setArtist(MyArtist artist) {
-				this.artist = artist;
+			public void setPlayList(MyPlayList playlist) {
+				this.playlist = playlist;
 			}
 
 			public TextView getTv_name() {
@@ -68,61 +68,61 @@ public class MyLibraryArtistsFragment extends ListFragment {
 
 		}
 
-		private MyLibraryArtistItemClickListener mListener = null;
-		private ArrayList<MyArtist> artists = null;
+		private MyLibraryPlayListItemClickListener mListener = null;
+		private ArrayList<MyPlayList> playlists = null;
 
-		public MyLibraryArtistsAdapter(Context context, int textViewResourceId,
-				ArrayList<MyArtist> objects, MyLibraryArtistItemClickListener listener) {
+		public MyLibraryPlayListsAdapter(Context context, int textViewResourceId,
+				ArrayList<MyPlayList> objects, MyLibraryPlayListItemClickListener listener) {
 
 			super(context, textViewResourceId, objects);
-			artists = objects;
+			playlists = objects;
 			mListener = listener;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView tv_name;
-			TextView tv_artist;
+			TextView tv_playlist;
 			TextView tv_totalSongs;
 			ViewHolder holder;
-			MyArtist artist = artists.get(position);
+			MyPlayList playlist = playlists.get(position);
 			if (convertView == null) {
 				/*LayoutInflater inflater = ((Activity) getContext())
 						.getLayoutInflater();*/
 				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflater.inflate(R.layout.library_artists_listview_item,
+				convertView = inflater.inflate(R.layout.library_playlists_listview_item,
 						parent, false);
 				convertView.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
 						ViewHolder holder = (ViewHolder) v.getTag();
-						MyArtist artist = holder.getArtist();
-						mListener.onLibraryArtistItemClick(artist, artists);
+						MyPlayList playlist = holder.getPlayList();
+						mListener.onLibraryPlayListItemClick(playlist, playlists);
 					}
 				});
 				tv_name = (TextView) convertView
-						.findViewById(R.id.artist_name);
+						.findViewById(R.id.playList_name);
 				tv_totalSongs = (TextView) convertView
-						.findViewById(R.id.artist_totalSongs);
-				holder = new ViewHolder(artist, tv_name, tv_totalSongs);
+						.findViewById(R.id.playList_totalSongs);
+				holder = new ViewHolder(playlist, tv_name, tv_totalSongs);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 				tv_name = holder.getTv_name();
 				tv_totalSongs = holder.getTv_totalSongs();
-				holder.setArtist(artist);
+				holder.setPlayList(playlist);
 			}
-			tv_name.setText(artist.getName());
-			tv_totalSongs.setText(artist.getSongs().size()+" [songs]");
+			tv_name.setText(playlist.getName());
+			tv_totalSongs.setText(playlist.getSongs().size()+" [songs]");
 			convertView.setTag(holder);
 			return convertView;
 		}
 	}
 
-	private MyLibraryArtistItemClickListener mListener = null;
-	public ArrayList<MyArtist> artists = null;
+	private MyLibraryPlayListItemClickListener mListener = null;
+	public ArrayList<MyPlayList> playlists = null;
 
-	public MyLibraryArtistsFragment(){	
+	public MyLibraryPlayListsFragment(){	
 	}
 
 	@Override
@@ -130,19 +130,19 @@ public class MyLibraryArtistsFragment extends ListFragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		artists = ((_MyLibaryDataProvider)getActivity()).getArtists();
-		if(artists==null)
+		playlists = ((_MyLibaryDataProvider)getActivity()).getPlayLists();
+		if(playlists==null)
 		{
-			artists = new ArrayList<MyArtist>();//by default
+			playlists = new ArrayList<MyPlayList>();//by default
 		}
 		
-		MyLibraryArtistsAdapter adp = new MyLibraryArtistsAdapter(getActivity().getApplicationContext(),
-				R.layout.library_artists_listview_item, artists, new MyLibraryArtistItemClickListener() {
+		MyLibraryPlayListsAdapter adp = new MyLibraryPlayListsAdapter(getActivity().getApplicationContext(),
+				R.layout.library_playlists_listview_item, playlists, new MyLibraryPlayListItemClickListener() {
 
 					@Override
-					public void onLibraryArtistItemClick(MyArtist current,
-							ArrayList<MyArtist> artists_) {
-						mListener.onLibraryArtistItemClick(current, artists_);
+					public void onLibraryPlayListItemClick(MyPlayList current,
+							ArrayList<MyPlayList> playlists_) {
+						mListener.onLibraryPlayListItemClick(current, playlists_);
 					}
 
 					
@@ -157,7 +157,7 @@ public class MyLibraryArtistsFragment extends ListFragment {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
 
-		mListener = (MyLibraryArtistItemClickListener) activity;
+		mListener = (MyLibraryPlayListItemClickListener) activity;
 	}
 
 	@Override

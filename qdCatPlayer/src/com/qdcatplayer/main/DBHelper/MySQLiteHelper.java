@@ -1,13 +1,9 @@
 package com.qdcatplayer.main.DBHelper;
 
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -17,7 +13,9 @@ import com.qdcatplayer.main.Entities.MyBitrate;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MyFormat;
 import com.qdcatplayer.main.Entities.MyPath;
+import com.qdcatplayer.main.Entities.MyPlayList;
 import com.qdcatplayer.main.Entities.MySong;
+import com.qdcatplayer.main.Entities.MySong_MyPlayList;
 
 public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 	private static final String DATABASE_NAME = "QDCATPLAYER_DB";
@@ -25,7 +23,10 @@ public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 	public MySQLiteHelper(Context ctx) {
 		super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
 	}
-	
+	public void resetDB()
+	{
+		onUpgrade(getWritableDatabase(), getConnectionSource(), DATABASE_VERSION, DATABASE_VERSION+1);
+	}
 	@Override
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		try {
@@ -36,6 +37,8 @@ public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, MyFormat.class);
             TableUtils.createTable(connectionSource, MyPath.class);
             TableUtils.createTable(connectionSource, MySong.class);
+            TableUtils.createTable(connectionSource, MyPlayList.class);
+            TableUtils.createTable(connectionSource, MySong_MyPlayList.class);
         } catch (java.sql.SQLException e) {
 			e.printStackTrace();
 		}
@@ -55,6 +58,9 @@ public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, MyFormat.class, true);
 			TableUtils.dropTable(connectionSource, MyPath.class, true);
 			TableUtils.dropTable(connectionSource, MySong.class, true);
+			TableUtils.dropTable(connectionSource, MyPlayList.class, true);
+			TableUtils.dropTable(connectionSource, MySong_MyPlayList.class, true);
+			
 		} catch (java.sql.SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -132,15 +138,38 @@ public class MySQLiteHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return _myPathDAO;
 	}
+	private RuntimeExceptionDao<MyPlayList, Integer> _myPlayListDAO = null;
+	public RuntimeExceptionDao<MyPlayList, Integer> getMyPlayListDAO()
+	{
+		if(_myPlayListDAO==null)
+		{
+			_myPlayListDAO = getRuntimeExceptionDao(MyPlayList.class);//do not use DaoManager.create(...);
+		}
+		return _myPlayListDAO;
+	}
+	private RuntimeExceptionDao<MySong_MyPlayList, Integer> _mySong_MyPlayListDAO = null;
+	public RuntimeExceptionDao<MySong_MyPlayList, Integer> getMySong_MyPlayListDAO()
+	{
+		if(_mySong_MyPlayListDAO==null)
+		{
+			_mySong_MyPlayListDAO = getRuntimeExceptionDao(MySong_MyPlayList.class);//do not use DaoManager.create(...);
+		}
+		return _mySong_MyPlayListDAO;
+	}
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		super.close();
+		//very importance because àter close there are no way to get it open again
+		//not tested all yet but at current time, do not call super.close or you
+		//might be encountred illegalExcaption when reset DB via upgrade
+		//super.close();
 		_myArtistDAO=null;
 		_myBitrateDAO=null;
 		_myFolderDAO=null;
 		_myFormatDAO=null;
 		_myPathDAO=null;
 		_mySongDAO=null;
+		_myAlbumDAO=null;
+		_myPlayListDAO=null;
+		_mySong_MyPlayListDAO=null;
 	}
 }

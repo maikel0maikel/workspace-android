@@ -5,11 +5,9 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MyPath;
-import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.Libraries.MyFileHelper;
 
 public class MyPathDAO extends _MyDAOAbstract<MyPathDAO, MyPath>
@@ -48,9 +46,7 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 		{
 			return -1;
 		}
-		if(getSource()==MySource.DISK_SOURCE)
-		{
-			try{
+		try{
 				//neu path co roi trong he thong thi khong add
 				if(obj.getId() != null && obj.getId() > 0)
 				{
@@ -77,8 +73,8 @@ implements _MyDAOInterface<MyPathDAO, MyPath>
 				e.printStackTrace();
 				return -1;
 			}
-		}
-		return -1;
+		
+		
 	}
 
 	@Override

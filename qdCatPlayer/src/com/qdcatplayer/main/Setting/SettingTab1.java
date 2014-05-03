@@ -2,20 +2,15 @@ package com.qdcatplayer.main.Setting;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.qdcatplayer.main.R;
 
-public class SettingTab1 extends PreferenceFragment {
-    @Override
+public class SettingTab1 extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -27,6 +22,10 @@ public class SettingTab1 extends PreferenceFragment {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.setting_detail1);
+        SharedPreferences pref= getPreferenceManager().getSharedPreferences();
+        pref.registerOnSharedPreferenceChangeListener(this);
+        pref.edit().putBoolean(FolderChooserPreference.FOLDER_CHANGED_KEY, false).commit();
+        ListPreference somePreference = (ListPreference) findPreference("folderList");
         /*
         CheckBoxPreference limit = (CheckBoxPreference)findPreference("checkbox_preference");
         limit.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -37,6 +36,26 @@ public class SettingTab1 extends PreferenceFragment {
 				return true;//must return true
 			}
 		});
-       */
+		*/
     }
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		// TODO Auto-generated method stub
+		Log.w("qd", "fragment");
+		return;
+	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+	}
 }

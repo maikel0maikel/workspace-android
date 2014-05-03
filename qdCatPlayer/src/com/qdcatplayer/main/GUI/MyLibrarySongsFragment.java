@@ -1,26 +1,19 @@
 package com.qdcatplayer.main.GUI;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.qdcatplayer.main.R;
-import com.qdcatplayer.main.DAOs.MySongDAO;
-import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.Entities.MyFolder;
-import com.qdcatplayer.main.Entities.MySong;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.Entities.MySong;
 
 /**
  * Set songs (ArrayList<MySong>) over bundle by
@@ -31,7 +24,8 @@ import android.widget.TextView;
 public class MyLibrarySongsFragment extends ListFragment {
 	public static String SONGS = "SONGS";
 	public interface MyLibrarySongItemClickListener {
-		public void onLibrarySongItemClick(MySong current, ArrayList<MySong> playlist);
+		public void onLibrarySongItemClick(MySong current, ArrayList<MySong> songs);
+		public void onLibrarySongItemLongClick(MySong current, ArrayList<MySong> songs);
 	}
 
 	private class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
@@ -118,6 +112,9 @@ public class MyLibrarySongsFragment extends ListFragment {
 				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflater.inflate(R.layout.library_songs_listview_item,
 						parent, false);
+				/*
+				 * Trung tâm bắt sự kiện đầu tiên 
+				 */
 				convertView.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -127,6 +124,17 @@ public class MyLibrarySongsFragment extends ListFragment {
 						mListener.onLibrarySongItemClick(song, songs);
 					}
 				});
+				convertView.setOnLongClickListener(new View.OnLongClickListener() {
+					
+					@Override
+					public boolean onLongClick(View v) {
+						ViewHolder holder = (ViewHolder) v.getTag();
+						MySong song = holder.getSong();
+						mListener.onLibrarySongItemLongClick(song, songs);
+						return true;
+					}
+				});
+				
 				tv_title = (TextView) convertView
 						.findViewById(R.id.song_title);
 				tv_artist = (TextView) convertView
@@ -165,8 +173,7 @@ public class MyLibrarySongsFragment extends ListFragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		Bundle data = getArguments();
-		songs = (ArrayList<MySong>) data.getSerializable(MyLibrarySongsFragment.SONGS);
+		songs = ((_MyLibaryDataProvider)getActivity()).getSongs();
 		if(songs==null)
 		{
 			songs = new ArrayList<MySong>();//by default
@@ -176,8 +183,13 @@ public class MyLibrarySongsFragment extends ListFragment {
 				R.layout.library_songs_listview_item, songs, new MyLibrarySongItemClickListener() {
 					@Override
 					public void onLibrarySongItemClick(MySong current, ArrayList<MySong> playlist) {
-						// TODO Auto-generated method stub
 						mListener.onLibrarySongItemClick(current, playlist);
+					}
+
+					@Override
+					public void onLibrarySongItemLongClick(MySong current,
+							ArrayList<MySong> songs) {
+						mListener.onLibrarySongItemLongClick(current, songs);
 					}
 				});
 		
@@ -201,7 +213,13 @@ public class MyLibrarySongsFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.library_songs_listview, container, false);
+		View v = inflater.inflate(R.layout.library_listview, container, false);
 		return v;
 	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);//not fail here
+	}
+	
 }

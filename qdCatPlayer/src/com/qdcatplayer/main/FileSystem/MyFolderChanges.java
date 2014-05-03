@@ -3,11 +3,8 @@ package com.qdcatplayer.main.FileSystem;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.qdcatplayer.main.Libraries.MyMD5;
 

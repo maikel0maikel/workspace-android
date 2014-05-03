@@ -2,14 +2,11 @@ package com.qdcatplayer.main.DAOs;
 
 import java.util.ArrayList;
 
-import com.j256.ormlite.dao.Dao;
+import android.content.Context;
+
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.DBHelper.MySQLiteHelper;
-import com.qdcatplayer.main.Entities.MySong;
-import com.qdcatplayer.main.Entities._MyEntityAbstract;
-
-import android.content.Context;
 
 public interface _MyDAOInterface<T,K> {
 	public Boolean release();

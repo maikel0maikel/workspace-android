@@ -7,21 +7,27 @@
     android:orientation="vertical"
     >
 
-    <LinearLayout
-        android:id="@+id/library_main_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:text="@string/hello_world" />
+	<FrameLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    >
 
+	    <LinearLayout
+	        android:id="@+id/library_main_placeholder"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:orientation="vertical"
+	        android:text="@string/hello_world"
+	         />
+	</FrameLayout>
     <LinearLayout
         android:id="@+id/library_main_navigation"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:text="@string/hello_world"
         android:orientation="vertical"
-        android:background="@android:color/black"
+        android:background="@android:color/darker_gray"
         />
 
 </LinearLayout>
