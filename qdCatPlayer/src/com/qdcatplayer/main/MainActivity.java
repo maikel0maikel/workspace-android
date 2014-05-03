@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
 		*/
 		//SettingListActivity m = new SettingListActivity();
 		
-		showLibraryActivity();
+		//showLibraryActivity();
 		
 		//Xong roi do, gio chinh giao dien gi do di
 		//Chung nao xong het roi commit qua tui luon
