@@ -12,6 +12,7 @@ import org.cmc.music.myid3.*;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -40,8 +41,7 @@ import com.qdcatplayer.main.Setting.SettingsActivity;
 public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 	private MediaPlayer mainMediaPlayer=null;
 	private MySong currentPlayingSong=null;
-	private Integer currentPosition=0;
-	private Boolean isPlayingState=false;
+	private ArrayList<MySong> songsList=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,6 +54,7 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 		dao.setSource(MySource.DB_SOURCE);
 		currentPlayingSong= dao.getById(1);
 		mainMediaPlayer = new MediaPlayer();
+		prepareMediaPlayer(mainMediaPlayer, currentPlayingSong);
 		//
 		
 		final ActionBar actionBar = getActionBar();
@@ -88,6 +89,7 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 		
 		
 	}
+	/*
 	private void update_sample()
 	{
 		try
@@ -104,6 +106,7 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 			
 		}
 	}
+	*/
 	private class KimTabListener implements ActionBar.TabListener{
 
 		@Override
@@ -114,8 +117,6 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-			Toast toast=Toast.makeText(getApplicationContext(), "tab", Toast.LENGTH_SHORT);
 			if(tab.getText().equals("Music Player")){
 				MainPlayerFragment fm=new MainPlayerFragment() {
 				};
@@ -125,9 +126,11 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 				frt.commit();
 			}
 			else{
-				
-				toast.setText("The others");
-				toast.show();
+				Fragment fm = new Fragment();
+				FragmentTransaction frt=getFragmentManager().beginTransaction();
+				frt.replace(R.id.layout_container, fm);
+				frt.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+				frt.commit();
 			}
 		}
 
@@ -149,6 +152,7 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 		Intent setting = new Intent(MainActivity.this, SettingsActivity.class);
 		startActivity(setting);
 	}
+	/*
 	private void getSongsFromFolderId()
 	{
 		MyFolder fd=new MyFolder();
@@ -166,6 +170,8 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 			}
 		}
 	}
+	*/
+	/*
 	private void Tracking()
 	{
 		MyFolderChanges tracker = new MyFolderChanges("/sdcard/music/hay", new MyFileChangesInterface() {
@@ -176,6 +182,8 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 		});
 		tracker.start();
 	}
+	*/
+	/*
 	private void LoadToDB()
 	{
 		//Declare music folder
@@ -195,6 +203,7 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 			item.insert();//F_Entity will auto insert and keep references
 		}
 	}
+	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -203,7 +212,6 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
 		callSetting();
 		return true;
 	}
@@ -216,24 +224,68 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 		return currentPlayingSong;
 	}
 	@Override
-	public MySong getNextSong() {
-		return new MySong();
+	public Boolean requestNextSong() {
+		Integer cur_index = songsList.indexOf(currentPlayingSong);
+		if(cur_index<0)
+		{
+			return false;
+		}
+		Integer next_index = cur_index+1;
+		if(next_index>=songsList.size())
+		{
+			return false;
+		}
+		currentPlayingSong = songsList.get(next_index);
+		return true;
 	}
 	@Override
-	public MySong getPrevSong() {
-		return new MySong();
+	public Boolean requestPrevSong() {
+		Integer cur_index = songsList.indexOf(currentPlayingSong);
+		if(cur_index<0)
+		{
+			return false;
+		}
+		Integer prev_index = cur_index-1;
+		if(prev_index<0)
+		{
+			return false;
+		}
+		currentPlayingSong = songsList.get(prev_index);
+		return true;
+	}
+	private void prepareMediaPlayer(MediaPlayer player, MySong obj)
+	{
+		if(player==null)
+		{
+			return;
+		}
+		try {
+			player.reset();
+			player.setDataSource(obj.getPath().getAbsPath());
+			player.prepare();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	@Override
-	public Integer getCurrentPostion() {
-		return currentPosition;
+	public Boolean setRepeat(Integer mode) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	@Override
-	public Boolean getPlayingState() {
-		return isPlayingState;
-	}
-	@Override
-	public void setPlayingState(Boolean isPlaying) {
-		this.isPlayingState = isPlaying;
+	public Boolean setShuffle(Boolean mode) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

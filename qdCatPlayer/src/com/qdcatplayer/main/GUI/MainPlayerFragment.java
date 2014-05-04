@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,81 +31,194 @@ import android.os.Handler;
 
 public abstract class MainPlayerFragment extends Fragment {
 	public interface MyMainPLayerDataProvider {
-		public MediaPlayer getMediaPlayer();
-
 		public MySong getCurrentSong();
 
-		public MySong getNextSong();
+		public MediaPlayer getMediaPlayer();
 
-		public MySong getPrevSong();
+		/**
+		 * bai hat se khong duoc phat cho toi khi dieu khien MediaPlayer
+		 * 
+		 * @return
+		 */
+		public Boolean requestNextSong();
 
-		public Integer getCurrentPostion();
+		/**
+		 * bai hat se khong duoc phat cho toi khi dieu khien MediaPlayer
+		 * 
+		 * @return
+		 */
+		public Boolean requestPrevSong();
 
 		/**
 		 * 
-		 * @return true (isPlaying), false (pause or stop)
+		 * @param mode
+		 *            0:khong repeat, 1: repeat 1 bai, 2: repeat toan bo
+		 * @return
 		 */
-		public Boolean getPlayingState();
+		public Boolean setRepeat(Integer mode);
 
-		public void setPlayingState(Boolean isPlaying);
+		/**
+		 * 
+		 * @param mode
+		 *            true: on, false: off
+		 * @return
+		 */
+		public Boolean setShuffle(Boolean mode);
 	}
 
+	private class ShowProgressTask extends AsyncTask<Void, Integer, Integer> {
+		@Override
+		protected Integer doInBackground(Void... params) {
+			if(mp==null)
+			{
+				return -1;
+			}
+			Integer b = mp.getDuration();
+			Integer a = 0;
+			// TODO Auto-generated method stub
+			while (mp.getCurrentPosition() <= b) {
+				if(isCancelled())
+				{
+					break;//dead code but still here for sure
+				}
+				a = mp.getCurrentPosition();
+				publishProgress(a, b);
+				if(!mp.isPlaying())//importance
+				{
+					break;
+				}
+				
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+					return -1;
+				}
+				
+			}
+			return 0;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			// TODO Auto-generated method stub
+			//super.onPostExecute(result);
+		}
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			//super.onPreExecute();
+		}
+		
+		/**
+		 * Input la miliseconds
+		 */
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			super.onProgressUpdate(progress);
+			Integer cur = progress[0];
+			Integer duration = progress[1];
+			updateProgressBar(cur, duration);
+		}
+	}
+	private TextView artistLabel;
+	private ImageButton btn_fav;
+	private ImageButton btn_play;
+	private ImageButton btn_repeat;
+	private ImageButton btn_shuffle;
+	/*
+	 * Listener to Activity
+	 */
+	private MyMainPLayerDataProvider dataProvider = null;
+	private MediaPlayer mp;
+	private SeekBar pro_bar;
+	private TextView songCurrentDurationLabel;
+	private TextView songNameLabel;
+	private TextView songTotalDurationLabel;
 	/*
 	 * 
 	 */
 	private ShowProgressTask task = null;
-	/*
-	 * Listener to Activity
-	 */
-	private MyMainPLayerDataProvider mListener = null;
-	/*
-	 * View instances
-	 */
-	//private Handler mHandler = new Handler();
-	private Utilities utils = new Utilities();
-	private TextView songTotalDurationLabel;
-	private TextView songCurrentDurationLabel;
-	private TextView songNameLabel;
-	private SeekBar pro_bar;
-	private TextView artistLabel;
-	private ImageButton btn_play;
-	private ImageButton btn_shuffle;
-	private ImageButton btn_repeat;
-	private ImageButton btn_fav;
-	private MediaPlayer mp;
 
 	/*
 	 * public void updateProgressBar() { mHandler.postDelayed(mUpdateTimeTask,
 	 * 100); }
 	 */
 
+	/*
+	 * View instances
+	 */
+	// private Handler mHandler = new Handler();
+	private Utilities utils = new Utilities();
+
+	/*
+	 * private Runnable mUpdateTimeTask = new Runnable() { public void run() {
+	 * long totalDuration = mp.getDuration(); long currentDuration =
+	 * mp.getCurrentPosition(); // Displaying Total Duration time
+	 * songTotalDurationLabel.setText("" +
+	 * utils.milliSecondsToTimer(totalDuration)); // Displaying time completed
+	 * playing songCurrentDurationLabel.setText("" +
+	 * utils.milliSecondsToTimer(currentDuration)); // Updating progress bar int
+	 * progress = (int) (utils.getProgressPercentage(currentDuration,
+	 * totalDuration)); // int
+	 * progress=(int)(((double)currentDuration/totalDuration)*100); //
+	 * Log.d("Progress", ""+progress); pro_bar.setProgress(progress); // Running
+	 * this thread after 100 milliseconds mHandler.postDelayed(this, 100); } };
+	 */
+
+	private void destroyProgressTask(ShowProgressTask input) {
+		if (input != null) {
+			input.cancel(false);
+		}
+	}
+
+	/**
+	 * Cancel task hien tai, va tao task moi, nhung khong chay lien
+	 * 
+	 * @param input
+	 */
+	private ShowProgressTask initNewProgressTask(ShowProgressTask input) {
+		destroyProgressTask(input);
+		return new ShowProgressTask();
+	}
+
+	private void loadSavedState() {
+		// Step 1:load song info
+		// update total time label
+		songTotalDurationLabel.setText(utils.milliSecondsToTimer(dataProvider
+				.getCurrentSong().getDuration() * 1000));
+		// update song name label
+		songNameLabel.setText(dataProvider.getCurrentSong().getTitle());
+		// update artist label
+		artistLabel
+				.setText(dataProvider.getCurrentSong().getArtist().getName());
+		// Step2: load current seekbar position (update immedialy if isPlaying)
+		mp = dataProvider.getMediaPlayer();
+		//create new instance of Propressbar Asynctask
+		task = initNewProgressTask(task);
+		task.execute();
+		// Step 3:load current pause/play
+		if (mp == null) {
+			return;
+		}
+		try {
+			if (mp.isPlaying()) {
+				btn_play.setImageResource(R.drawable.pause);
+				btn_play.setTag("Pause");
+			} else {
+				btn_play.setImageResource(R.drawable.play_bg_auto);
+				btn_play.setTag("PLay");
+			}
+		} catch (IllegalStateException e) {
+			btn_play.setImageResource(R.drawable.play_bg_auto);
+			btn_play.setTag("PLay");
+		}
+	}
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		mListener = (MyMainPLayerDataProvider) activity;
+		dataProvider = (MyMainPLayerDataProvider) activity;
 	}
-	/*
-	private Runnable mUpdateTimeTask = new Runnable() {
-		public void run() {
-			long totalDuration = mp.getDuration();
-			long currentDuration = mp.getCurrentPosition();
-			// Displaying Total Duration time
-			songTotalDurationLabel.setText(""
-					+ utils.milliSecondsToTimer(totalDuration));
-			// Displaying time completed playing
-			songCurrentDurationLabel.setText(""
-					+ utils.milliSecondsToTimer(currentDuration));
-			// Updating progress bar
-			int progress = (int) (utils.getProgressPercentage(currentDuration,
-					totalDuration));
-			// int progress=(int)(((double)currentDuration/totalDuration)*100);
-			// Log.d("Progress", ""+progress);
-			pro_bar.setProgress(progress);
-			// Running this thread after 100 milliseconds
-			mHandler.postDelayed(this, 100);
-		}
-	};
-	*/
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,18 +236,13 @@ public abstract class MainPlayerFragment extends Fragment {
 				.findViewById(R.id.textView_remain_duration);
 		songNameLabel = (TextView) v.findViewById(R.id.textView_SongName);
 		artistLabel = (TextView) v.findViewById(R.id.textview_Artist);
-		// get from provider
-		mp = mListener.getMediaPlayer();
-		prepareMediaPlayer();
-		// set pre value from provider
-		// ...
-		updateSongInfo();
+		// load saved state
+		loadSavedState();
 
-		// set view tag
-		btn_play.setTag("Play");
-		btn_shuffle.setTag("UnSelected");
-		btn_repeat.setTag("UnSelected");
-		btn_fav.setTag("UnSelected");
+		// btn_play.setTag("Play");
+		// btn_shuffle.setTag("UnSelected");
+		// btn_repeat.setTag("UnSelected");
+		// btn_fav.setTag("UnSelected");
 		pro_bar.setMax(100);
 
 		// set listener for view
@@ -141,7 +250,7 @@ public abstract class MainPlayerFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				Boolean isPlaying = mListener.getPlayingState();
+				Boolean isPlaying = mp.isPlaying();
 				if (isPlaying) {
 					pauseMediaPLayer();
 				} else {
@@ -194,6 +303,19 @@ public abstract class MainPlayerFragment extends Fragment {
 		// Listeners control seekbar when click on
 		pro_bar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				// mHandler.removeCallbacks(mUpdateTimeTask);
+			}
+
+			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
 				// mHandler.removeCallbacks(mUpdateTimeTask);
@@ -204,32 +326,59 @@ public abstract class MainPlayerFragment extends Fragment {
 				}
 				seekMediaPlayer(currentPosition);
 			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-				// mHandler.removeCallbacks(mUpdateTimeTask);
-			}
-
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				// TODO Auto-generated method stub
-
-			}
 		});
 		mp.setOnCompletionListener(new OnCompletionListener() {
 
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				// TODO Auto-generated method stub
-				mListener.setPlayingState(false);
+
 			}
 		});
-
+		
 		// done
 		return v;
 
+	}
+
+	private void pauseMediaPLayer() {
+		if (mp == null) {
+			return;
+		}
+		destroyProgressTask(task);
+		btn_play.setImageResource(R.drawable.play_bg_auto);
+		btn_play.setTag("PLay");
+		try {
+			if (mp.isPlaying()) {
+				mp.pause();
+			}
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void playMediaPLayer() {
+		if (mp == null) {
+			return;
+		}
+		try {
+			mp.start();
+
+			/*
+			 * update view
+			 */
+			btn_play.setImageResource(R.drawable.pause);
+			// set Tag
+			btn_play.setTag("Pause");
+			// kim: Su dung cach code mau
+			// pro_bar.setProgress(0);
+			// updateProgressBar();
+			// kim: Su dung asynctask
+			task = initNewProgressTask(task);
+			task.execute();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -241,144 +390,15 @@ public abstract class MainPlayerFragment extends Fragment {
 		if (mp == null) {
 			return;
 		}
-		if (task != null && !task.isCancelled()) {
-			task.cancel(true);
-			task = null;
-		}
+
 		// forward or backward to certain seconds
 		mp.seekTo(currentPosition);
 		// update timer progress again
 		// kim: su dung theo code mau
 		// updateProgressBar();
 		// kim: su dung async task
-		task = new ShowProgressTask();
+		task = initNewProgressTask(task);
 		task.execute();
-	}
-	/**
-	 * call when creating View or switch Song
-	 */
-	private void updateSongInfo() {
-		// update total time label
-		songTotalDurationLabel.setText(utils.milliSecondsToTimer(mListener
-				.getCurrentSong().getDuration() * 1000));
-		// update song name label
-		songNameLabel.setText(mListener.getCurrentSong().getTitle());
-		// update artist label
-		artistLabel.setText(mListener.getCurrentSong().getArtist().getName());
-	}
-	/**
-	 * khoi tao truoc khi play or pause
-	 */
-	private void prepareMediaPlayer() {
-		if (mp == null) {
-			return;
-		}
-		try {
-			mp.reset();
-			mp.setDataSource(mListener.getCurrentSong().getPath().getAbsPath());
-			mp.prepare();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	private void playMediaPLayer() {
-		if (mp == null) {
-			return;
-		}
-		if (task != null && !task.isCancelled()) {
-			task.cancel(true);
-			task = null;
-		}
-		try {
-			mp.start();
-
-			/*
-			 * update view
-			 */
-			btn_play.setImageResource(R.drawable.pause);
-			// set Tag
-			btn_play.setTag("Pause");
-			mListener.setPlayingState(true);
-			// kim: Su dung cach code mau
-			// pro_bar.setProgress(0);
-			// updateProgressBar();
-			// kim: Su dung asynctask
-			task = new ShowProgressTask();
-			task.execute();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private class ShowProgressTask extends AsyncTask<Void, Integer, Integer> {
-		@Override
-		protected void onPreExecute() {
-			//pro_bar.setVisibility(View.VISIBLE);
-		}
-
-		@Override
-		protected Integer doInBackground(Void... params) {
-			Integer b = mp.getDuration();
-			Integer a = 0;
-			// TODO Auto-generated method stub
-			while (mp.isPlaying() && mp.getCurrentPosition() <= b) {
-				a = mp.getCurrentPosition();
-				publishProgress(a, b);
-				try {
-					Thread.sleep(1000);
-				} catch (Exception e) {
-					return -1;
-				}
-			}
-			return 0;
-		}
-
-		/**
-		 * Input la miliseconds
-		 */
-		@Override
-		protected void onProgressUpdate(Integer... progress) {
-			Integer cur = progress[0];
-			Integer duration = progress[1];
-			updateProgressBar(cur, duration);
-		}
-
-		@Override
-		protected void onPostExecute(Integer result) {
-			// pro_bar.setVisibility(View.INVISIBLE);
-		}
-	}
-	
-	private void pauseMediaPLayer() {
-		if (mp == null) {
-			return;
-		}
-		if (task != null && !task.isCancelled()) {
-			task.cancel(true);
-			task = null;
-		}
-		btn_play.setImageResource(R.drawable.play_bg_auto);
-		btn_play.setTag("PLay");
-		mListener.setPlayingState(false);
-		try {
-			if (mp.isPlaying()) {
-				mp.pause();
-			}
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -394,5 +414,11 @@ public abstract class MainPlayerFragment extends Fragment {
 			songCurrentDurationLabel
 					.setText(utils.milliSecondsToTimer(current));
 		}
+	}
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		super.onDetach();
+		destroyProgressTask(task);
 	}
 }
