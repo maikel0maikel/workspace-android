@@ -14,6 +14,7 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -31,12 +32,16 @@ import com.qdcatplayer.main.FileSystem.MyFileChangesInterface;
 import com.qdcatplayer.main.FileSystem.MyFolderChanges;
 //import com.qdcatplayer.main.GUI.MyLibraryActivity;
 import com.qdcatplayer.main.GUI.MainPlayerFragment;
+import com.qdcatplayer.main.GUI.MainPlayerFragment.MyMainPLayerDataProvider;
 import com.qdcatplayer.main.GUI.MyLibraryActivity;
 import com.qdcatplayer.main.Setting.SettingsActivity;
 
 
-public class MainActivity extends Activity {
-
+public class MainActivity extends Activity implements MyMainPLayerDataProvider {
+	private MediaPlayer mainMediaPlayer=null;
+	private MySong currentPlayingSong=null;
+	private Integer currentPosition=0;
+	private Boolean isPlayingState=false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,8 +49,13 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main_layout);
 		MyDBManager mn=new MyDBManager();
 		mn.getHelper(this).getWritableDatabase();
-		//--
-		/*
+		//test
+		MySongDAO dao=new MySongDAO(this, null);
+		dao.setSource(MySource.DB_SOURCE);
+		currentPlayingSong= dao.getById(1);
+		mainMediaPlayer = new MediaPlayer();
+		//
+		
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		Tab mTab1= actionBar.newTab().setText("List").setTabListener(new KimTabListener());
@@ -54,7 +64,7 @@ public class MainActivity extends Activity {
 		actionBar.addTab(mTab1);
 		actionBar.addTab(mTab2);
 		actionBar.addTab(mTab3);
-		*/
+		
 		//LoadToDB();
 		
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -73,7 +83,7 @@ public class MainActivity extends Activity {
 		*/
 		
 		
-		showLibraryActivity();
+		//showLibraryActivity();
 		
 		
 		
@@ -130,8 +140,8 @@ public class MainActivity extends Activity {
 	}
 	private void showLibraryActivity()
 	{
-	//	Intent itt = new Intent(MainActivity.this, MyLibraryActivity.class);
-		//startActivity(itt);
+		Intent itt = new Intent(MainActivity.this, MyLibraryActivity.class);
+		startActivity(itt);
 	}
 	
 	private void callSetting()
@@ -196,6 +206,34 @@ public class MainActivity extends Activity {
 		
 		callSetting();
 		return true;
+	}
+	@Override
+	public MediaPlayer getMediaPlayer() {
+		return mainMediaPlayer;
+	}
+	@Override
+	public MySong getCurrentSong() {
+		return currentPlayingSong;
+	}
+	@Override
+	public MySong getNextSong() {
+		return new MySong();
+	}
+	@Override
+	public MySong getPrevSong() {
+		return new MySong();
+	}
+	@Override
+	public Integer getCurrentPostion() {
+		return currentPosition;
+	}
+	@Override
+	public Boolean getPlayingState() {
+		return isPlayingState;
+	}
+	@Override
+	public void setPlayingState(Boolean isPlaying) {
+		this.isPlayingState = isPlaying;
 	}
 	
 }
