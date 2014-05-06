@@ -21,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.qdcatplayer.main.R;
+
+import android.widget.ImageView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -32,7 +34,8 @@ import android.os.Handler;
 public abstract class MainPlayerFragment extends Fragment {
 	public interface MyMainPLayerDataProvider {
 		public MySong getCurrentSong();
-
+		public Integer getPLayedCount();
+		public Integer getTotalCount();
 		public MediaPlayer getMediaPlayer();
 
 		/**
@@ -64,6 +67,9 @@ public abstract class MainPlayerFragment extends Fragment {
 		 * @return
 		 */
 		public Boolean setShuffle(Boolean mode);
+		
+		public Boolean getShuffle();
+		public Integer getRepeat();
 	}
 
 	private class ShowProgressTask extends AsyncTask<Void, Integer, Integer> {
@@ -120,9 +126,15 @@ public abstract class MainPlayerFragment extends Fragment {
 			updateProgressBar(cur, duration);
 		}
 	}
+	/*
+	 * View instances
+	 */
 	private TextView artistLabel;
+	private TextView songIndex;
 	private ImageButton btn_fav;
 	private ImageButton btn_play;
+	private ImageButton btn_next;
+	private ImageButton btn_prev;
 	private ImageButton btn_repeat;
 	private ImageButton btn_shuffle;
 	/*
@@ -144,26 +156,8 @@ public abstract class MainPlayerFragment extends Fragment {
 	 * 100); }
 	 */
 
-	/*
-	 * View instances
-	 */
-	// private Handler mHandler = new Handler();
+	
 	private Utilities utils = new Utilities();
-
-	/*
-	 * private Runnable mUpdateTimeTask = new Runnable() { public void run() {
-	 * long totalDuration = mp.getDuration(); long currentDuration =
-	 * mp.getCurrentPosition(); // Displaying Total Duration time
-	 * songTotalDurationLabel.setText("" +
-	 * utils.milliSecondsToTimer(totalDuration)); // Displaying time completed
-	 * playing songCurrentDurationLabel.setText("" +
-	 * utils.milliSecondsToTimer(currentDuration)); // Updating progress bar int
-	 * progress = (int) (utils.getProgressPercentage(currentDuration,
-	 * totalDuration)); // int
-	 * progress=(int)(((double)currentDuration/totalDuration)*100); //
-	 * Log.d("Progress", ""+progress); pro_bar.setProgress(progress); // Running
-	 * this thread after 100 milliseconds mHandler.postDelayed(this, 100); } };
-	 */
 
 	private void destroyProgressTask(ShowProgressTask input) {
 		if (input != null) {
@@ -180,9 +174,12 @@ public abstract class MainPlayerFragment extends Fragment {
 		destroyProgressTask(input);
 		return new ShowProgressTask();
 	}
-
-	private void loadSavedState() {
-		// Step 1:load song info
+	/**
+	 * Update textView, SongName, Artist Name,...
+	 * (get data from provider)
+	 */
+	private void updateCurrentSongInfoToView()
+	{
 		// update total time label
 		songTotalDurationLabel.setText(utils.milliSecondsToTimer(dataProvider
 				.getCurrentSong().getDuration() * 1000));
@@ -191,27 +188,36 @@ public abstract class MainPlayerFragment extends Fragment {
 		// update artist label
 		artistLabel
 				.setText(dataProvider.getCurrentSong().getArtist().getName());
+		songIndex
+			.setText(dataProvider.getPLayedCount()+"/"+dataProvider.getTotalCount());
+	}
+	/**
+	 * Goi khi khoi tao View cho Fragment, su dung khi chuyen doi giua cac Fragment
+	 * Duoc goi sau khi da co duoc cac View Instances
+	 */
+	private void loadSavedState() {
+		// Step 1:load song info
+		mp = dataProvider.getMediaPlayer();//very importance
+		updateCurrentSongInfoToView();
 		// Step2: load current seekbar position (update immedialy if isPlaying)
-		mp = dataProvider.getMediaPlayer();
 		//create new instance of Propressbar Asynctask
 		task = initNewProgressTask(task);
 		task.execute();
 		// Step 3:load current pause/play
 		if (mp == null) {
-			return;
+			return;//fail here
 		}
+		//load PLay/pause state
 		try {
-			if (mp.isPlaying()) {
-				btn_play.setImageResource(R.drawable.pause);
-				btn_play.setTag("Pause");
-			} else {
-				btn_play.setImageResource(R.drawable.play_bg_auto);
-				btn_play.setTag("PLay");
-			}
-		} catch (IllegalStateException e) {
-			btn_play.setImageResource(R.drawable.play_bg_auto);
-			btn_play.setTag("PLay");
+			setPlayButton(btn_play, !mp.isPlaying());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		//load shuffle state
+		setShuffleButton(btn_shuffle, dataProvider.getShuffle());
+		//load repeat state
+		setRepeatButton(btn_repeat, dataProvider.getRepeat());
+		
 	}
 
 	@Override
@@ -226,6 +232,8 @@ public abstract class MainPlayerFragment extends Fragment {
 		View v = inflater.inflate(R.layout.player_main, container, false);
 		// get view instances
 		btn_play = (ImageButton) v.findViewById(R.id.imageButton_play);
+		btn_next = (ImageButton) v.findViewById(R.id.imageButton_next);
+		btn_prev = (ImageButton) v.findViewById(R.id.imageButton_prev);
 		btn_shuffle = (ImageButton) v.findViewById(R.id.imageButton_shuffle);
 		btn_repeat = (ImageButton) v.findViewById(R.id.imageButton_repeat);
 		btn_fav = (ImageButton) v.findViewById(R.id.imageButton_favorite);
@@ -236,15 +244,13 @@ public abstract class MainPlayerFragment extends Fragment {
 				.findViewById(R.id.textView_remain_duration);
 		songNameLabel = (TextView) v.findViewById(R.id.textView_SongName);
 		artistLabel = (TextView) v.findViewById(R.id.textview_Artist);
-		// load saved state
-		loadSavedState();
-
-		// btn_play.setTag("Play");
-		// btn_shuffle.setTag("UnSelected");
-		// btn_repeat.setTag("UnSelected");
-		// btn_fav.setTag("UnSelected");
+		songIndex = (TextView) v.findViewById(R.id.textView_song_index);
+		
+		//set View tag and default values
+		btn_fav.setTag("UnSelected");
 		pro_bar.setMax(100);
-
+		// load saved state
+		loadSavedState();//fisrt after have view Instances
 		// set listener for view
 		btn_play.setOnClickListener(new OnClickListener() {
 
@@ -256,6 +262,20 @@ public abstract class MainPlayerFragment extends Fragment {
 				} else {
 					playMediaPLayer();
 				}
+			}
+		});
+		btn_next.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				nextAndPlayMediaPlayer();
+			}
+		});
+		btn_prev.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				prevAndPlayMediaPlayer();
 			}
 		});
 		btn_fav.setOnClickListener(new OnClickListener() {
@@ -276,28 +296,14 @@ public abstract class MainPlayerFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (btn_repeat.getTag().equals("UnSelected")) {
-					btn_repeat.setImageResource(R.drawable.repeat_selected);
-					btn_repeat.setTag("Selected");
-				} else if (btn_repeat.getTag().equals("Selected")) {
-					btn_repeat.setImageResource(R.drawable.repeat_auto);
-					btn_repeat.setTag("UnSelected");
-				}
+				dataProvider.setRepeat(switchRepeatButtonNextState((ImageButton)v));
 			}
 		});
 		btn_shuffle.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (btn_shuffle.getTag().equals("UnSelected")) {
-					btn_shuffle.setImageResource(R.drawable.shuffle_selected);
-					btn_shuffle.setTag("Selected");
-				} else if (btn_shuffle.getTag().equals("Selected")) {
-					btn_shuffle.setImageResource(R.drawable.shuffle_auto);
-					btn_shuffle.setTag("UnSelected");
-				}
+				dataProvider.setShuffle(setShuffleButton((ImageButton)v, !dataProvider.getShuffle()));
 			}
 		});
 		// Listeners control seekbar when click on
@@ -327,11 +333,13 @@ public abstract class MainPlayerFragment extends Fragment {
 				seekMediaPlayer(currentPosition);
 			}
 		});
+		
+		//set listener for finish player
 		mp.setOnCompletionListener(new OnCompletionListener() {
 
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-
+				nextAndPlayMediaPlayer();
 			}
 		});
 		
@@ -339,19 +347,131 @@ public abstract class MainPlayerFragment extends Fragment {
 		return v;
 
 	}
+	/**
+	 * Hỗ trợ set Default khi v chưa có tag
+	 * @param v
+	 * @return RepeateState dung cho gan nguoc lại dataProvider
+	 */
+	protected Integer switchRepeatButtonNextState(ImageButton v) {
+		String tag;
+		if(v.getTag()==null)
+		{
+			v.setTag("SelectedAll");
+		}
+		tag = v.getTag().toString();
+		
+		 
+		if(tag.equals("UnSelected"))
+		{
+			return setRepeatButton(v, 1);
+		} else if(tag.equals("SelectedOne"))
+		{
+			return setRepeatButton(v, 2);
+		} else if(tag.equals("SelectedAll"))
+		{
+			return setRepeatButton(v, 0);
+		}
+		return 0;
+	}
+	/**
+	 * 
+	 * @param button
+	 * @param mode = {0: "UnSelected", 1: "One", 2: "All"}
+	 * @return Dùng để gán lại cho dataProvider thông qua hàm
+	 */
+	private Integer setRepeatButton(ImageButton button, Integer mode) {
+		if (mode==0) {
+			button.setImageResource(R.drawable.repeat_none_auto);
+			button.setTag("UnSelected");			
+		} else if (mode==1) {
+			button.setImageResource(R.drawable.repeat_selected_one_auto);
+			button.setTag("SelectedOne");			
+		} else if (mode==2) {
+			button.setImageResource(R.drawable.repeat_selected_all_auto);
+			button.setTag("SelectedAll");		
+		}
+		return mode;
+	}
+	/**
+	 * 
+	 * @param button
+	 * @param mode = {true: "Play", false: "Pause"}
+	 */
+	private void setPlayButton(ImageButton button, Boolean mode)
+	{
+		if(mode)
+		{
+			btn_play.setImageResource(R.drawable.play_bg_auto);
+			btn_play.setTag("PLay");
+		}
+		else
+		{
+			btn_play.setImageResource(R.drawable.pause_bg_auto);
+			btn_play.setTag("Pause");
+		}
+	}
+	/**
+	 * 
+	 * @param button
+	 * @param mode = {false: "UnSelected", true: "Selected"}
+	 * @return Dùng để gán lại cho dataProvider.SetShuffle(...)
+	 */
+	private Boolean setShuffleButton(ImageButton button, Boolean mode)
+	{
+		if(mode)
+		{
+			btn_shuffle.setImageResource(R.drawable.shuffle_selected_auto);
+			btn_shuffle.setTag("Selected");
+		}
+		else
+		{
+			btn_shuffle.setImageResource(R.drawable.shuffle_none_auto);
+			btn_shuffle.setTag("UnSelected");
+		}
+		return mode;
+	}
+	private void nextAndPlayMediaPlayer() {
+		if (mp == null) {
+			return;
+		}
+		destroyProgressTask(task);
+		//prepare next song
+		
+		if(dataProvider.requestNextSong())
+		{
+			//call play
+			playMediaPLayer();
+			//call update view
+			updateCurrentSongInfoToView();
+		}
+	}
+	private void prevAndPlayMediaPlayer() {
+		if (mp == null) {
+			return;
+		}
+		destroyProgressTask(task);
+		//prepare prev song
+		
+		if(dataProvider.requestPrevSong())
+		{
+			//call play
+			playMediaPLayer();
+			//call update view
+			updateCurrentSongInfoToView();
+		}
+	}
 
 	private void pauseMediaPLayer() {
 		if (mp == null) {
 			return;
 		}
 		destroyProgressTask(task);
-		btn_play.setImageResource(R.drawable.play_bg_auto);
-		btn_play.setTag("PLay");
 		try {
 			if (mp.isPlaying()) {
 				mp.pause();
+				setPlayButton(btn_play, true);
 			}
-		} catch (IllegalStateException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -362,13 +482,10 @@ public abstract class MainPlayerFragment extends Fragment {
 		}
 		try {
 			mp.start();
-
 			/*
 			 * update view
 			 */
-			btn_play.setImageResource(R.drawable.pause);
-			// set Tag
-			btn_play.setTag("Pause");
+			setPlayButton(btn_play, false);
 			// kim: Su dung cach code mau
 			// pro_bar.setProgress(0);
 			// updateProgressBar();

@@ -11,7 +11,11 @@ import android.util.Log;
 
 import com.qdcatplayer.main.R;
 
-
+/**
+ * Caller activity must use startActivity for result
+ * @author admin
+ *
+ */
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

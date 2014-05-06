@@ -44,7 +44,6 @@ implements
 	MyLibraryArtistItemClickListener,
 	MyLibraryFolderItemClickListener,
 	MyLibraryPlayListItemClickListener,
-	OnFolderChooserFinishListener,
 	_MyLibaryDataProvider
 {
 	/**
@@ -230,12 +229,6 @@ implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
-	}
-
-	@Override
-	public void OnFolderChooserFinish() {
-		// TODO Auto-generated method stub
-		Log.w("qd","wtf");
 	}
 	@Override
 	public void onLibraryAlbumItemClick(MyAlbum current,

@@ -22,7 +22,7 @@
             android:background="@android:color/transparent"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/shuffle_auto" />
+            android:src="@drawable/shuffle_none_auto" />
 
         <ImageButton
             android:id="@+id/imageButton_favorite"
@@ -47,7 +47,7 @@
             android:background="@android:color/transparent"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/repeat_auto" />
+            android:src="@drawable/repeat_none_auto" />
     </LinearLayout>
 
     <LinearLayout

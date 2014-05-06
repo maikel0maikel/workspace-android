@@ -53,10 +53,10 @@ public final class R {
         public static final int next=0x7f020011;
         public static final int next_bg_auto=0x7f020012;
         public static final int next_touch=0x7f020013;
-        public static final int pause=0x7f020014;
-        public static final int pause2=0x7f020015;
-        public static final int pause3=0x7f020016;
-        public static final int pause3_touch=0x7f020017;
+        public static final int pause2=0x7f020014;
+        public static final int pause3=0x7f020015;
+        public static final int pause3_touch=0x7f020016;
+        public static final int pause_bg_auto=0x7f020017;
         public static final int play=0x7f020018;
         public static final int play_bg_auto=0x7f020019;
         public static final int play_touch=0x7f02001a;
@@ -64,18 +64,20 @@ public final class R {
         public static final int prev_bg_auto=0x7f02001c;
         public static final int prev_touch=0x7f02001d;
         public static final int repeat=0x7f02001e;
-        public static final int repeat_auto=0x7f02001f;
-        public static final int repeat_final=0x7f020020;
-        public static final int repeat_selected=0x7f020021;
-        public static final int repeat_touch=0x7f020022;
-        public static final int right_arrow=0x7f020023;
-        public static final int right_arrow_auto=0x7f020024;
-        public static final int right_arrow_touch=0x7f020025;
-        public static final int shuffle=0x7f020026;
-        public static final int shuffle_auto=0x7f020027;
-        public static final int shuffle_final=0x7f020028;
-        public static final int shuffle_selected=0x7f020029;
-        public static final int shuffle_touch=0x7f02002a;
+        public static final int repeat_final=0x7f02001f;
+        public static final int repeat_none_auto=0x7f020020;
+        public static final int repeat_one_final=0x7f020021;
+        public static final int repeat_selected_all_auto=0x7f020022;
+        public static final int repeat_selected_one_auto=0x7f020023;
+        public static final int repeat_touch=0x7f020024;
+        public static final int right_arrow=0x7f020025;
+        public static final int right_arrow_auto=0x7f020026;
+        public static final int right_arrow_touch=0x7f020027;
+        public static final int shuffle=0x7f020028;
+        public static final int shuffle_final=0x7f020029;
+        public static final int shuffle_none_auto=0x7f02002a;
+        public static final int shuffle_selected_auto=0x7f02002b;
+        public static final int shuffle_touch=0x7f02002c;
     }
     public static final class id {
         public static final int action_settings=0x7f0b0029;
