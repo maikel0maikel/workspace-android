@@ -199,7 +199,7 @@ public class FolderChooserPreference extends ListPreference{
 		
 	}
 	private String summary_bk = "";
-	private Boolean aSyncTaskFinish=false;
+
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		super.onDialogClosed(positiveResult);

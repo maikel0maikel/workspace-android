@@ -3,12 +3,17 @@ package com.qdcatplayer.main;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Stack;
 
 import org.cmc.music.metadata.IMusicMetadata;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.*;
 
+import android.R.integer;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -36,26 +41,46 @@ import com.qdcatplayer.main.GUI.MainPlayerFragment;
 import com.qdcatplayer.main.GUI.MainPlayerFragment.MyMainPLayerDataProvider;
 import com.qdcatplayer.main.GUI.MyLibraryActivity;
 import com.qdcatplayer.main.Setting.SettingsActivity;
+import com.qdcatplayer.main.Setting.FolderChooserPreference.OnFolderChooserFinishListener;
 
 
-public class MainActivity extends Activity implements MyMainPLayerDataProvider {
+public class MainActivity extends Activity
+implements
+MyMainPLayerDataProvider
+{
+	/**
+	 * For MainPlayer Fragment
+	 */
+	private Random r_tmp = null;
 	private MediaPlayer mainMediaPlayer=null;
 	private MySong currentPlayingSong=null;
 	private ArrayList<MySong> songsList=null;
+	private Boolean shuffleMode=false;
+	private Integer repeatMode=0;
+	private HashMap<Integer, MySong> playedList = null;
+	private Stack<MySong> playedStack = null;
+	/**
+	 * End
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.main_layout);
+		//prepare DB
 		MyDBManager mn=new MyDBManager();
 		mn.getHelper(this).getWritableDatabase();
-
-		//test
+		//prepare media provider for test
 		MySongDAO dao=new MySongDAO(this, null);
 		dao.setSource(MySource.DB_SOURCE);
-		currentPlayingSong= dao.getById(1);
+		songsList = dao.getAll();
+		currentPlayingSong= songsList.get(0);
 		mainMediaPlayer = new MediaPlayer();
 		prepareMediaPlayer(mainMediaPlayer, currentPlayingSong);
+		playedList = new HashMap<Integer, MySong>();
+		playedList.put(songsList.indexOf(currentPlayingSong), currentPlayingSong);
+		playedStack = new Stack<MySong>();
+		playedStack.push(currentPlayingSong);
+		r_tmp = new Random();
 		//
 		
 		final ActionBar actionBar = getActionBar();
@@ -67,28 +92,7 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 		actionBar.addTab(mTab2);
 		actionBar.addTab(mTab3);
 		
-		//LoadToDB();
-		
-		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
-		/*
-		GlobalDAO dao = new GlobalDAO(this);
-		dao.setSource(MySource.DB_SOURCE);
-		dao.getMySongDAO().getAll();
-		dao.getMySongDAO().getHelper().resetDB();
-		dao.getMySongDAO().getAll();
-		dao.release();
-		
-		dao=new GlobalDAO(this);
-		dao.getMySongDAO().setSource(MySource.DB_SOURCE);
-		dao.getMySongDAO().getAll();
-		*/
-		
-		
 		//showLibraryActivity();
-		
-		
-		
 	}
 	/*
 	private void update_sample()
@@ -151,7 +155,13 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 	private void callSetting()
 	{
 		Intent setting = new Intent(MainActivity.this, SettingsActivity.class);
-		startActivity(setting);
+		startActivityForResult(setting, 1);
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
 	}
 	/*
 	private void getSongsFromFolderId()
@@ -226,67 +236,147 @@ public class MainActivity extends Activity implements MyMainPLayerDataProvider {
 	}
 	@Override
 	public Boolean requestNextSong() {
-		Integer cur_index = songsList.indexOf(currentPlayingSong);
-		if(cur_index<0)
+		Integer index = songsList.indexOf(currentPlayingSong);
+		//Step 1: Calculate next index
+		//check repeate mode
+		if(repeatMode==0)
 		{
-			return false;
+			//check shuffle mode
+			if(shuffleMode)
+			{
+				if(playedList.size()<songsList.size())
+				{
+					while(true)
+					{
+						index = r_tmp.nextInt(songsList.size());
+						if(!playedList.containsKey(index))
+						{
+							break;
+						}
+					}
+				}
+				else
+				{
+					index=-1;
+				}
+			}
+			else
+			{
+				index++;
+				if(index>=songsList.size())
+				{
+					index=-1;
+				}
+			}
 		}
-		Integer next_index = cur_index+1;
-		if(next_index>=songsList.size())
+		else if(repeatMode==1)
 		{
-			return false;
+			
+		} else if(repeatMode==2)
+		{
+			if(shuffleMode)
+			{
+				if(playedList.size()>=songsList.size())
+				{
+					playedList.clear();
+					//playedStack.clear(); to reduce memory
+				}
+				
+				while(true)
+				{
+					index = r_tmp.nextInt(songsList.size());
+					if(!playedList.containsKey(index))
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				index++;
+				if(index>=songsList.size())
+				{
+					index=0;
+				}
+			}
 		}
-		currentPlayingSong = songsList.get(next_index);
-		return true;
+		//final
+		if(index>=0)
+		{
+			currentPlayingSong = songsList.get(index);
+			playedStack.push(currentPlayingSong);
+			playedList.put(index, currentPlayingSong);
+			return prepareMediaPlayer(mainMediaPlayer, currentPlayingSong);
+		}
+		return false;
 	}
 	@Override
 	public Boolean requestPrevSong() {
-		Integer cur_index = songsList.indexOf(currentPlayingSong);
-		if(cur_index<0)
+		if(playedStack.size()>=2)
 		{
-			return false;
+			try{
+				playedList.remove(songsList.indexOf(playedStack.pop()));
+				currentPlayingSong = playedStack.lastElement();
+				return prepareMediaPlayer(mainMediaPlayer, currentPlayingSong);
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
-		Integer prev_index = cur_index-1;
-		if(prev_index<0)
-		{
-			return false;
-		}
-		currentPlayingSong = songsList.get(prev_index);
-		return true;
+		return false;
 	}
-	private void prepareMediaPlayer(MediaPlayer player, MySong obj)
+	/**
+	 * final method to get media player ready before fragment can call
+	 * @param player
+	 * @param obj
+	 * @return
+	 */
+	private Boolean prepareMediaPlayer(MediaPlayer player, MySong obj)
 	{
-		if(player==null)
+		if(player==null || obj==null)
 		{
-			return;
+			return false;
 		}
 		try {
 			player.reset();
 			player.setDataSource(obj.getPath().getAbsPath());
 			player.prepare();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+			return true;
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	@Override
 	public Boolean setRepeat(Integer mode) {
-		// TODO Auto-generated method stub
-		return null;
+		repeatMode = mode;
+		return true;
 	}
 	@Override
 	public Boolean setShuffle(Boolean mode) {
-		// TODO Auto-generated method stub
-		return null;
+		shuffleMode = mode;
+		return true;
+	}
+
+	@Override
+	public Boolean getShuffle() {
+		return shuffleMode;
+	}
+
+	@Override
+	public Integer getRepeat() {
+		return repeatMode;
+	}
+
+	@Override
+	public Integer getPLayedCount() {
+		return playedList.size();
+	}
+
+	@Override
+	public Integer getTotalCount() {
+		return songsList.size();
 	}
 	
 }
