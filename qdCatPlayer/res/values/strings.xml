@@ -21,5 +21,6 @@
     <string name="ctx_songs_ADD_TO_QUEUE">Add to queue</string>
     <!-- Khu vuc setting -->
     <string name="library_item_selector">@android:drawable/list_selector_background</string>
-
+	<!-- Khi vuc Library view -->
+	<color name="library_textColor">#000000</color>
 </resources>

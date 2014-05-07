@@ -732,6 +732,10 @@ _MyLibaryDataProvider
 		//set player list from enqueue
 		PL.songsList = LI._enqueue;
 		PL.currentPlayingSong = current;
+		//reset played and stack
+		PL.playedList = new HashMap<Integer, MySong>();
+		PL.playedStack = new Stack<MySong>();
+		PL.playedList.put(PL.songsList.indexOf(PL.currentPlayingSong), PL.currentPlayingSong);
 		prepareMediaPlayer(PL.mainMediaPlayer, PL.currentPlayingSong);
 		PL.mainMediaPlayer.start();//force to play right now
 		//call fragment main player
@@ -767,6 +771,9 @@ _MyLibaryDataProvider
 		LI._artistsAll=null;
 		LI._songsAll=null;
 		LI._playListsAll=null;
+		LI._enqueue = null;
+		//PLAYER
+		
 		
 		if(LI._gDAOs!=null)
 		{

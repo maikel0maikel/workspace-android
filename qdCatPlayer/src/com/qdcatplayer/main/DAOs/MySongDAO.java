@@ -282,7 +282,7 @@ implements _MyDAOInterface<MySongDAO,MySong>
 	 */
 	@Override
 	public void load(MySong obj) {
-		Boolean ID3_NATIVE_ANDROID = false;
+		Boolean ID3_NATIVE_ANDROID = true;
 		if(getSource()==MySource.DB_SOURCE)
 		{
 			super.load(obj);
@@ -323,8 +323,6 @@ implements _MyDAOInterface<MySongDAO,MySong>
 				MyFormat format = new MyFormat("MP3");
 				obj.setFormat(format);
 				
-				//DONE
-				obj.setLoaded(true);
 			}
 			//use external myID3 library
 			else
@@ -359,6 +357,8 @@ implements _MyDAOInterface<MySongDAO,MySong>
 					e.printStackTrace();
 				} // read metadata
 			}
+			//DONE
+			obj.setLoaded(true);
 		}
 	}
 	/**
