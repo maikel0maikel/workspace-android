@@ -18,4 +18,5 @@ public interface _MyLibaryDataProvider{
 	public ArrayList<MyAlbum> getAlbums();
 	public ArrayList<MyFolder> getFolders();
 	public ArrayList<MyPlayList> getPlayLists();
+	public ArrayList<MySong> getEnqueue();
 }

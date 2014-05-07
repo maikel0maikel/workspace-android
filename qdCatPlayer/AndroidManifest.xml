@@ -30,7 +30,7 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="com.qdcatplayer.main.GUI.MyLibraryActivity"
+            android:name="com.qdcatplayer.main.GUI.MyLibraryActivity_BAK"
             android:label="@string/title_activity_my_library" >
         </activity>
     </application>

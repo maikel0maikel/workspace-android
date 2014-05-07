@@ -1,5 +1,7 @@
 package com.qdcatplayer.main.Entities;
 
+import java.util.ArrayList;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MySongDAO;
@@ -208,5 +210,22 @@ public class MySong extends _MyEntityAbstract<MySongDAO, MySong> {
 			return false;
 		}
 		return getPath().isOnDisk();
+	}
+	/**
+	 * Kiem tra bai hat co thuoc trong mot Songs List hay khong
+	 * dua tren absPath
+	 * @param list
+	 * @return
+	 */
+	public Boolean isSongInList(ArrayList<MySong> list)
+	{
+		for(MySong item:list)
+		{
+			if(item.getPath().getAbsPath().equals(this.getPath().getAbsPath()))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

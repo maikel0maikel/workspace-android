@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MySong;
+import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
 import com.qdcatplayer.main.SharedAdapter.MyLibrarySongsAdapter;
 
 /**
@@ -22,17 +23,13 @@ import com.qdcatplayer.main.SharedAdapter.MyLibrarySongsAdapter;
  * @author admin
  *
  */
-public class MyLibrarySongsFragment extends ListFragment {
+public class MyLibraryEnqueueFragment extends ListFragment {
 	public static String SONGS = "SONGS";
-	public interface MyLibrarySongItemClickListener {
-		public void onLibrarySongItemClick(MySong current, ArrayList<MySong> songs);
-		public void onLibrarySongItemLongClick(MySong current, ArrayList<MySong> songs);
-	}
 
 	private MyLibrarySongItemClickListener mListener = null;
 	public ArrayList<MySong> songs = null;
 
-	public MyLibrarySongsFragment(){	
+	public MyLibraryEnqueueFragment(){	
 	}
 
 	@Override
@@ -40,7 +37,7 @@ public class MyLibrarySongsFragment extends ListFragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		songs = ((_MyLibaryDataProvider)getActivity()).getSongs();
+		songs = ((_MyLibaryDataProvider)getActivity()).getEnqueue();
 		if(songs==null)
 		{
 			songs = new ArrayList<MySong>();//by default

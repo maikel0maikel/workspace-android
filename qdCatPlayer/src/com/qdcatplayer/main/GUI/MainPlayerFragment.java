@@ -37,6 +37,7 @@ public abstract class MainPlayerFragment extends Fragment {
 		public Integer getPLayedCount();
 		public Integer getTotalCount();
 		public MediaPlayer getMediaPlayer();
+		public Boolean prepareMediaPlayer(MediaPlayer player, MySong obj);
 
 		/**
 		 * bai hat se khong duoc phat cho toi khi dieu khien MediaPlayer
