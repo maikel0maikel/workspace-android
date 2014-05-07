@@ -1,6 +1,7 @@
 package com.qdcatplayer.main.GUI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -34,7 +35,7 @@ import com.qdcatplayer.main.Setting.SettingsActivity;
  * @author admin
  *
  */
-public class MyLibraryActivity
+public class MyLibraryActivity_BAK
 extends
 	Activity
 implements	
@@ -47,7 +48,7 @@ implements
 	_MyLibaryDataProvider
 {
 	/**
-	 * For MyLibaryDataProvider cached
+	 * For MyLibaryDataProvider cached, Fragment use
 	 */
 	private ArrayList<MyAlbum> _albumsProvider=null;
 	private ArrayList<MyArtist> _artistsProvider=null;
@@ -66,9 +67,15 @@ implements
 	 * Shared DAO accross Activity Live
 	 */
 	private GlobalDAO _gDAOs = null;
-	public MyLibraryActivity() {
-		// TODO Auto-generated constructor stub
-
+	/**
+	 * Enqueue
+	 */
+	private ArrayList<MySong> _enqueue = null;
+	/**
+	 * 
+	 */
+	public MyLibraryActivity_BAK() {
+		
 	}
 	private void callLibraryAlbumsFragment(Boolean addToBackStack, ArrayList<MyAlbum> albums) {
 		MyLibraryAlbumsFragment mFragment = new MyLibraryAlbumsFragment();
@@ -159,20 +166,34 @@ implements
         }
         ft.commit();
 	}
+	private void callLibraryEnqueueFragment(Boolean addToBackStack, ArrayList<MySong> playLists)
+	{
+		MyLibraryEnqueueFragment mFragment = new MyLibraryEnqueueFragment();
+		//khong nen dung bundle.serialize de pass data, khi saveinstance rat de bi loi
+		//set temp song first
+		_enqueue = playLists;//very importance
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.library_main_placeholder, mFragment);
+        //since addToBackStacl allow user to navigate to blank screen
+        //when app not swap fragment yet
+        if(addToBackStack)
+        {
+        	ft.addToBackStack(MyLibraryEnqueueFragment.class.getName());//very importance
+        	//Log.w("qd",MyLibrarySongsFragment.class.getName());
+        }
+        ft.commit();
+	}
 	@Override
 	public ArrayList<MyAlbum> getAlbums() {
-		// TODO Auto-generated method stub
 		return _albumsProvider;
 	}
 	@Override
 	public ArrayList<MyArtist> getArtists() {
-		// TODO Auto-generated method stub
 		return _artistsProvider;
 	}
 
 	@Override
 	public ArrayList<MyFolder> getFolders() {
-		// TODO Auto-generated method stub
 		return _foldersProvider;
 	}
 
@@ -195,7 +216,7 @@ implements
 			//backto root GUI first
 			callLibraryListFragment();
 			//reset all cached member related to DB
-			resetDBState();
+			resetLibraryDBState();
 		}
 		return;
 	}
@@ -205,10 +226,16 @@ implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.library_main);
 		//init DB DAOs
-		resetDBState();
+		resetLibraryDBState();
+		//init memeber pre-values
+		init();
 		//View by default
 		callLibraryListFragment();
 		
+	}
+	private void init()
+	{
+		this._enqueue = new ArrayList<MySong>();
 	}
 	private void test()
 	{
@@ -307,6 +334,16 @@ implements
 			callLibraryPlayListsFragment(true, _playListsAll);//be careful because of cache
 			return;
 		}
+		else if(itemId.toUpperCase().equals("ENQUEUE_ITEM"))
+		{
+			//cached because of time to load allrecursive song for count
+			if(_enqueue==null)
+			{
+				_enqueue = new ArrayList<MySong>();
+			}
+			callLibraryEnqueueFragment(true, _enqueue);//be careful because of cache
+			return;
+		}
 		//default
 		else
 		{
@@ -314,15 +351,18 @@ implements
 			return;
 		}
 	}
+	/**
+	 * Dung de add vo enqueue
+	 */
 	@Override
 	public void onLibrarySongItemClick(MySong current,
 			ArrayList<MySong> playlist) {
 		Toast.makeText(this, current.getPath().getAbsPath()+":"+playlist.size(), 200).show();
 		//...passing to main player here
+		
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		Intent setting = new Intent(this, SettingsActivity.class);
 		startActivityForResult(setting, 1);
 		return true;
@@ -338,7 +378,7 @@ implements
 	/**
 	 * Xoa tat ca cahed, release DB, va sau do tao moi lai
 	 */
-	private void resetDBState()
+	private void resetLibraryDBState()
 	{
 		_foldersProvider = null;
 		_albumsProvider=null;
@@ -369,18 +409,17 @@ implements
 	public void onLibrarySongItemLongClick(MySong current,
 			ArrayList<MySong> songs) {
 		//Toast.makeText(this, "onLibrarySongItemLongClick", 300).show();
-		songs_ctx_dialog = new MyLibrarySongsCtxDialog(this, new MySong(), new MyLibrarySongsCtxDialog.MyLibrarySongsCtxItemListener() {
+		songs_ctx_dialog = new MyLibrarySongsCtxDialog(this, current, new MyLibrarySongsCtxDialog.MyLibrarySongsCtxItemListener() {
 			
 			@Override
 			public void OnLibrarySongsCtxClick_EDIT_TAG(MySong obj) {
-				// TODO Auto-generated method stub
 				Log.w("qd", "edit tag clicked"+getClass().getName());
+				addToEnqueue(obj);
 				songs_ctx_dialog.dismiss();
 			}
 			
 			@Override
 			public void OnLibrarySongsCtxClick_ADD_TO_PLAYLIST(MySong obj) {
-				// TODO Auto-generated method stub
 				Log.w("qd", "add to playlist clicked"+getClass().getName());
 				songs_ctx_dialog.dismiss();
 			}
@@ -388,12 +427,23 @@ implements
 			@Override
 			public void OnLibrarySongsCtxClick_ADD_TO_ENQUEUE(MySong obj) {
 				Log.w("qd", "add to enqueue clicked"+getClass().getName());
+				
 				songs_ctx_dialog.dismiss();
 			}
 		});
 		songs_ctx_dialog.setTitle("Context dialog");
 		songs_ctx_dialog.show();
 	}
-
+	@Override
+	public ArrayList<MySong> getEnqueue() {
+		return this._enqueue;
+	}
+	public void addToEnqueue(MySong obj)
+	{
+		if(!obj.isSongInList(_enqueue))
+		{
+			_enqueue.add(obj);
+		}
+	}
 	
 }
