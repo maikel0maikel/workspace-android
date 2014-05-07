@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
+import com.qdcatplayer.main.Utilities.Utilities;
 
 public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 	private class ViewHolder {
@@ -97,6 +98,7 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.library_songs_listview_item,
 					parent, false);
+			
 			/*
 			 * Trung tâm bắt sự kiện đầu tiên 
 			 */
@@ -140,9 +142,10 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 		tv_title.setText(song.getTitle());
 		tv_album.setText(song.getAlbum()==null?"unknown":song.getAlbum().getName());
 		tv_artist.setText(song.getArtist()==null?"unknown":song.getArtist().getName());
-		tv_duration.setText(song.getDuration().toString());
+		tv_duration.setText(utils.milliSecondsToTimer(song.getDuration()));
 
 		convertView.setTag(holder);
 		return convertView;
 	}
+	private Utilities utils = new Utilities();
 }

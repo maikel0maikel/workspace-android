@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:text="Default"
             android:textSize="18sp"
+            android:textColor="@color/library_textColor"
             />
 
         <TextView
@@ -27,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Default"
+            android:textColor="@color/library_textColor"
             />
         
     </LinearLayout>
@@ -43,13 +45,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Default"
+            android:textColor="@color/library_textColor"
+            android:layout_gravity="right"
             />
 
         <TextView
             android:id="@+id/song_album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Default"
+            android:text="Default" 
+            android:layout_gravity="right"
+            android:textColor="@color/library_textColor"
             />
         
     </LinearLayout>

@@ -152,12 +152,6 @@ public abstract class MainPlayerFragment extends Fragment {
 	 */
 	private ShowProgressTask task = null;
 
-	/*
-	 * public void updateProgressBar() { mHandler.postDelayed(mUpdateTimeTask,
-	 * 100); }
-	 */
-
-	
 	private Utilities utils = new Utilities();
 
 	private void destroyProgressTask(ShowProgressTask input) {
@@ -183,7 +177,7 @@ public abstract class MainPlayerFragment extends Fragment {
 	{
 		// update total time label
 		songTotalDurationLabel.setText(utils.milliSecondsToTimer(dataProvider
-				.getCurrentSong().getDuration() * 1000));
+				.getCurrentSong().getDuration()));
 		// update song name label
 		songNameLabel.setText(dataProvider.getCurrentSong().getTitle());
 		// update artist label
@@ -199,15 +193,16 @@ public abstract class MainPlayerFragment extends Fragment {
 	private void loadSavedState() {
 		// Step 1:load song info
 		mp = dataProvider.getMediaPlayer();//very importance
+		if (mp == null) {
+			return;//fail here
+		}
+		
 		updateCurrentSongInfoToView();
 		// Step2: load current seekbar position (update immedialy if isPlaying)
 		//create new instance of Propressbar Asynctask
 		task = initNewProgressTask(task);
 		task.execute();
 		// Step 3:load current pause/play
-		if (mp == null) {
-			return;//fail here
-		}
 		//load PLay/pause state
 		try {
 			setPlayButton(btn_play, !mp.isPlaying());
@@ -537,6 +532,19 @@ public abstract class MainPlayerFragment extends Fragment {
 	public void onDetach() {
 		// TODO Auto-generated method stub
 		super.onDetach();
-		destroyProgressTask(task);
+		destroyProgressTask(task);//not trigged
 	}
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		destroyProgressTask(task);//not trigged
+	}
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		destroyProgressTask(task);//very importance
+	}
+	
 }

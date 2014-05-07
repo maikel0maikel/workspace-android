@@ -21,6 +21,9 @@ public final class R {
     }
     public static final class color {
         public static final int header_blue_bg=0x7f080000;
+        /**  Khi vuc Library view 
+         */
+        public static final int library_textColor=0x7f080001;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
