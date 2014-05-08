@@ -21,6 +21,7 @@ public final class R {
     }
     public static final class color {
         public static final int header_blue_bg=0x7f080000;
+        public static final int library_activeSong_bgColor=0x7f080002;
         /**  Khi vuc Library view 
          */
         public static final int library_textColor=0x7f080001;
