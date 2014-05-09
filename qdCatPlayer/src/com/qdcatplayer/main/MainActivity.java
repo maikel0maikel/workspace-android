@@ -124,15 +124,17 @@ _MyLibaryDataProvider
 		MySongDAO dao=new MySongDAO(this, null);
 		dao.setSource(MySource.DB_SOURCE);
 		PL.songsList = dao.getAll();
-		PL.currentPlayingSong= PL.songsList.get(0);
 		PL.mainMediaPlayer = new MediaPlayer();
-		prepareMediaPlayer(PL.mainMediaPlayer, PL.currentPlayingSong);
-		PL.playedList = new HashMap<Integer, MySong>();
-		PL.playedList.put(PL.songsList.indexOf(PL.currentPlayingSong), PL.currentPlayingSong);
-		PL.playedStack = new Stack<MySong>();
-		PL.playedStack.push(PL.currentPlayingSong);
 		PL.r_tmp = new Random();
-		
+		if(PL.songsList.size()>0)
+		{
+			PL.currentPlayingSong= PL.songsList.get(0);
+			prepareMediaPlayer(PL.mainMediaPlayer, PL.currentPlayingSong);
+			PL.playedList = new HashMap<Integer, MySong>();
+			PL.playedList.put(PL.songsList.indexOf(PL.currentPlayingSong), PL.currentPlayingSong);
+			PL.playedStack = new Stack<MySong>();
+			PL.playedStack.push(PL.currentPlayingSong);
+		}
 		//Step 3: Init tab
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
