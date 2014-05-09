@@ -18,13 +18,17 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.qdcatplayer.main.DAOs.GlobalDAO;
@@ -61,6 +65,7 @@ import com.qdcatplayer.main.GUI.MyLibraryActivity_BAK;
 import com.qdcatplayer.main.Setting.FolderChooserPreference;
 import com.qdcatplayer.main.Setting.SettingsActivity;
 import com.qdcatplayer.main.Setting.FolderChooserPreference.OnFolderChooserFinishListener;
+import com.qdcatplayer.main.SharedAdapter.MyLibrarySongsAdapter;
 
 
 public class MainActivity extends Activity
@@ -141,21 +146,57 @@ _MyLibaryDataProvider
 		//Step 4: default view
 		//callLibraryListFragment();
 	}
+	private void clearAllBackStack()
+	{
+		FragmentManager fm = getFragmentManager();
+		for(int i = 0; i < fm.getBackStackEntryCount(); i++) {    
+		    fm.popBackStack();
+		}
+	}
 	private class KimTabListener implements ActionBar.TabListener{
 
 		@Override
-		public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+		public void onTabReselected(Tab tab, FragmentTransaction arg1) {
 			
 		}
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			if(tab.getText().equals("main_player")){
-				callMainPlayerFragment(true);
+				//Step 2
+				callMainPlayerFragment(false);
+				//khong can dang ky listener khi choi xong
+				//ben trong fragment no tu dang ky roi
+				
 			}else if(tab.getText().equals("library")){
-				callLibraryListFragment();
+				callLibraryListFragment(false);
+				//vi khi thoat fragment main player thi mat listener
+				//begin: register listener for update next song auto
+		  		PL.mainMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+		  			@Override
+		  			public void onCompletion(MediaPlayer mp) {
+		  				if(requestNextSong())
+		  				{
+		  					PL.mainMediaPlayer.start();
+		  				}
+		  			}
+		  		});
+		  		//end
+				
 			}else if(tab.getText().equals("list")){
-				callLibraryEnqueueFragment(true, LI._enqueue);
+				callLibraryEnqueueFragment(false, LI._enqueue);
+				//vi khi thoat fragment main player thi mat listener
+				//begin: register listener for update next song auto
+		  		PL.mainMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+		  			@Override
+		  			public void onCompletion(MediaPlayer mp) {
+		  				if(requestNextSong())
+		  				{
+		  					PL.mainMediaPlayer.start();
+		  				}
+		  			}
+		  		});
+		  		//end
 			}
 		}
 
@@ -502,14 +543,17 @@ _MyLibaryDataProvider
         }
         ft.commit();
 	}
-	private void callLibraryListFragment()
+	private void callLibraryListFragment(Boolean addToBackStack)
 	{
 		MyLibraryListFragment mFragment = new MyLibraryListFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(layout_container, mFragment);
         //since addToBackStacl allow user to navigate to blank screen
         //when app not swap fragment yet
-        //ft.addToBackStack("MyLibraryListFragment");//very importance
+        if(addToBackStack)
+        {
+        	ft.addToBackStack(MyLibraryListFragment.class.getName());//very importance
+        }
         ft.commit();
         //switch tab
   		actionBar.selectTab(actionBar.getTabAt(0));
@@ -535,6 +579,7 @@ _MyLibaryDataProvider
         	//Log.w("qd",MyLibrarySongsFragment.class.getName());
         }
         ft.commit();
+        
 	}
 	private void callLibraryPlayListsFragment(Boolean addToBackStack, ArrayList<MyPlayList> playLists)
 	{
@@ -570,7 +615,7 @@ _MyLibaryDataProvider
         }
         ft.commit();
         //switch tab
-  		actionBar.selectTab(actionBar.getTabAt(2));
+  		//actionBar.selectTab(actionBar.getTabAt(2));//layout can error
 	}
 	@Override
 	public ArrayList<MyAlbum> getAlbums() {
@@ -602,7 +647,7 @@ _MyLibaryDataProvider
 		if(changed)
 		{
 			//backto root GUI first
-			callLibraryListFragment();
+			callLibraryListFragment(false);
 			//switch tab
 			actionBar.selectTab(actionBar.getTabAt(0));
 			//reset all cached member related to DB
@@ -716,7 +761,7 @@ _MyLibaryDataProvider
 		//default
 		else
 		{
-			callLibraryListFragment();
+			callLibraryListFragment(true);
 			return;
 		}
 	}
@@ -754,6 +799,7 @@ _MyLibaryDataProvider
 		//may be serialize when passing bundle to fragment from this activity
 		//fixed by use another approach
 		super.onSaveInstanceState(outState);
+		
 	}
 	/**
 	 * Xoa tat ca cahed, release DB, va sau do tao moi lai

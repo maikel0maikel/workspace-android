@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MySong;
+import com.qdcatplayer.main.GUI.MainPlayerFragment.MyMainPLayerDataProvider;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
 import com.qdcatplayer.main.Utilities.Utilities;
 
@@ -75,13 +76,15 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 
 	private MyLibrarySongItemClickListener mListener = null;
 	private ArrayList<MySong> songs = null;
+	private MyMainPLayerDataProvider dataProvider=null;
 
 	public MyLibrarySongsAdapter(Context context, int textViewResourceId,
-			ArrayList<MySong> objects, MyLibrarySongItemClickListener listener) {
+			ArrayList<MySong> objects, MyLibrarySongItemClickListener listener, MyMainPLayerDataProvider dataProvider) {
 
 		super(context, textViewResourceId, objects);
 		songs = objects;
 		mListener = listener;
+		this.dataProvider = dataProvider;
 	}
 
 	@Override
@@ -143,7 +146,15 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 		tv_album.setText(song.getAlbum()==null?"unknown":song.getAlbum().getName());
 		tv_artist.setText(song.getArtist()==null?"unknown":song.getArtist().getName());
 		tv_duration.setText(utils.milliSecondsToTimer(song.getDuration()));
-
+		
+		//begin: doi color baclground khi dang la curent playing song
+		if(dataProvider!=null && dataProvider.getCurrentSong().
+				getPath().getAbsPath().
+				equals(song.getPath().getAbsPath()))
+		{
+			convertView.setBackgroundColor(getContext().getResources().getColor(R.color.library_activeSong_bgColor));
+		}
+		//end
 		convertView.setTag(holder);
 		return convertView;
 	}
