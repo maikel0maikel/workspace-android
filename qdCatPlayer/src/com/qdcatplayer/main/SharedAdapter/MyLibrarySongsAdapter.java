@@ -152,7 +152,13 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 				getPath().getAbsPath().
 				equals(song.getPath().getAbsPath()))
 		{
+			//when current playing
 			convertView.setBackgroundColor(getContext().getResources().getColor(R.color.library_activeSong_bgColor));
+		}
+		else
+		{
+			//by default
+			convertView.setBackgroundResource(android.R.drawable.list_selector_background);
 		}
 		//end
 		convertView.setTag(holder);
