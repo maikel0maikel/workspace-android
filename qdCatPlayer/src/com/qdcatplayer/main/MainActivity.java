@@ -14,23 +14,31 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.*;
 
 import android.R.integer;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MyFolderDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
@@ -53,7 +61,10 @@ import com.qdcatplayer.main.GUI.MyLibraryListFragment;
 import com.qdcatplayer.main.GUI.MyLibraryPlayListsFragment;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment;
 import com.qdcatplayer.main.GUI._MyLibaryDataProvider;
+import com.qdcatplayer.main.GUI.CtxDialog.EditTagDialog;
+import com.qdcatplayer.main.GUI.CtxDialog.EditTagDialog.EditDialogListener;
 import com.qdcatplayer.main.GUI.CtxDialog.MyLibrarySongsCtxDialog;
+import com.qdcatplayer.main.GUI.CtxDialog.TestCtxDialog;
 import com.qdcatplayer.main.GUI.MainPlayerFragment.MyMainPLayerDataProvider;
 import com.qdcatplayer.main.GUI.MyLibraryAlbumsFragment.MyLibraryAlbumItemClickListener;
 import com.qdcatplayer.main.GUI.MyLibraryArtistsFragment.MyLibraryArtistItemClickListener;
@@ -85,6 +96,7 @@ MyLibraryAlbumItemClickListener,
 MyLibraryArtistItemClickListener,
 MyLibraryFolderItemClickListener,
 MyLibraryPlayListItemClickListener,
+EditDialogListener,
 _MyLibaryDataProvider
 {
 	private int layout_container = R.id.layout_container;
@@ -836,6 +848,7 @@ _MyLibaryDataProvider
 		return LI._playListsProvider;
 	}
 	MyLibrarySongsCtxDialog songs_ctx_dialog = null;
+	TestCtxDialog editTag_ctx_dialog=null;
 	@Override
 	public void onLibrarySongItemLongClick(MySong current,
 			ArrayList<MySong> songs) {
@@ -845,8 +858,22 @@ _MyLibaryDataProvider
 			@Override
 			public void OnLibrarySongsCtxClick_EDIT_TAG(MySong obj) {
 				Log.w("qd", "edit tag clicked"+getClass().getName());
-				addToSongList(obj);
 				songs_ctx_dialog.dismiss();
+				//addToSongList(obj);
+				//Bundle d=new Bundle();
+				EditTagDialog a=new EditTagDialog(getApplicationContext(), obj, new EditDialogListener() {
+					
+					@Override
+					public void onFinishEdit(MySong input) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getApplicationContext(), input.getTitle(), Toast.LENGTH_LONG).show();
+					}
+				});
+//				editTag_ctx_dialog = new TestCtxDialog(_getContext(), obj, null);
+				//songs_ctx_dialog.dismiss();
+				a.show(getFragmentManager(),"edittag");
+			
+	//			editTag_ctx_dialog.show();
 			}
 			
 			@Override
@@ -869,5 +896,10 @@ _MyLibaryDataProvider
 	public ArrayList<MySong> getEnqueue() {
 		return LI._enqueue;
 	}
-	
+	@Override
+	public void onFinishEdit(MySong input) {
+		// TODO Auto-generated method stub
+		
+	}
 }
+
