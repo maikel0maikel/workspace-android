@@ -2,17 +2,6 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:cmwmobile="http://schemas.android.com/apk/res/com.qdcatplayer.main.Setting2"
         >
-
-    <PreferenceCategory
-            android:title="Alo1234">
-
-        <CheckBoxPreference
-                android:key="checkbox_preference"
-                android:title="Alo123"
-                android:summary="Alo123_mota" />
-        
-
-    </PreferenceCategory>
     <com.qdcatplayer.main.Setting.FolderChooserPreference
 		android:key="folderList"
 		android:title="@string/setting_choose_folder_title"
@@ -20,9 +9,4 @@
 		android:entries="@array/vdthoi"
 		android:entryValues="@array/vdthoi2"
 		/>
-    <Preference android:summary="2222222" android:key="loading_state" android:icon="@drawable/ic_launcher" android:title="1111"/>
-    
-    
-
-
 </PreferenceScreen>

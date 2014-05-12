@@ -16,17 +16,19 @@ import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MyFolder;
 
 /**
- * Set folder (ArrayList<MyFolder>) over bundle by
- * using bundle.setSerializable(MyLibraryFoldersFragment.FOLDERS, folders)
+ * Set folder (ArrayList<MyFolder>) over bundle by using
+ * bundle.setSerializable(MyLibraryFoldersFragment.FOLDERS, folders)
+ * 
  * @author admin
- *
+ * 
  */
 public class MyLibraryFoldersFragment extends ListFragment {
 	public static String FOLDERS = "FOLDERS";
+
 	public interface MyLibraryFolderItemClickListener {
-		public void onLibraryFolderItemClick(MyFolder current, ArrayList<MyFolder> folders);
+		public void onLibraryFolderItemClick(MyFolder current,
+				ArrayList<MyFolder> folders);
 	}
-	
 
 	private class MyLibraryFoldersAdapter extends ArrayAdapter<MyFolder> {
 		private class ViewHolder {
@@ -38,10 +40,10 @@ public class MyLibraryFoldersFragment extends ListFragment {
 			public ViewHolder(MyFolder folder, TextView tv_name,
 					TextView tv_absPath, TextView tv_totalSongs) {
 				this.tv_name = tv_name;
-				this.tv_absPath= tv_absPath;
+				this.tv_absPath = tv_absPath;
 				this.tv_totalSongs = tv_totalSongs;
 				this.folder = folder;
-				
+
 			}
 
 			public MyFolder getFolder() {
@@ -81,7 +83,8 @@ public class MyLibraryFoldersFragment extends ListFragment {
 		private ArrayList<MyFolder> folders = null;
 
 		public MyLibraryFoldersAdapter(Context context, int textViewResourceId,
-				ArrayList<MyFolder> objects, MyLibraryFolderItemClickListener listener) {
+				ArrayList<MyFolder> objects,
+				MyLibraryFolderItemClickListener listener) {
 
 			super(context, textViewResourceId, objects);
 			folders = objects;
@@ -96,11 +99,14 @@ public class MyLibraryFoldersFragment extends ListFragment {
 			ViewHolder holder;
 			MyFolder folder = folders.get(position);
 			if (convertView == null) {
-				/*LayoutInflater inflater = ((Activity) getContext())
-						.getLayoutInflater();*/
-				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflater.inflate(R.layout.library_folders_listview_item,
-						parent, false);
+				/*
+				 * LayoutInflater inflater = ((Activity) getContext())
+				 * .getLayoutInflater();
+				 */
+				LayoutInflater inflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflater.inflate(
+						R.layout.library_folders_listview_item, parent, false);
 				convertView.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -110,14 +116,14 @@ public class MyLibraryFoldersFragment extends ListFragment {
 						mListener.onLibraryFolderItemClick(current, folders);
 					}
 				});
-				tv_name = (TextView) convertView
-						.findViewById(R.id.folder_name);
+				tv_name = (TextView) convertView.findViewById(R.id.folder_name);
 				tv_absPath = (TextView) convertView
 						.findViewById(R.id.folder_absPath);
 				tv_totalSongs = (TextView) convertView
 						.findViewById(R.id.folder_totalSongs);
-						
-				holder = new ViewHolder(folder, tv_name,  tv_absPath, tv_totalSongs);
+
+				holder = new ViewHolder(folder, tv_name, tv_absPath,
+						tv_totalSongs);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 				tv_name = holder.getTv_name();
@@ -126,42 +132,43 @@ public class MyLibraryFoldersFragment extends ListFragment {
 				holder.setFolder(folder);
 			}
 			tv_name.setText(folder.getFolderName());
-			tv_totalSongs.setText(folder.getAllRecursiveSongs().size()+" [songs]");
+			tv_totalSongs.setText(folder.getAllRecursiveSongs().size()
+					+ " [songs]");
 			tv_absPath.setText(folder.getAbsPath());
 			convertView.setTag(holder);
 			return convertView;
 		}
 	}
 
-	
 	private MyLibraryFolderItemClickListener mListener = null;
 	public ArrayList<MyFolder> folders = null;
 
-	public MyLibraryFoldersFragment(){	
+	public MyLibraryFoldersFragment() {
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		
-		folders = ((_MyLibaryDataProvider)getActivity()).getFolders();
-		if(folders==null)
-		{
-			folders = new ArrayList<MyFolder>();//by default
+
+		folders = ((_MyLibaryDataProvider) getActivity()).getFolders();
+		if (folders == null) {
+			folders = new ArrayList<MyFolder>();// by default
 		}
-		
-		MyLibraryFoldersAdapter adp = new MyLibraryFoldersAdapter(getActivity().getApplicationContext(),
-				R.layout.library_folders_listview_item, folders, new MyLibraryFolderItemClickListener() {
+
+		MyLibraryFoldersAdapter adp = new MyLibraryFoldersAdapter(getActivity()
+				.getApplicationContext(),
+				R.layout.library_folders_listview_item, folders,
+				new MyLibraryFolderItemClickListener() {
 
 					@Override
 					public void onLibraryFolderItemClick(MyFolder current,
 							ArrayList<MyFolder> folders_) {
 						mListener.onLibraryFolderItemClick(current, folders_);
 					}
-					
+
 				});
-		
+
 		setListAdapter(adp);
 	}
 
@@ -182,7 +189,8 @@ public class MyLibraryFoldersFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(android.R.layout.list_content, container, false);//use common "list_content" layout
+		View v = inflater.inflate(android.R.layout.list_content, container,
+				false);// use common "list_content" layout
 		return v;
 	}
 }

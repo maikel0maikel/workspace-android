@@ -13,7 +13,7 @@ import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.GUI.MainPlayerFragment.MyMainPLayerDataProvider;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
-import com.qdcatplayer.main.Utilities.Utilities;
+import com.qdcatplayer.main.Libraries.PlayerUtilities;
 
 public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 	private class ViewHolder {
@@ -23,10 +23,10 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 		private TextView tv_duration = null;
 		private TextView tv_title = null;
 
-		public ViewHolder(MySong song, TextView tv_title,
-				TextView tv_artist, TextView tv_duration,TextView tv_album) {
+		public ViewHolder(MySong song, TextView tv_title, TextView tv_artist,
+				TextView tv_duration, TextView tv_album) {
 			this.tv_title = tv_title;
-			this.tv_artist= tv_artist;
+			this.tv_artist = tv_artist;
 			this.tv_duration = tv_duration;
 			this.tv_album = tv_album;
 			this.song = song;
@@ -76,10 +76,11 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 
 	private MyLibrarySongItemClickListener mListener = null;
 	private ArrayList<MySong> songs = null;
-	private MyMainPLayerDataProvider dataProvider=null;
+	private MyMainPLayerDataProvider dataProvider = null;
 
 	public MyLibrarySongsAdapter(Context context, int textViewResourceId,
-			ArrayList<MySong> objects, MyLibrarySongItemClickListener listener, MyMainPLayerDataProvider dataProvider) {
+			ArrayList<MySong> objects, MyLibrarySongItemClickListener listener,
+			MyMainPLayerDataProvider dataProvider) {
 
 		super(context, textViewResourceId, objects);
 		songs = objects;
@@ -96,14 +97,17 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 		ViewHolder holder;
 		MySong song = songs.get(position);
 		if (convertView == null) {
-			/*LayoutInflater inflater = ((Activity) getContext())
-					.getLayoutInflater();*/
-			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.library_songs_listview_item,
-					parent, false);
-			
 			/*
-			 * Trung tâm bắt sự kiện đầu tiên 
+			 * LayoutInflater inflater = ((Activity) getContext())
+			 * .getLayoutInflater();
+			 */
+			LayoutInflater inflater = (LayoutInflater) getContext()
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(
+					R.layout.library_songs_listview_item, parent, false);
+
+			/*
+			 * Trung tâm bắt sự kiện đầu tiên
 			 */
 			convertView.setOnClickListener(new View.OnClickListener() {
 
@@ -115,7 +119,7 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 				}
 			});
 			convertView.setOnLongClickListener(new View.OnLongClickListener() {
-				
+
 				@Override
 				public boolean onLongClick(View v) {
 					ViewHolder holder = (ViewHolder) v.getTag();
@@ -124,16 +128,14 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 					return true;
 				}
 			});
-			
-			tv_title = (TextView) convertView
-					.findViewById(R.id.song_title);
-			tv_artist = (TextView) convertView
-					.findViewById(R.id.song_artist);
+
+			tv_title = (TextView) convertView.findViewById(R.id.song_title);
+			tv_artist = (TextView) convertView.findViewById(R.id.song_artist);
 			tv_duration = (TextView) convertView
 					.findViewById(R.id.song_duration);
-			tv_album = (TextView) convertView
-					.findViewById(R.id.song_album);
-			holder = new ViewHolder(song, tv_title,  tv_artist, tv_duration, tv_album);
+			tv_album = (TextView) convertView.findViewById(R.id.song_album);
+			holder = new ViewHolder(song, tv_title, tv_artist, tv_duration,
+					tv_album);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 			tv_title = holder.getTv_title();
@@ -143,26 +145,28 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 			holder.setSong(song);
 		}
 		tv_title.setText(song.getTitle());
-		tv_album.setText(song.getAlbum()==null?"unknown":song.getAlbum().getName());
-		tv_artist.setText(song.getArtist()==null?"unknown":song.getArtist().getName());
-		tv_duration.setText(utils.milliSecondsToTimer(song.getDuration()));
-		
-		//begin: doi color baclground khi dang la curent playing song
-		if(dataProvider!=null && dataProvider.getCurrentSong().
-				getPath().getAbsPath().
-				equals(song.getPath().getAbsPath()))
-		{
-			//when current playing
-			convertView.setBackgroundColor(getContext().getResources().getColor(R.color.library_activeSong_bgColor));
+		tv_album.setText(song.getAlbum() == null ? "unknown" : song.getAlbum()
+				.getName());
+		tv_artist.setText(song.getArtist() == null ? "unknown" : song
+				.getArtist().getName());
+		tv_duration.setText(PlayerUtilities.milliSecondsToTimer(song
+				.getDuration()));
+
+		// begin: doi color baclground khi dang la curent playing song
+		if (dataProvider != null
+				&& dataProvider.getCurrentSong()!=null
+				&& dataProvider.getCurrentSong().getPath().getAbsPath()
+						.equals(song.getPath().getAbsPath())) {
+			// when current playing
+			convertView.setBackgroundColor(getContext().getResources()
+					.getColor(R.color.library_activeSong_bgColor));
+		} else {
+			// by default
+			convertView
+					.setBackgroundResource(android.R.drawable.list_selector_background);
 		}
-		else
-		{
-			//by default
-			convertView.setBackgroundResource(android.R.drawable.list_selector_background);
-		}
-		//end
+		// end
 		convertView.setTag(holder);
 		return convertView;
 	}
-	private Utilities utils = new Utilities();
 }

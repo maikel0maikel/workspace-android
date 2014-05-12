@@ -16,15 +16,18 @@ import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MyPlayList;
 
 /**
- * Set albums (ArrayList<MyAlbum>) over bundle by
- * using bundle.setSerializable(MyLibraryAlbumsFragment.SONGS, albums)
+ * Set albums (ArrayList<MyAlbum>) over bundle by using
+ * bundle.setSerializable(MyLibraryAlbumsFragment.SONGS, albums)
+ * 
  * @author admin
- *
+ * 
  */
 public class MyLibraryPlayListsFragment extends ListFragment {
 	public static String PLAYLISTS = "PLAYLISTS";
+
 	public interface MyLibraryPlayListItemClickListener {
-		public void onLibraryPlayListItemClick(MyPlayList current, ArrayList<MyPlayList> playlists);
+		public void onLibraryPlayListItemClick(MyPlayList current,
+				ArrayList<MyPlayList> playlists);
 	}
 
 	private class MyLibraryPlayListsAdapter extends ArrayAdapter<MyPlayList> {
@@ -38,7 +41,7 @@ public class MyLibraryPlayListsFragment extends ListFragment {
 				this.tv_name = tv_name;
 				this.tv_totalSongs = tv_totalSongs;
 				this.playlist = playlist;
-				
+
 			}
 
 			public MyPlayList getPlayList() {
@@ -65,14 +68,14 @@ public class MyLibraryPlayListsFragment extends ListFragment {
 				this.tv_totalSongs = tv_totalSongs;
 			}
 
-
 		}
 
 		private MyLibraryPlayListItemClickListener mListener = null;
 		private ArrayList<MyPlayList> playlists = null;
 
-		public MyLibraryPlayListsAdapter(Context context, int textViewResourceId,
-				ArrayList<MyPlayList> objects, MyLibraryPlayListItemClickListener listener) {
+		public MyLibraryPlayListsAdapter(Context context,
+				int textViewResourceId, ArrayList<MyPlayList> objects,
+				MyLibraryPlayListItemClickListener listener) {
 
 			super(context, textViewResourceId, objects);
 			playlists = objects;
@@ -87,18 +90,23 @@ public class MyLibraryPlayListsFragment extends ListFragment {
 			ViewHolder holder;
 			MyPlayList playlist = playlists.get(position);
 			if (convertView == null) {
-				/*LayoutInflater inflater = ((Activity) getContext())
-						.getLayoutInflater();*/
-				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflater.inflate(R.layout.library_playlists_listview_item,
-						parent, false);
+				/*
+				 * LayoutInflater inflater = ((Activity) getContext())
+				 * .getLayoutInflater();
+				 */
+				LayoutInflater inflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflater
+						.inflate(R.layout.library_playlists_listview_item,
+								parent, false);
 				convertView.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
 						ViewHolder holder = (ViewHolder) v.getTag();
 						MyPlayList playlist = holder.getPlayList();
-						mListener.onLibraryPlayListItemClick(playlist, playlists);
+						mListener.onLibraryPlayListItemClick(playlist,
+								playlists);
 					}
 				});
 				tv_name = (TextView) convertView
@@ -113,7 +121,7 @@ public class MyLibraryPlayListsFragment extends ListFragment {
 				holder.setPlayList(playlist);
 			}
 			tv_name.setText(playlist.getName());
-			tv_totalSongs.setText(playlist.getSongs().size()+" [songs]");
+			tv_totalSongs.setText(playlist.getSongs().size() + " [songs]");
 			convertView.setTag(holder);
 			return convertView;
 		}
@@ -122,33 +130,33 @@ public class MyLibraryPlayListsFragment extends ListFragment {
 	private MyLibraryPlayListItemClickListener mListener = null;
 	public ArrayList<MyPlayList> playlists = null;
 
-	public MyLibraryPlayListsFragment(){	
+	public MyLibraryPlayListsFragment() {
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		
-		playlists = ((_MyLibaryDataProvider)getActivity()).getPlayLists();
-		if(playlists==null)
-		{
-			playlists = new ArrayList<MyPlayList>();//by default
+
+		playlists = ((_MyLibaryDataProvider) getActivity()).getPlayLists();
+		if (playlists == null) {
+			playlists = new ArrayList<MyPlayList>();// by default
 		}
-		
-		MyLibraryPlayListsAdapter adp = new MyLibraryPlayListsAdapter(getActivity().getApplicationContext(),
-				R.layout.library_playlists_listview_item, playlists, new MyLibraryPlayListItemClickListener() {
+
+		MyLibraryPlayListsAdapter adp = new MyLibraryPlayListsAdapter(
+				getActivity().getApplicationContext(),
+				R.layout.library_playlists_listview_item, playlists,
+				new MyLibraryPlayListItemClickListener() {
 
 					@Override
 					public void onLibraryPlayListItemClick(MyPlayList current,
 							ArrayList<MyPlayList> playlists_) {
-						mListener.onLibraryPlayListItemClick(current, playlists_);
+						mListener.onLibraryPlayListItemClick(current,
+								playlists_);
 					}
 
-					
-					
 				});
-		
+
 		setListAdapter(adp);
 	}
 

@@ -3,6 +3,7 @@ package com.qdcatplayer.main.Entities;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyFormatDAO;
+import com.qdcatplayer.main.Libraries.MyStringHelper;
 
 @DatabaseTable(tableName = "MyFormats")
 public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
@@ -21,10 +22,9 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 		setExtension(extension);
 	}
 
-
 	public String getExtension() {
 		super.load();
-		return extension;
+		return MyStringHelper.filterNullOrBlank(extension, UNKNOWN_VALUE);
 	}
 
 	public String getMimeType() {
@@ -35,13 +35,14 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 	@Override
 	public void reset() {
 		super.reset();
-		
+
 		extension = null;
-		mimeType = null;		
+		mimeType = null;
 	}
 
 	public void setExtension(String extension) {
-		this.extension = extension == null ? "" : extension;
+		this.extension = MyStringHelper.filterSQLSpecial(extension,
+				UNKNOWN_VALUE);
 	}
 
 	public void setMimeType(String mimeType) {
@@ -50,11 +51,11 @@ public class MyFormat extends _MyEntityAbstract<MyFormatDAO, MyFormat> {
 
 	@Override
 	public Integer insert() {
-		//very importance
-		//since MyBitrate may be loaded when fetching MySong
-		//if not force to set loaded=true then
-		//new load script will be acted and reset will be called
-		//then all data pre-loaded will swiped out
+		// very importance
+		// since MyBitrate may be loaded when fetching MySong
+		// if not force to set loaded=true then
+		// new load script will be acted and reset will be called
+		// then all data pre-loaded will swiped out
 		setLoaded(true);
 		return super.insert();
 	}

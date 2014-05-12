@@ -5,6 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.qdcatplayer.main.DAOs.MyPathDAO;
 import com.qdcatplayer.main.DAOs.MySource;
 import com.qdcatplayer.main.Libraries.MyFileHelper;
+import com.qdcatplayer.main.Libraries.MyStringHelper;
 
 @DatabaseTable(tableName = "MyPaths")
 public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
@@ -16,7 +17,7 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	private Boolean parentFolder_ready = false;
 	@DatabaseField(unique = true, canBeNull = false)
 	private String absPath = null;
-	@DatabaseField(canBeNull=false)
+	@DatabaseField(canBeNull = false)
 	protected String fileName = null;
 	protected String fileExtension = null;
 
@@ -24,16 +25,16 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	private MyFolder parentFolder = null;
 
 	/**
-	 * Khi insert Path thi do Song van chua duoc insert
-	 * nen tam thoi song=null, sau khi MyPath duoc insert thanh cong thi
-	 * Song se co nhiem vu gan nguoc id cua minh qua chp Path.Song
-	 
-		@DatabaseField(foreign = true, canBeNull = true)
-		private MySong song = null;
-	*/
+	 * Khi insert Path thi do Song van chua duoc insert nen tam thoi song=null,
+	 * sau khi MyPath duoc insert thanh cong thi Song se co nhiem vu gan nguoc
+	 * id cua minh qua chp Path.Song
+	 * 
+	 * @DatabaseField(foreign = true, canBeNull = true) private MySong song =
+	 *                        null;
+	 */
 
 	public MyPath() {
-		
+
 	}
 
 	public MyPath(String absPath) {
@@ -41,35 +42,43 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	}
 
 	public String getAbsPath() {
-		if(getGlobalDAO().getSource()!=MySource.DISK_SOURCE)//very importance
+		if (getGlobalDAO().getSource() != MySource.DISK_SOURCE)// very
+																// importance
 		{
 			super.load();
 		}
 		return absPath;
 	}
+
 	/**
 	 * Ham On The Fly, khong ho tro Cache
+	 * 
 	 * @param withDot
 	 * @return
 	 */
 	public String getFileExtension(Boolean withDot) {
 		super.load();
-		return withDot?"."+fileExtension:fileExtension;
+		return withDot ? "."
+				+ MyStringHelper
+						.filterNullOrBlank(fileExtension, UNKNOWN_VALUE)
+				: MyStringHelper
+						.filterNullOrBlank(fileExtension, UNKNOWN_VALUE);
 	}
+
 	/**
-	 * Ham On The Fly, phu thuoc vao absPath
-	 * Cung trang thai voi loaded
+	 * Ham On The Fly, phu thuoc vao absPath Cung trang thai voi loaded
+	 * 
 	 * @return
 	 */
 	public String getFileName() {
 		super.load();
-		return fileName;
+		return MyStringHelper.filterNullOrBlank(fileName, UNKNOWN_VALUE);
 	}
 
 	public MyFolder getParentFolder() {
-		//parent folder co bien Boolean rieng de load
-		//khong dung chung loaded
-		if (parentFolder_ready == true || parentFolder!=null) {
+		// parent folder co bien Boolean rieng de load
+		// khong dung chung loaded
+		if (parentFolder_ready == true || parentFolder != null) {
 			return parentFolder;
 		}
 		// do not know DAO !
@@ -79,7 +88,7 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 		// get through DAO is recommended, DAO will look SOURCE to choose
 		// where to get Parent Obj
 		parentFolder = getDao().getParentFolder(this);
-		//DAO was already set by above call
+		// DAO was already set by above call
 		parentFolder_ready = true;
 		return parentFolder;
 	}
@@ -87,13 +96,13 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	@Override
 	public void reset() {
 		super.reset();
-		//clear member
+		// clear member
 		parentFolder = null;
 		fileName = null;
-		//do not reset absPath
+		// do not reset absPath
 		// set lazy state
 		parentFolder_ready = false;
-		
+
 	}
 
 	public void setAbsPath(String path) {
@@ -101,7 +110,8 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	}
 
 	public void setFileName(String fileName) {
-		this.fileName = fileName;
+		this.fileName = MyStringHelper
+				.filterSQLSpecial(fileName, UNKNOWN_VALUE);
 	}
 
 	public void setParentFolder(MyFolder parentFolder) {
@@ -109,16 +119,15 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	}
 
 	public Boolean isOnDisk() {
-		if(getAbsPath()==null)
-		{
+		if (getAbsPath() == null) {
 			return false;
 		}
 		return MyFileHelper.isExist(getAbsPath());
 	}
 
 	public void setFileExtension(String fileExtension_) {
-		fileExtension = fileExtension_;
+		this.fileExtension = MyStringHelper.filterSQLSpecial(fileExtension_,
+				UNKNOWN_VALUE);
 	}
-
 
 }

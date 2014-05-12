@@ -5,7 +5,7 @@
     <header
         android:icon="@drawable/ic_launcher"
         android:fragment="com.qdcatplayer.main.Setting.SettingTab1"
-        android:summary="TAB1 summary"
+        android:summary="Cấu hình chung"
         android:title="TAB1" >
         <extra
             android:name="settings 1"
@@ -13,7 +13,7 @@
     </header>
     <header
         android:fragment="com.qdcatplayer.main.Setting.SettingTab2"
-        android:summary="TAB1 summary"
+        android:summary="Thông tin hệ thống"
         android:title="TAB2" >
         <extra
             android:name="settings 2"

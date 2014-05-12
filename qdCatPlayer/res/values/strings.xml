@@ -23,5 +23,5 @@
     <string name="library_item_selector">@android:drawable/list_selector_background</string>
 	<!-- Khi vuc Library view -->
 	<color name="library_textColor">#000000</color>
-	<color name="library_activeSong_bgColor">#FF0000</color>
+	<color name="library_activeSong_bgColor">#E3E3E3</color>
 </resources>

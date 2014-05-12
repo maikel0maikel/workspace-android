@@ -213,3 +213,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+qdCatPlayer/gen/com/qdcatplayer/main/R.java

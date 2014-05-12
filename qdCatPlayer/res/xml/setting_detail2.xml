@@ -2,12 +2,11 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-            android:title="Alo1234567">
-
-        <CheckBoxPreference
-                android:key="checkbox_preference"
-                android:title="Alo123456"
-                android:summary="Alo123456_mota" />
+            android:title="About"
+            android:summary="Đồ án môn học Android 2014.
+            Sinh viên thực hiện: Nguyễn Quốc Dũng, Nguyễn Hoàng Kim.
+            Người hướng dẫn: Thầy Cao Thái Phương Thanh"
+            >
 
     </PreferenceCategory>
 
