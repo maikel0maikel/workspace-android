@@ -50,7 +50,7 @@ public final class R {
         public static final int left_arrow=0x7f02000a;
         public static final int left_arrow_auto=0x7f02000b;
         public static final int left_arrow_touch=0x7f02000c;
-        public static final int library_ctx_dialog_selector=0x7f02000d;
+        public static final int library_item_selector=0x7f02000d;
         public static final int music_tone=0x7f02000e;
         public static final int music_tone_auto=0x7f02000f;
         public static final int music_tone_touch=0x7f020010;

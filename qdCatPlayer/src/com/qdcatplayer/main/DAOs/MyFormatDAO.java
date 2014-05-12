@@ -8,17 +8,15 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.qdcatplayer.main.Entities.MyFormat;
 
 public class MyFormatDAO extends _MyDAOAbstract<MyFormatDAO, MyFormat>
-implements _MyDAOInterface<MyFormatDAO, MyFormat>
-{
+		implements _MyDAOInterface<MyFormatDAO, MyFormat> {
 
 	public MyFormatDAO(Context ctx, GlobalDAO g) {
-		super(ctx,g);
+		super(ctx, g);
 	}
 
 	@Override
 	public RuntimeExceptionDao<MyFormat, Integer> getDao() {
-		if(getManager()!=null && getHelper()!=null)
-		{
+		if (getManager() != null && getHelper() != null) {
 			return getHelper().getMyFormatDAO();
 		}
 		return null;
@@ -40,23 +38,21 @@ implements _MyDAOInterface<MyFormatDAO, MyFormat>
 
 	@Override
 	public Integer insert(MyFormat obj) {
-		//neu object chua co trong DB thi goi super insert
+		// neu object chua co trong DB thi goi super insert
 		try {
-				MyFormat tmp = getDao().queryBuilder().where().eq(MyFormat.EXTENSION_F, obj.getExtension()).queryForFirst();
-				if(tmp==null)
-				{
-					super.insert(obj);
-				}
-				else
-				{
-					obj.setId(tmp.getId());
-				}
-				return 1;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return -1;
+			MyFormat tmp = getDao().queryBuilder().where()
+					.eq(MyFormat.EXTENSION_F, obj.getExtension())
+					.queryForFirst();
+			if (tmp == null) {
+				super.insert(obj);
+			} else {
+				obj.setId(tmp.getId());
 			}
-		
-		
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+
 	}
 }

@@ -17,15 +17,18 @@ import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MyAlbum;
 
 /**
- * Set albums (ArrayList<MyAlbum>) over bundle by
- * using bundle.setSerializable(MyLibraryAlbumsFragment.SONGS, albums)
+ * Set albums (ArrayList<MyAlbum>) over bundle by using
+ * bundle.setSerializable(MyLibraryAlbumsFragment.SONGS, albums)
+ * 
  * @author admin
- *
+ * 
  */
 public class MyLibraryAlbumsFragment extends ListFragment {
 	public static String ALBUMS = "ALBUMS";
+
 	public interface MyLibraryAlbumItemClickListener {
-		public void onLibraryAlbumItemClick(MyAlbum current, ArrayList<MyAlbum> albums);
+		public void onLibraryAlbumItemClick(MyAlbum current,
+				ArrayList<MyAlbum> albums);
 	}
 
 	private class MyLibraryAlbumsAdapter extends ArrayAdapter<MyAlbum> {
@@ -37,13 +40,13 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 			private ImageView img = null;
 
 			public ViewHolder(MyAlbum album, TextView tv_name,
-					TextView tv_artist, TextView tv_totalSongs,ImageView img) {
+					TextView tv_artist, TextView tv_totalSongs, ImageView img) {
 				this.tv_name = tv_name;
-				this.tv_artist= tv_artist;
+				this.tv_artist = tv_artist;
 				this.tv_totalSongs = tv_totalSongs;
 				this.img = img;
 				this.album = album;
-				
+
 			}
 
 			public MyAlbum getAlbum() {
@@ -86,14 +89,14 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 				this.img = img;
 			}
 
-
 		}
 
 		private MyLibraryAlbumItemClickListener mListener = null;
 		private ArrayList<MyAlbum> albums = null;
 
 		public MyLibraryAlbumsAdapter(Context context, int textViewResourceId,
-				ArrayList<MyAlbum> objects, MyLibraryAlbumItemClickListener listener) {
+				ArrayList<MyAlbum> objects,
+				MyLibraryAlbumItemClickListener listener) {
 
 			super(context, textViewResourceId, objects);
 			albums = objects;
@@ -109,11 +112,14 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 			ViewHolder holder;
 			MyAlbum album = albums.get(position);
 			if (convertView == null) {
-				/*LayoutInflater inflater = ((Activity) getContext())
-						.getLayoutInflater();*/
-				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflater.inflate(R.layout.library_albums_listview_item,
-						parent, false);
+				/*
+				 * LayoutInflater inflater = ((Activity) getContext())
+				 * .getLayoutInflater();
+				 */
+				LayoutInflater inflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflater.inflate(
+						R.layout.library_albums_listview_item, parent, false);
 				convertView.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -123,15 +129,14 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 						mListener.onLibraryAlbumItemClick(album, albums);
 					}
 				});
-				tv_name = (TextView) convertView
-						.findViewById(R.id.album_name);
+				tv_name = (TextView) convertView.findViewById(R.id.album_name);
 				tv_artist = (TextView) convertView
 						.findViewById(R.id.album_artist);
 				tv_totalSongs = (TextView) convertView
 						.findViewById(R.id.album_totalSongs);
-				img = (ImageView) convertView
-						.findViewById(R.id.album_image);
-				holder = new ViewHolder(album, tv_name,  tv_artist, tv_totalSongs, img);
+				img = (ImageView) convertView.findViewById(R.id.album_image);
+				holder = new ViewHolder(album, tv_name, tv_artist,
+						tv_totalSongs, img);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 				tv_name = holder.getTv_name();
@@ -141,7 +146,7 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 				holder.setAlbum(album);
 			}
 			tv_name.setText(album.getName());
-			tv_totalSongs.setText(album.getSongs().size()+" [songs]");
+			tv_totalSongs.setText(album.getSongs().size() + " [songs]");
 			tv_artist.setText("[artist]");
 			convertView.setTag(holder);
 			return convertView;
@@ -151,31 +156,32 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 	private MyLibraryAlbumItemClickListener mListener = null;
 	public ArrayList<MyAlbum> albums = null;
 
-	public MyLibraryAlbumsFragment(){	
+	public MyLibraryAlbumsFragment() {
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		
-		albums = ((_MyLibaryDataProvider)getActivity()).getAlbums();
-		if(albums==null)
-		{
-			albums = new ArrayList<MyAlbum>();//by default
+
+		albums = ((_MyLibaryDataProvider) getActivity()).getAlbums();
+		if (albums == null) {
+			albums = new ArrayList<MyAlbum>();// by default
 		}
-		
-		MyLibraryAlbumsAdapter adp = new MyLibraryAlbumsAdapter(getActivity().getApplicationContext(),
-				R.layout.library_albums_listview_item, albums, new MyLibraryAlbumItemClickListener() {
+
+		MyLibraryAlbumsAdapter adp = new MyLibraryAlbumsAdapter(getActivity()
+				.getApplicationContext(),
+				R.layout.library_albums_listview_item, albums,
+				new MyLibraryAlbumItemClickListener() {
 
 					@Override
 					public void onLibraryAlbumItemClick(MyAlbum current,
 							ArrayList<MyAlbum> albums_) {
 						mListener.onLibraryAlbumItemClick(current, albums_);
 					}
-					
+
 				});
-		
+
 		setListAdapter(adp);
 	}
 
@@ -199,6 +205,7 @@ public class MyLibraryAlbumsFragment extends ListFragment {
 		View v = inflater.inflate(R.layout.library_listview, container, false);
 		return v;
 	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub

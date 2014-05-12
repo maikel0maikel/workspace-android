@@ -24,7 +24,7 @@ public class MyLibraryListFragment extends ListFragment {
 		private class ViewHolder {
 			private ImageView img = null;
 			private TextView tv = null;
-			private String itemId=null;
+			private String itemId = null;
 
 			public String getItemId() {
 				return itemId;
@@ -74,16 +74,19 @@ public class MyLibraryListFragment extends ListFragment {
 			TextView tv;
 			ViewHolder holder;
 			if (convertView == null) {
-				/*LayoutInflater inflater = ((Activity) getContext())
-						.getLayoutInflater();*/
-				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				/*
+				 * LayoutInflater inflater = ((Activity) getContext())
+				 * .getLayoutInflater();
+				 */
+				LayoutInflater inflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflater.inflate(R.layout.library_listview_item,
 						parent, false);
 				convertView.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						ViewHolder holder=(ViewHolder)v.getTag();
+						ViewHolder holder = (ViewHolder) v.getTag();
 						mListener.onLibraryItemClick(holder.getItemId());
 					}
 				});
@@ -114,9 +117,8 @@ public class MyLibraryListFragment extends ListFragment {
 	private MyLibraryClickListener mListener = null;
 	public String[] values = null;
 
-	public MyLibraryListFragment()
-	{
-		
+	public MyLibraryListFragment() {
+
 	}
 
 	private void loadResource() {
@@ -134,19 +136,20 @@ public class MyLibraryListFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		
-		//load resource
+
+		// load resource
 		loadResource();
-		MyLibraryAdapter adp = new MyLibraryAdapter(getActivity().getApplicationContext(),
-				R.layout.library_listview_item, values, new MyLibraryClickListener() {
-					
+		MyLibraryAdapter adp = new MyLibraryAdapter(getActivity()
+				.getApplicationContext(), R.layout.library_listview_item,
+				values, new MyLibraryClickListener() {
+
 					@Override
 					public void onLibraryItemClick(String itemId) {
-						//send message to parent activity
+						// send message to parent activity
 						mListener.onLibraryItemClick(itemId);
 					}
 				});
-		
+
 		setListAdapter(adp);
 	}
 

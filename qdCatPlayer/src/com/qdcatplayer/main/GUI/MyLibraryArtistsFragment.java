@@ -16,15 +16,18 @@ import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MyArtist;
 
 /**
- * Set albums (ArrayList<MyAlbum>) over bundle by
- * using bundle.setSerializable(MyLibraryAlbumsFragment.SONGS, albums)
+ * Set albums (ArrayList<MyAlbum>) over bundle by using
+ * bundle.setSerializable(MyLibraryAlbumsFragment.SONGS, albums)
+ * 
  * @author admin
- *
+ * 
  */
 public class MyLibraryArtistsFragment extends ListFragment {
 	public static String ARTISTS = "ARTISTS";
+
 	public interface MyLibraryArtistItemClickListener {
-		public void onLibraryArtistItemClick(MyArtist current, ArrayList<MyArtist> artists);
+		public void onLibraryArtistItemClick(MyArtist current,
+				ArrayList<MyArtist> artists);
 	}
 
 	private class MyLibraryArtistsAdapter extends ArrayAdapter<MyArtist> {
@@ -38,7 +41,7 @@ public class MyLibraryArtistsFragment extends ListFragment {
 				this.tv_name = tv_name;
 				this.tv_totalSongs = tv_totalSongs;
 				this.artist = artist;
-				
+
 			}
 
 			public MyArtist getArtist() {
@@ -65,14 +68,14 @@ public class MyLibraryArtistsFragment extends ListFragment {
 				this.tv_totalSongs = tv_totalSongs;
 			}
 
-
 		}
 
 		private MyLibraryArtistItemClickListener mListener = null;
 		private ArrayList<MyArtist> artists = null;
 
 		public MyLibraryArtistsAdapter(Context context, int textViewResourceId,
-				ArrayList<MyArtist> objects, MyLibraryArtistItemClickListener listener) {
+				ArrayList<MyArtist> objects,
+				MyLibraryArtistItemClickListener listener) {
 
 			super(context, textViewResourceId, objects);
 			artists = objects;
@@ -87,11 +90,14 @@ public class MyLibraryArtistsFragment extends ListFragment {
 			ViewHolder holder;
 			MyArtist artist = artists.get(position);
 			if (convertView == null) {
-				/*LayoutInflater inflater = ((Activity) getContext())
-						.getLayoutInflater();*/
-				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflater.inflate(R.layout.library_artists_listview_item,
-						parent, false);
+				/*
+				 * LayoutInflater inflater = ((Activity) getContext())
+				 * .getLayoutInflater();
+				 */
+				LayoutInflater inflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflater.inflate(
+						R.layout.library_artists_listview_item, parent, false);
 				convertView.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -101,8 +107,7 @@ public class MyLibraryArtistsFragment extends ListFragment {
 						mListener.onLibraryArtistItemClick(artist, artists);
 					}
 				});
-				tv_name = (TextView) convertView
-						.findViewById(R.id.artist_name);
+				tv_name = (TextView) convertView.findViewById(R.id.artist_name);
 				tv_totalSongs = (TextView) convertView
 						.findViewById(R.id.artist_totalSongs);
 				holder = new ViewHolder(artist, tv_name, tv_totalSongs);
@@ -113,7 +118,7 @@ public class MyLibraryArtistsFragment extends ListFragment {
 				holder.setArtist(artist);
 			}
 			tv_name.setText(artist.getName());
-			tv_totalSongs.setText(artist.getSongs().size()+" [songs]");
+			tv_totalSongs.setText(artist.getSongs().size() + " [songs]");
 			convertView.setTag(holder);
 			return convertView;
 		}
@@ -122,22 +127,23 @@ public class MyLibraryArtistsFragment extends ListFragment {
 	private MyLibraryArtistItemClickListener mListener = null;
 	public ArrayList<MyArtist> artists = null;
 
-	public MyLibraryArtistsFragment(){	
+	public MyLibraryArtistsFragment() {
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		
-		artists = ((_MyLibaryDataProvider)getActivity()).getArtists();
-		if(artists==null)
-		{
-			artists = new ArrayList<MyArtist>();//by default
+
+		artists = ((_MyLibaryDataProvider) getActivity()).getArtists();
+		if (artists == null) {
+			artists = new ArrayList<MyArtist>();// by default
 		}
-		
-		MyLibraryArtistsAdapter adp = new MyLibraryArtistsAdapter(getActivity().getApplicationContext(),
-				R.layout.library_artists_listview_item, artists, new MyLibraryArtistItemClickListener() {
+
+		MyLibraryArtistsAdapter adp = new MyLibraryArtistsAdapter(getActivity()
+				.getApplicationContext(),
+				R.layout.library_artists_listview_item, artists,
+				new MyLibraryArtistItemClickListener() {
 
 					@Override
 					public void onLibraryArtistItemClick(MyArtist current,
@@ -145,10 +151,8 @@ public class MyLibraryArtistsFragment extends ListFragment {
 						mListener.onLibraryArtistItemClick(current, artists_);
 					}
 
-					
-					
 				});
-		
+
 		setListAdapter(adp);
 	}
 
