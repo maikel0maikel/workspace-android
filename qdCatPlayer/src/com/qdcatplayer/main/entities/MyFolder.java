@@ -83,6 +83,10 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 
 	public String getFolderName() {
 		super.load();
+		if(absPath.equals("/"))
+		{
+			return "[root]";
+		}
 		return MyStringHelper.filterNullOrBlank(folderName, UNKNOWN_VALUE);
 	}
 
