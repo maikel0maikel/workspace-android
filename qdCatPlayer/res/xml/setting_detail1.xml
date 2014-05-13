@@ -6,7 +6,14 @@
 		android:key="folderList"
 		android:title="@string/setting_choose_folder_title"
 		android:summary="@string/setting_choose_folder_summary"
-		android:entries="@array/vdthoi"
-		android:entryValues="@array/vdthoi2"
+		android:entries="@array/example_entries"
+		android:entryValues="@array/example_values"
 		/>
+    <ListPreference
+        android:key="languageList"
+		android:title="@string/setting_language_choose_title"
+		android:summary="@string/setting_language_choose_summary"
+		android:entries="@array/language_entries"
+		android:entryValues="@array/language_values"
+         />
 </PreferenceScreen>

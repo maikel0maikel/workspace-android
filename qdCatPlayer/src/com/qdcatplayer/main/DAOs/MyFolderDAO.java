@@ -12,6 +12,7 @@ import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MyPath;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.Libraries.MyFileHelper;
+import com.qdcatplayer.main.Libraries.MyStringHelper;
 
 public class MyFolderDAO extends _MyDAOAbstract<MyFolderDAO, MyFolder>
 		implements _MyDAOInterface<MyFolderDAO, MyFolder> {
@@ -50,6 +51,7 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolderDAO, MyFolder>
 	}
 
 	public MyFolder getByAbsPath(String absPath) {
+		absPath = MyStringHelper.filterSQLSpecialAbsPath(absPath, "unknown", true);//for sure
 		MyFolder obj;
 		try {
 			obj = getDao().queryBuilder().where()
@@ -87,7 +89,7 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolderDAO, MyFolder>
 			// kiem tra xem folder nay co trong he thong chua
 			// neu co roi thi chi cap nhat id
 			MyFolder tontai = getDao().queryBuilder().where()
-					.eq(MyFolder.ABSPATH_F, obj.getAbsPath()).queryForFirst();
+					.eq(MyFolder.ABSPATH_F, obj.getAbsPathForSQL()).queryForFirst();
 			if (tontai == null) {
 				// try to create FK First
 				if (obj.getParentFolder() != null) {
@@ -157,7 +159,7 @@ public class MyFolderDAO extends _MyDAOAbstract<MyFolderDAO, MyFolder>
 			try {
 				// get folder from DB first
 				MyFolder fd = getDao().queryBuilder().where()
-						.eq(MyFolder.ABSPATH_F, obj.getAbsPath())
+						.eq(MyFolder.ABSPATH_F, obj.getAbsPathForSQL())
 						.queryForFirst();
 				if (fd == null) {
 					return childsSong;

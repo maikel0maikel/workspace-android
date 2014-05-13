@@ -9,21 +9,21 @@ package com.qdcatplayer.main;
 
 public final class R {
     public static final class array {
-        public static final int imageValues=0x7f050002;
-        public static final int library_ctx_songs_id_array=0x7f050005;
-        public static final int library_ctx_songs_value_array=0x7f050006;
-        public static final int library_item_id_array=0x7f050003;
-        public static final int library_item_value_array=0x7f050004;
-        public static final int vdthoi=0x7f050000;
-        public static final int vdthoi2=0x7f050001;
+        public static final int example_entries=0x7f050000;
+        public static final int example_values=0x7f050001;
+        public static final int imageValues=0x7f050004;
+        public static final int language_entries=0x7f050002;
+        public static final int language_values=0x7f050003;
+        public static final int library_ctx_songs_id_array=0x7f050007;
+        public static final int library_ctx_songs_value_array=0x7f050008;
+        public static final int library_item_id_array=0x7f050005;
+        public static final int library_item_value_array=0x7f050006;
     }
     public static final class attr {
     }
     public static final class color {
         public static final int header_blue_bg=0x7f080000;
         public static final int library_activeSong_bgColor=0x7f080002;
-        /**  Khi vuc Library view 
-         */
         public static final int library_textColor=0x7f080001;
     }
     public static final class dimen {
@@ -32,6 +32,7 @@ public final class R {
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
+ Default screen margins, per the Android Design guidelines. 
          */
         public static final int activity_horizontal_margin=0x7f060000;
         public static final int activity_vertical_margin=0x7f060001;
@@ -84,8 +85,8 @@ public final class R {
         public static final int shuffle_touch=0x7f02002c;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b0030;
-        public static final int add_to_queue=0x7f0b002f;
+        public static final int action_exit=0x7f0b0030;
+        public static final int action_settings=0x7f0b002f;
         public static final int album_artist=0x7f0b000a;
         public static final int album_image=0x7f0b0008;
         public static final int album_name=0x7f0b0009;
@@ -156,29 +157,46 @@ public final class R {
         public static final int setting_folder_chooser_item=0x7f030012;
     }
     public static final class menu {
-        public static final int ctx_songs_menu=0x7f0a0000;
-        public static final int main=0x7f0a0001;
+        public static final int main=0x7f0a0000;
     }
     public static final class string {
+        public static final int action_exit=0x7f070002;
+        /**   Action bar 
+  Action bar 
+         */
         public static final int action_settings=0x7f070001;
+        public static final int activity_exit_message=0x7f070013;
+        public static final int activity_exit_negative=0x7f070015;
+        public static final int activity_exit_positive=0x7f070014;
+        /**  Khu vuc Main Activity  
+ Khu vuc Main Activity  
+         */
+        public static final int activity_exit_title=0x7f070012;
         public static final int app_name=0x7f070000;
-        public static final int ctx_songs_ADD_TO_QUEUE=0x7f07000d;
-        public static final int hello_world=0x7f070002;
-        public static final int library_album_label=0x7f070006;
-        public static final int library_allsongs_label=0x7f070009;
-        public static final int library_artist_label=0x7f070007;
-        public static final int library_folder_label=0x7f070008;
-        /**  Khu vuc setting 
+        public static final int ctx_songs_ADD_TO_QUEUE=0x7f070010;
+        /**  END 
+ END 
          */
-        public static final int library_item_selector=0x7f07000e;
-        public static final int setting_choose_folder_summary=0x7f07000c;
-        /**  Khu vực dành cho Setting  
+        public static final int hello_world=0x7f070003;
+        public static final int library_album_label=0x7f070004;
+        public static final int library_allsongs_label=0x7f070007;
+        public static final int library_artist_label=0x7f070005;
+        public static final int library_folder_label=0x7f070006;
+        /**  Khi vuc Library Fragment 
+ Khi vuc Library Fragment 
          */
-        public static final int setting_choose_folder_title=0x7f07000b;
-        public static final int title_activity_my_library=0x7f07000a;
-        public static final int title_activity_settings=0x7f070005;
-        public static final int title_setting_detail=0x7f070004;
-        public static final int title_setting_list=0x7f070003;
+        public static final int library_item_selector=0x7f070011;
+        public static final int setting_choose_folder_summary=0x7f07000f;
+        public static final int setting_choose_folder_title=0x7f07000e;
+        public static final int setting_language_choose_summary=0x7f07000d;
+        public static final int setting_language_choose_title=0x7f07000c;
+        public static final int setting_tab_general_title=0x7f07000a;
+        public static final int setting_tab_info_title=0x7f07000b;
+        /**  Khu vực dành cho Setting activity  
+ Khu vực dành cho Setting activity  
+         */
+        public static final int setting_title=0x7f070009;
+        public static final int title_activity_my_library=0x7f070008;
     }
     public static final class style {
         /** 
@@ -201,9 +219,20 @@ public final class R {
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
+
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        
          */
         public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
+ All customizations that are NOT specific to a particular API-level can go here. 
+ Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f090001;

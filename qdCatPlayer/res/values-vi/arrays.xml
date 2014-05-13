@@ -29,19 +29,19 @@
         <item >ENQUEUE_ITEM</item>
     </string-array>
     <string-array name="library_item_value_array">
-        <item >All songs</item>
+        <item >Tất cả bài hát</item>
         <item >Albums</item>
-        <item >Artists</item>
-        <item >Folders</item>
-        <item >Enqueue</item>
+        <item >Ca sĩ</item>
+        <item >Thư mục</item>
+        <item >Hàng đợi</item>
     </string-array>
     <string-array name="library_ctx_songs_id_array">
         <item >ADD_TO_ENQUEUE</item>
         <item >EDIT_TAG</item>
     </string-array>
     <string-array name="library_ctx_songs_value_array">
-        <item >Add to enqueue</item>
-        <item >Edit tag</item>
+        <item >Thêm vào hàng đợi</item>
+        <item >Chỉnh sửa TAG nhạc</item>
     </string-array>
     
 </resources>

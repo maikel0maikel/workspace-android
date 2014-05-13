@@ -2,26 +2,36 @@
 <resources>
 
     <string name="app_name">qdCatPlayer</string>
+    <!--  Action bar -->
     <string name="action_settings">Settings</string>
+    <string name="action_exit">Exit</string>
+    <!-- END -->
     <string name="hello_world">Hello world!</string>
 
     <color name="header_blue_bg">#7b96b8</color>
-
-    <string name="title_setting_list">Setting</string>
-    <string name="title_setting_detail">Setting Detail</string>
-    <string name="title_activity_settings">Setting</string>
+    
     <string name="library_album_label">Albums</string>
     <string name="library_artist_label">Artists</string>
     <string name="library_folder_label">Folders</string>
     <string name="library_allsongs_label">All songs</string>
     <string name="title_activity_my_library">MyLibraryActivity</string>
-    <!-- Khu vực dành cho Setting  -->
-    <string name="setting_choose_folder_title">Chọn thư mục</string>
-    <string name="setting_choose_folder_summary">Chọn thư mục chứa các bài hát, hệ thống sẽ xóa toàn bộ CSDL cũ và cập nhật lại CSDL mới</string>
+    <!-- Khu vực dành cho Setting activity  -->
+    <string name="setting_title">Setting</string>
+    <string name="setting_tab_general_title">General</string>
+    <string name="setting_tab_info_title">Readme</string>
+    <string name="setting_language_choose_title">Language</string>
+    <string name="setting_language_choose_summary">Ngôn ngữ</string>
+    <string name="setting_choose_folder_title">Choose Music Folders</string>
+    <string name="setting_choose_folder_summary">Database will be erased entirely and then replaced by new one</string>
     <string name="ctx_songs_ADD_TO_QUEUE">Add to queue</string>
-    <!-- Khu vuc setting -->
-    <string name="library_item_selector">@android:drawable/list_selector_background</string>
-	<!-- Khi vuc Library view -->
+    
+	<!-- Khi vuc Library Fragment -->
+	<string name="library_item_selector">@android:drawable/list_selector_background</string>
 	<color name="library_textColor">#000000</color>
 	<color name="library_activeSong_bgColor">#E3E3E3</color>
+	<!-- Khu vuc Main Activity  -->
+	<string name="activity_exit_title">Confirm</string>
+	<string name="activity_exit_message">Are you sure ?</string>
+	<string name="activity_exit_positive">OK</string>
+	<string name="activity_exit_negative">Cancel</string>
 </resources>
