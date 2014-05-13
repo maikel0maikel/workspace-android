@@ -15,6 +15,10 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	// so, we need to declare new Boolean varible to separate meaning
 	// of 2 concept: "no parent" and "not ready yet"
 	private Boolean parentFolder_ready = false;
+	/**
+	 * Mặc định absPath khi lưu vào CSDL, ký tự ' sẽ bị thay thế
+	 * Xem MyStringHelper để biết thêm
+	 */
 	@DatabaseField(unique = true, canBeNull = false)
 	private String absPath = null;
 	@DatabaseField(canBeNull = false)
@@ -37,19 +41,33 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 
 	}
 
-	public MyPath(String absPath) {
-		setAbsPath(absPath);
+	public MyPath(String absPath_) {
+		setAbsPath(absPath_);
 	}
-
+	/**
+	 * Sử dụng khi làm việc ngoài CSDL, có ký tự '
+	 * @return
+	 */
 	public String getAbsPath() {
 		if (getGlobalDAO().getSource() != MySource.DISK_SOURCE)// very
 																// importance
 		{
 			super.load();
 		}
-		return absPath;
+		return MyStringHelper.filterSQLSpecialAbsPath(absPath,UNKNOWN_VALUE, false);
 	}
-
+	/**
+	 * Sử dụng khi truy vấn CSDL, do không được sử dụng ký tự '
+	 * @return
+	 */
+	public String getAbsPathForSQL() {
+		if (getGlobalDAO().getSource() != MySource.DISK_SOURCE)// very
+																// importance
+		{
+			super.load();
+		}
+		return MyStringHelper.filterNullOrBlank(absPath, UNKNOWN_VALUE);
+	}
 	/**
 	 * Ham On The Fly, khong ho tro Cache
 	 * 
@@ -106,7 +124,7 @@ public class MyPath extends _MyEntityAbstract<MyPathDAO, MyPath> {
 	}
 
 	public void setAbsPath(String path) {
-		absPath = path;
+		absPath = MyStringHelper.filterSQLSpecialAbsPath(path,UNKNOWN_VALUE, true);
 	}
 
 	public void setFileName(String fileName) {

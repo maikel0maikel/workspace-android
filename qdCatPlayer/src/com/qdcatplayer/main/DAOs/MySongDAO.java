@@ -72,7 +72,7 @@ public class MySongDAO extends _MyDAOAbstract<MySongDAO, MySong> implements
 			try {
 				MyPath tmp = getGlobalDAO().getMyPathDAO().getDao()
 						.queryBuilder().where()
-						.eq(MyPath.ABSPATH_F, obj.getPath().getAbsPath())
+						.eq(MyPath.ABSPATH_F, obj.getPath().getAbsPathForSQL())
 						.queryForFirst();
 
 				// neu Path da ton tai thi bo qua insert luon

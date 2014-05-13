@@ -21,7 +21,6 @@ public class SettingTab1 extends PreferenceFragment implements
 		pref.edit()
 				.putBoolean(FolderChooserPreference.FOLDER_CHANGED_KEY, false)
 				.commit();
-		ListPreference somePreference = (ListPreference) findPreference("folderList");
 	}
 
 	@Override

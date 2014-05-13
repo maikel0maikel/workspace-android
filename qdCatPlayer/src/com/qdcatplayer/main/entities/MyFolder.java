@@ -37,16 +37,22 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 
 	}
 
-	public MyFolder(String absPath) {
+	public MyFolder(String absPath_) {
 		// TODO Auto-generated constructor stub
-		setAbsPath(absPath);
+		setAbsPath(absPath_);
 	}
 
 	public String getAbsPath() {
 		if (getGlobalDAO().getSource() != MySource.DISK_SOURCE) {
 			super.load();
 		}
-		return absPath;
+		return MyStringHelper.filterSQLSpecialAbsPath(absPath,UNKNOWN_VALUE, false);
+	}
+	public String getAbsPathForSQL() {
+		if (getGlobalDAO().getSource() != MySource.DISK_SOURCE) {
+			super.load();
+		}
+		return MyStringHelper.filterNullOrBlank(absPath,UNKNOWN_VALUE);
 	}
 
 	/**
@@ -124,7 +130,7 @@ public class MyFolder extends _MyEntityAbstract<MyFolderDAO, MyFolder> {
 	}
 
 	public void setAbsPath(String absPath_) {
-		absPath = absPath_;
+		absPath = MyStringHelper.filterSQLSpecialAbsPath(absPath_,UNKNOWN_VALUE, true);
 	}
 
 	public void setFolderName(String folderName_) {

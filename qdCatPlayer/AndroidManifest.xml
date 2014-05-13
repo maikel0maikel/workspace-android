@@ -31,15 +31,8 @@
         </activity>
         <activity
             android:name="com.qdcatplayer.main.Setting.SettingsActivity"
-            android:label="@string/title_activity_settings" 
             android:screenOrientation="portrait"
-            >
-        </activity>
-        <activity
-            android:name="com.qdcatplayer.main.GUI.MyLibraryActivity_BAK"
-            android:label="@string/title_activity_my_library" 
-            android:screenOrientation="portrait"
-            >
+            android:label="@string/setting_title" >
         </activity>
     </application>
 

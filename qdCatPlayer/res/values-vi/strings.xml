@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">qdCatPlayer</string>
+    <!--  Action bar -->
+    <string name="action_settings">Cài đặt</string>
+    <string name="action_exit">Thoát</string>
+    <!-- END -->
+    <string name="hello_world">Hello world!</string>
+
+    <color name="header_blue_bg">#7b96b8</color>
+    
+    <string name="library_album_label">Albums</string>
+    <string name="library_artist_label">Ca sỹ</string>
+    <string name="library_folder_label">Thư mục</string>
+    <string name="library_allsongs_label">Tất cả bài hát</string>
+    <!-- Khu vực dành cho Setting activity  -->
+    <string name="setting_title">Cài đặt</string>
+    <string name="setting_tab_general_title">Cấu hình chung</string>
+    <string name="setting_tab_info_title">Giới thiệu</string>
+    <string name="setting_language_choose_title">Ngôn ngữ</string>
+    <string name="setting_language_choose_summary">Language</string>
+    <string name="setting_choose_folder_title">Chọn thư mục nhạc</string>
+    <string name="setting_choose_folder_summary">CSDL cũ sẽ bị xóa và được tạo mới lại</string>
+    <string name="ctx_songs_ADD_TO_QUEUE">Thêm vào hàng đợi</string>
+    
+	<!-- Khi vuc Library Fragment -->
+	<string name="library_item_selector">@android:drawable/list_selector_background</string>
+	<color name="library_textColor">#000000</color>
+	<color name="library_activeSong_bgColor">#E3E3E3</color>
+	<!-- Khu vuc Main Activity  -->
+	<string name="activity_exit_title">Xác nhận</string>
+	<string name="activity_exit_message">Bạn có chắc muốn thoát ?</string>
+	<string name="activity_exit_positive">Có</string>
+	<string name="activity_exit_negative">Hủy</string>
+</resources>

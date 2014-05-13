@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.SelectArg;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MyPath;
 import com.qdcatplayer.main.Libraries.MyFileHelper;
@@ -51,7 +52,7 @@ public class MyPathDAO extends _MyDAOAbstract<MyPathDAO, MyPath> implements
 			// neu path co roi trong he thong thi khong add ma
 			// chi cap nhat id sang
 			MyPath tmp = getDao().queryBuilder().where()
-					.eq(MyPath.ABSPATH_F, obj.getAbsPath()).queryForFirst();
+					.eq(MyPath.ABSPATH_F, obj.getAbsPathForSQL()).queryForFirst();
 			if (tmp != null) {
 				obj.setId(tmp.getId());
 				return 1;

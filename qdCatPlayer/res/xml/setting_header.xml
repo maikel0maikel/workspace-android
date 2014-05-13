@@ -3,18 +3,15 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
-        android:icon="@drawable/ic_launcher"
         android:fragment="com.qdcatplayer.main.Setting.SettingTab1"
-        android:summary="Cấu hình chung"
-        android:title="TAB1" >
+        android:title="@string/setting_tab_general_title" >
         <extra
             android:name="settings 1"
             android:value="DIVE 1" />
     </header>
     <header
         android:fragment="com.qdcatplayer.main.Setting.SettingTab2"
-        android:summary="Thông tin hệ thống"
-        android:title="TAB2" >
+        android:title="@string/setting_tab_info_title" >
         <extra
             android:name="settings 2"
             android:value="DIVE 2" />

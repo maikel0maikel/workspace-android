@@ -1,19 +1,29 @@
 package com.qdcatplayer.main;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Stack;
+
+import org.apache.http.util.LangUtils;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -94,6 +104,8 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_layout);
+		//load language
+		loadLanguage();
 		// Step 1:prepare DB
 		MyDBManager mn = new MyDBManager();
 		mn.getHelper(this).getWritableDatabase();
@@ -601,9 +613,12 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		if (data == null) {
 			return;
 		}
-		Boolean changed = data.getBooleanExtra(
+		Boolean dbChanged = data.getBooleanExtra(
 				FolderChooserPreference.FOLDER_CHANGED_KEY, false);
-		if (changed) {
+		String langChanged = data.getStringExtra(SettingsActivity.LANG_KEY);
+		//qd continue to work here
+		//...
+		if (dbChanged) {
 			// backto root GUI first
 			callLibraryListFragment(false);
 			// switch tab
@@ -743,8 +758,41 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent setting = new Intent(this, SettingsActivity.class);
-		startActivityForResult(setting, 1);
+		if(item.getItemId()==R.id.action_settings)
+		{
+			Intent setting = new Intent(this, SettingsActivity.class);
+			startActivityForResult(setting, 1);
+		}
+		else if(item.getItemId()==R.id.action_exit)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		    builder.setTitle(getResources().getString(R.string.activity_exit_title));
+		    builder.setMessage(getResources().getString(R.string.activity_exit_message));
+
+		    builder.setPositiveButton(getResources().getString(R.string.activity_exit_positive), new DialogInterface.OnClickListener() {
+
+		        public void onClick(DialogInterface dialog, int which) {
+		            // Do nothing but close the dialog
+		            dialog.dismiss();
+		            finish();
+		        }
+
+		    });
+
+		    builder.setNegativeButton(getResources().getString(R.string.activity_exit_negative), new DialogInterface.OnClickListener() {
+
+		        @Override
+		        public void onClick(DialogInterface dialog, int which) {
+		            // Do nothing
+		            dialog.dismiss();
+		        }
+		    });
+
+		    
+		    AlertDialog alert = builder.create();
+		    alert.show();
+		}
 		return true;
 	}
 
@@ -853,5 +901,15 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	@Override
 	public void onFinishEdit(MySong input) {
 		
+	}
+	private void loadLanguage()
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String lang = prefs.getString(SettingsActivity.LANG_KEY, "en_US");//coi file setting.xml de biet key
+		Locale locale = new Locale(lang); 
+		Locale.setDefault(locale);
+		Configuration config = getResources().getConfiguration();
+		config.locale = locale;
+		getResources().updateConfiguration(config, null);
 	}
 }

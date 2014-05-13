@@ -1,14 +1,21 @@
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-            android:title="About"
-            android:summary="Đồ án môn học Android 2014.
-            Sinh viên thực hiện: Nguyễn Quốc Dũng, Nguyễn Hoàng Kim.
-            Người hướng dẫn: Thầy Cao Thái Phương Thanh"
+    <Preference
+            android:title="Giới thiệu"
+            android:summary="Đồ án môn học Android 2014 - chương trình nghe nhạc qdCatPlayer.\nSinh viên thực hiện: Nguyễn Quốc Dũng, Nguyễn Hoàng Kim.\nNgười hướng dẫn: Thầy Cao Thái Phương Thanh"
             >
-
-    </PreferenceCategory>
-
+	</Preference>
+    <Preference
+            android:title="SV thực hiện"
+            android:summary="Nguyễn Quốc Dũng, Nguyễn Hoàng Kim."
+            
+            >
+    </Preference>
+    <Preference
+            android:title="GV hướng dẫn"
+            android:summary="Người hướng dẫn: Thầy Cao Thái Phương Thanh"
+            >
+    </Preference>
 
 </PreferenceScreen>
