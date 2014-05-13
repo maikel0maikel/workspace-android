@@ -28,7 +28,7 @@
 	<!-- Khi vuc Library Fragment -->
 	<string name="library_item_selector">@android:drawable/list_selector_background</string>
 	<color name="library_textColor">#000000</color>
-	<color name="library_activeSong_bgColor">#E3E3E3</color>
+	<color name="library_activeSong_bgColor">#4c8bff</color>
 	<!-- Khu vuc Main Activity  -->
 	<string name="activity_exit_title">Confirm</string>
 	<string name="activity_exit_message">Are you sure ?</string>
