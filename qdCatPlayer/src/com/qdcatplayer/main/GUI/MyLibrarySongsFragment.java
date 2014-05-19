@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.GUI.MainPlayerFragment.MyMainPLayerDataProvider;
 import com.qdcatplayer.main.SharedAdapter.MyLibrarySongsAdapter;
@@ -33,7 +34,7 @@ public class MyLibrarySongsFragment extends ListFragment {
 	}
 
 	private MyLibrarySongItemClickListener mListener = null;
-	private MyMainPLayerDataProvider dataProvider = null;
+	private MyPlayer dataProvider = null;
 	private ArrayList<MySong> songs = null;
 
 	public MyLibrarySongsFragment() {
@@ -73,7 +74,7 @@ public class MyLibrarySongsFragment extends ListFragment {
 		super.onAttach(activity);
 
 		mListener = (MyLibrarySongItemClickListener) activity;
-		dataProvider = (MyMainPLayerDataProvider) activity;
+		dataProvider = ((MyMainPLayerDataProvider) activity).getDataProvider();
 	}
 
 	@Override

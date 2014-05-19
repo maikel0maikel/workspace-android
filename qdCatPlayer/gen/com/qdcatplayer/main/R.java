@@ -172,12 +172,13 @@ public final class R {
          */
         public static final int action_settings=0x7f070001;
         public static final int activity_exit_message=0x7f070013;
-        public static final int activity_exit_negative=0x7f070015;
-        public static final int activity_exit_positive=0x7f070014;
+        public static final int activity_exit_negative=0x7f070016;
+        public static final int activity_exit_positive=0x7f070015;
         /**  Khu vuc Main Activity  
  Khu vuc Main Activity  
          */
         public static final int activity_exit_title=0x7f070012;
+        public static final int activity_restart_message=0x7f070014;
         public static final int app_name=0x7f070000;
         public static final int ctx_songs_ADD_TO_QUEUE=0x7f070010;
         /**  END 

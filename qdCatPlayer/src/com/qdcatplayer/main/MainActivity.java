@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -29,9 +30,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
 import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
+import com.qdcatplayer.main.DAOs._GlobalDAOInterface;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.Entities.MyAlbum;
 import com.qdcatplayer.main.Entities.MyArtist;
@@ -76,29 +79,10 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		EditDialogListener, _MyLibaryDataProvider {
 	private int layout_container = R.id.layout_container;
 
-	private class Player {
-		public Player() {
-
-		}
-
-		/**
-		 * For MainPlayer Fragment
-		 */
-		public Random r_tmp = null;
-		public MediaPlayer mainMediaPlayer = null;
-		public MySong currentPlayingSong = null;
-		public ArrayList<MySong> songsList = null;
-		public Boolean shuffleMode = false;
-		public Integer repeatMode = 0;
-		public HashMap<Integer, MySong> playedList = null;
-		public Stack<MySong> playedStack = null;
-		/**
-		 * End
-		 */
-	}
+	
 
 	private ActionBar actionBar = null;
-	private Player PL = new Player();
+	private MyPlayer PL = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,18 +98,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		// Step 2:init main player
 		MySongDAO dao = new MySongDAO(this, null);
 		dao.setSource(MySource.DB_SOURCE);
-		PL.songsList = new ArrayList<MySong>();//dao.getAll();
-		LI._enqueue = PL.songsList;
-		PL.mainMediaPlayer = new MediaPlayer();
-		PL.r_tmp = new Random();
-		PL.playedList = new HashMap<Integer, MySong>();
-		PL.playedStack = new Stack<MySong>();
-		if (PL.songsList.size() > 0) {
-			PL.currentPlayingSong = null;
-			prepareMediaPlayer(PL.mainMediaPlayer, PL.currentPlayingSong);
-			PL.playedList.put(PL.songsList.indexOf(PL.currentPlayingSong), PL.currentPlayingSong);
-			PL.playedStack.push(PL.currentPlayingSong);
-		}
+		PL = new MyPlayer(null, null);
 		// Step 3: Init tab
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -141,13 +114,6 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		actionBar.addTab(mTab3);
 		// Step 4: default view
 		// callLibraryListFragment();
-	}
-
-	private void clearAllBackStack() {
-		FragmentManager fm = getFragmentManager();
-		for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
-			fm.popBackStack();
-		}
 	}
 
 	private class KimTabListener implements ActionBar.TabListener {
@@ -169,12 +135,12 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 				callLibraryListFragment(false);
 				// vi khi thoat fragment main player thi mat listener
 				// begin: register listener for update next song auto
-				PL.mainMediaPlayer
+				PL.getMediaPlayer()
 						.setOnCompletionListener(new OnCompletionListener() {
 							@Override
 							public void onCompletion(MediaPlayer mp) {
-								if (requestNextSong()) {
-									PL.mainMediaPlayer.start();
+								if (PL.requestNextSong()) {
+									PL.Play();
 								}
 							}
 						});
@@ -184,12 +150,12 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 				callLibraryEnqueueFragment(false, LI._enqueue);
 				// vi khi thoat fragment main player thi mat listener
 				// begin: register listener for update next song auto
-				PL.mainMediaPlayer
+				PL.getMediaPlayer()
 						.setOnCompletionListener(new OnCompletionListener() {
 							@Override
 							public void onCompletion(MediaPlayer mp) {
-								if (requestNextSong()) {
-									PL.mainMediaPlayer.start();
+								if (PL.requestNextSong()) {
+									PL.Play();
 								}
 							}
 						});
@@ -255,160 +221,6 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	 * item.insert();//F_Entity will auto insert and keep references } }
 	 */
 
-	@Override
-	public MediaPlayer getMediaPlayer() {
-		return PL.mainMediaPlayer;
-	}
-
-	@Override
-	public MySong getCurrentSong() {
-		return PL.currentPlayingSong;
-	}
-
-	@Override
-	public Boolean requestNextSong() {
-		Integer index = PL.songsList.indexOf(PL.currentPlayingSong);
-		// Step 1: Calculate next index
-		// check repeate mode
-		if (PL.repeatMode == 0) {
-			// check shuffle mode
-			if (PL.shuffleMode) {
-				if (PL.playedList.size() < PL.songsList.size()) {
-					while (true) {
-						index = PL.r_tmp.nextInt(PL.songsList.size());
-						if (!PL.playedList.containsKey(index)) {
-							break;
-						}
-					}
-				} else {
-					index = -1;
-				}
-			} else {
-				index++;
-				if (index >= PL.songsList.size()) {
-					index = -1;
-				}
-			}
-		} else if (PL.repeatMode == 1) {
-
-		} else if (PL.repeatMode == 2) {
-			if (PL.shuffleMode) {
-				if (PL.playedList.size() >= PL.songsList.size()) {
-					PL.playedList.clear();
-					// playedStack.clear(); to reduce memory
-				}
-
-				while (true) {
-					index = PL.r_tmp.nextInt(PL.songsList.size());
-					if (!PL.playedList.containsKey(index)) {
-						break;
-					}
-				}
-			} else {
-				index++;
-				if (index >= PL.songsList.size()) {
-					index = 0;
-				}
-			}
-		}
-		// final
-		if (index >= 0) {
-			PL.currentPlayingSong = PL.songsList.get(index);
-			PL.playedStack.push(PL.currentPlayingSong);
-			PL.playedList.put(index, PL.currentPlayingSong);
-			return prepareMediaPlayer(PL.mainMediaPlayer, PL.currentPlayingSong);
-		}
-		return false;
-	}
-
-	@Override
-	public Boolean requestPrevSong() {
-		if (PL.repeatMode == 1) {
-			try {
-				return prepareMediaPlayer(PL.mainMediaPlayer,
-						PL.currentPlayingSong);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else if (PL.playedStack.size() >= 2) {
-			try {
-				PL.playedList
-						.remove(PL.songsList.indexOf(PL.playedStack.pop()));
-				PL.currentPlayingSong = PL.playedStack.lastElement();
-				return prepareMediaPlayer(PL.mainMediaPlayer,
-						PL.currentPlayingSong);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else if(PL.playedStack.size() >= 1)
-		{
-			try {
-				PL.currentPlayingSong = PL.playedStack.pop();
-				PL.playedList
-				.remove(PL.songsList.indexOf(PL.playedStack.pop()));
-				return prepareMediaPlayer(PL.mainMediaPlayer,
-						PL.currentPlayingSong);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * final method to get media player ready before fragment can call
-	 * 
-	 * @param player
-	 * @param obj
-	 * @return
-	 */
-	@Override
-	public Boolean prepareMediaPlayer(MediaPlayer player, MySong obj) {
-		if (player == null || obj == null) {
-			return false;
-		}
-		try {
-			player.reset();
-			player.setDataSource(obj.getPath().getAbsPath());
-			player.prepare();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	@Override
-	public Boolean setRepeat(Integer mode) {
-		PL.repeatMode = mode;
-		return true;
-	}
-
-	@Override
-	public Boolean setShuffle(Boolean mode) {
-		PL.shuffleMode = mode;
-		return true;
-	}
-
-	@Override
-	public Boolean getShuffle() {
-		return PL.shuffleMode;
-	}
-
-	@Override
-	public Integer getRepeat() {
-		return PL.repeatMode;
-	}
-
-	@Override
-	public Integer getPLayedCount() {
-		return PL.playedList.size();
-	}
-
-	@Override
-	public Integer getTotalCount() {
-		return PL.songsList.size();
-	}
 
 	/**
 	 * add to PL.songList
@@ -420,7 +232,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 			LI._enqueue.add(obj);
 		}
 		// move enqueue to PL list
-		PL.songsList = LI._enqueue;
+		PL.setSongsList(LI._enqueue);
 	}
 
 	/**
@@ -615,7 +427,38 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		}
 		Boolean dbChanged = data.getBooleanExtra(
 				FolderChooserPreference.FOLDER_CHANGED_KEY, false);
-		String langChanged = data.getStringExtra(SettingsActivity.LANG_KEY);
+		Boolean langChanged = data.getBooleanExtra(SettingsActivity.LANG_CHANGED_KEY, false);
+		if(langChanged)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		    builder.setTitle(getResources().getString(R.string.activity_exit_title));
+		    builder.setMessage(getResources().getString(R.string.activity_restart_message));
+
+		    builder.setPositiveButton(getResources().getString(R.string.activity_exit_positive), new DialogInterface.OnClickListener() {
+
+		        public void onClick(DialogInterface dialog, int which) {
+		            // Do nothing but close the dialog
+		            dialog.dismiss();
+		            restart();
+		        }
+
+		    });
+
+		    builder.setNegativeButton(getResources().getString(R.string.activity_exit_negative), new DialogInterface.OnClickListener() {
+
+		        @Override
+		        public void onClick(DialogInterface dialog, int which) {
+		            // Do nothing
+		            dialog.dismiss();
+		        }
+		    });
+
+		    
+		    AlertDialog alert = builder.create();
+		    alert.show();
+		    return;
+		}
 		//qd continue to work here
 		//...
 		if (dbChanged) {
@@ -627,6 +470,23 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 			resetLibraryDBState();
 		}
 		return;
+	}
+	
+	private void exit() {
+		//move to library fragment first
+        callLibraryListFragment(true);
+        //release Media Player
+        PL.release();
+        //exit activity
+        finish();
+	}
+	private void restart() {
+		//move to library fragment first
+        callLibraryListFragment(true);
+        //release Media Player
+        PL.release();
+        //exit activity
+        finish();
 	}
 
 	protected void InitMyLibrary() {
@@ -743,15 +603,8 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		// set enqueue
 		LI._enqueue = playlist;
 		// set player list from enqueue
-		PL.songsList = LI._enqueue;
-		PL.currentPlayingSong = current;
-		// reset played and stack
-		PL.playedList = new HashMap<Integer, MySong>();
-		PL.playedStack = new Stack<MySong>();
-		PL.playedList.put(PL.songsList.indexOf(PL.currentPlayingSong),
-				PL.currentPlayingSong);
-		prepareMediaPlayer(PL.mainMediaPlayer, PL.currentPlayingSong);
-		PL.mainMediaPlayer.start();// force to play right now
+		PL.setNew(current, playlist);
+		PL.Play();
 		// call fragment main player
 		callMainPlayerFragment(true);
 	}
@@ -775,7 +628,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		        public void onClick(DialogInterface dialog, int which) {
 		            // Do nothing but close the dialog
 		            dialog.dismiss();
-		            finish();
+		            exit();
 		        }
 
 		    });
@@ -804,27 +657,117 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		// may be serialize when passing bundle to fragment from this activity
 		// fixed by use another approach
 		super.onSaveInstanceState(outState);
-
 	}
-
+	private void resetLibraryDBCache()
+	{
+		//provider
+		if(LI._foldersProvider!=null)
+		{
+			for(MyFolder item:LI._foldersProvider)
+			{
+				item.reset();
+			}
+		}
+		if(LI._albumsProvider!=null)
+		{
+			for(MyAlbum item:LI._albumsProvider)
+			{
+				item.reset();
+			}
+		}
+		if(LI._artistsProvider!=null)
+		{
+			for(MyArtist item:LI._artistsProvider)
+			{
+				item.reset();
+			}
+		}
+		if(LI._songsProvider!=null)
+		{
+			for(MySong item:LI._songsProvider)
+			{
+				item.reset();
+			}
+		}
+		if(LI._playListsProvider!=null)
+		{
+			for(MyPlayList item:LI._playListsProvider)
+			{
+				item.reset();
+			}
+		}
+		//All
+		if(LI._foldersAll!=null)
+		{
+			for(MyFolder item:LI._foldersAll)
+			{
+				item.reset();
+			}
+		}
+		if(LI._albumsAll!=null)
+		{
+			for(MyAlbum item:LI._albumsAll)
+			{
+				item.reset();
+			}
+		}
+		if(LI._artistsAll!=null)
+		{
+			for(MyArtist item:LI._artistsAll)
+			{
+				item.reset();
+			}
+		}
+		if(LI._songsAll!=null)
+		{
+			for(MySong item:LI._songsAll)
+			{
+				item.reset();
+			}
+		}
+		if(LI._playListsAll!=null)
+		{
+			for(MyPlayList item:LI._playListsAll)
+			{
+				item.reset();
+			}
+		}
+		//enqueue
+		if(LI._enqueue!=null)
+		{
+			for(MySong item:LI._enqueue)
+			{
+				item.reset();
+			}
+		}
+		//playlist
+		if(PL.getSongsList()!=null)
+		{
+			for(MySong item:PL.getSongsList())
+			{
+				item.reset();
+			}
+		}
+	}
 	/**
 	 * Xoa tat ca cahed, release DB, va sau do tao moi lai
 	 */
 	private void resetLibraryDBState() {
-		LI._foldersProvider = null;
-		LI._albumsProvider = null;
-		LI._artistsProvider = null;
-		LI._songsProvider = null;
-		LI._playListsProvider = null;
-
-		LI._foldersAll = null;
-		LI._albumsAll = null;
-		LI._artistsAll = null;
-		LI._songsAll = null;
-		LI._playListsAll = null;
+		//Provider
+		LI._albumsProvider=null;
+		LI._artistsProvider=null;
+		LI._foldersProvider=null;
+		LI._playListsProvider=null;
+		LI._songsProvider=null;
+		//All
+		LI._albumsAll=null;
+		LI._artistsAll=null;
+		LI._foldersAll=null;
+		LI._playListsAll=null;
+		LI._songsAll=null;
+		
 		LI._enqueue = null;
-		// PLAYER
-
+		
 		if (LI._gDAOs != null) {
 			LI._gDAOs.release();
 			LI._gDAOs = null;
@@ -859,10 +802,9 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 									@Override
 									public void onFinishEdit(MySong input) {
-										// TODO Auto-generated method stub
-										Toast.makeText(getApplicationContext(),
-												input.getTitle(),
-												Toast.LENGTH_LONG).show();
+										Toast.makeText(getApplicationContext(), "Done", 1000).show();
+										//reset DB cache
+										resetLibraryDBCache();
 									}
 								});
 						// editTag_ctx_dialog = new TestCtxDialog(_getContext(),
@@ -911,5 +853,10 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		Configuration config = getResources().getConfiguration();
 		config.locale = locale;
 		getResources().updateConfiguration(config, null);
+	}
+
+	@Override
+	public MyPlayer getDataProvider() {
+		return PL;
 	}
 }

@@ -189,7 +189,7 @@ public class MyLibraryFoldersFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(android.R.layout.list_content, container,
+		View v = inflater.inflate(R.layout.library_listview, container,
 				false);// use common "list_content" layout
 		return v;
 	}

@@ -22,11 +22,13 @@ import com.qdcatplayer.main.R;
  */
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
+	private String prevLang = "en_US";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setTitle(getResources().getString(R.string.setting_title));
+		prevLang = PreferenceManager.getDefaultSharedPreferences(this).getString(LANG_KEY, "en_US");
 	}
 
 	@Override
@@ -47,6 +49,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		super.onDestroy();
 	}
 	public static final String LANG_KEY = "languageList";
+	public static final String LANG_CHANGED_KEY = "languageChanged";
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
 		// TODO Auto-generated method stub
@@ -56,13 +59,13 @@ public class SettingsActivity extends PreferenceActivity implements
 				.getBoolean(FolderChooserPreference.FOLDER_CHANGED_KEY, false);
 		String langChanged = PreferenceManager.getDefaultSharedPreferences(this)
 				.getString(LANG_KEY, "en_US");
-		
 		//cho activity biet la DB da thay doi, can refresh
 		setResult(
 				RESULT_OK,
 				getIntent().putExtra(
 						FolderChooserPreference.FOLDER_CHANGED_KEY, dbChanged)
 						.putExtra(LANG_KEY, langChanged)
+						.putExtra(LANG_CHANGED_KEY, !langChanged.equals(prevLang))
 				);
 		return;
 	}

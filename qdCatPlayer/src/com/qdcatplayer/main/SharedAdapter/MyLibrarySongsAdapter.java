@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.GUI.MainPlayerFragment.MyMainPLayerDataProvider;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
@@ -76,11 +77,11 @@ public class MyLibrarySongsAdapter extends ArrayAdapter<MySong> {
 
 	private MyLibrarySongItemClickListener mListener = null;
 	private ArrayList<MySong> songs = null;
-	private MyMainPLayerDataProvider dataProvider = null;
+	private MyPlayer dataProvider = null;
 
 	public MyLibrarySongsAdapter(Context context, int textViewResourceId,
 			ArrayList<MySong> objects, MyLibrarySongItemClickListener listener,
-			MyMainPLayerDataProvider dataProvider) {
+			MyPlayer dataProvider) {
 
 		super(context, textViewResourceId, objects);
 		songs = objects;
