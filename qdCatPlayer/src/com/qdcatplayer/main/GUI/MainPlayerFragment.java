@@ -16,72 +16,31 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.qdcatplayer.main.R;
+import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
 import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.Libraries.PlayerUtilities;
 
 public abstract class MainPlayerFragment extends Fragment {
 	public interface MyMainPLayerDataProvider {
-		public MySong getCurrentSong();
-
-		public Integer getPLayedCount();
-
-		public Integer getTotalCount();
-
-		public MediaPlayer getMediaPlayer();
-
-		public Boolean prepareMediaPlayer(MediaPlayer player, MySong obj);
-
-		/**
-		 * bai hat se khong duoc phat cho toi khi dieu khien MediaPlayer
-		 * 
-		 * @return
-		 */
-		public Boolean requestNextSong();
-
-		/**
-		 * bai hat se khong duoc phat cho toi khi dieu khien MediaPlayer
-		 * 
-		 * @return
-		 */
-		public Boolean requestPrevSong();
-
-		/**
-		 * 
-		 * @param mode
-		 *            0:khong repeat, 1: repeat 1 bai, 2: repeat toan bo
-		 * @return
-		 */
-		public Boolean setRepeat(Integer mode);
-
-		/**
-		 * 
-		 * @param mode
-		 *            true: on, false: off
-		 * @return
-		 */
-		public Boolean setShuffle(Boolean mode);
-
-		public Boolean getShuffle();
-
-		public Integer getRepeat();
+		public MyPlayer getDataProvider();
 	}
 
 	private class ShowProgressTask extends AsyncTask<Void, Integer, Integer> {
 		@Override
 		protected Integer doInBackground(Void... params) {
-			if (mp == null) {
+			if (!dataProvider.isReady()) {
 				return -1;
 			}
-			Integer b = mp.getDuration();
+			Integer b = dataProvider.getDuration();
 			Integer a = 0;
 			// TODO Auto-generated method stub
-			while (mp.getCurrentPosition() <= b) {
+			while (dataProvider.getCurrentPosition() <= b) {
 				if (isCancelled()) {
 					break;// dead code but still here for sure
 				}
-				a = mp.getCurrentPosition();
+				a = dataProvider.getCurrentPosition();
 				publishProgress(a, b);
-				if (!mp.isPlaying())// importance
+				if (!dataProvider.isPlaying())// importance
 				{
 					break;
 				}
@@ -134,8 +93,7 @@ public abstract class MainPlayerFragment extends Fragment {
 	/*
 	 * Listener to Activity
 	 */
-	private MyMainPLayerDataProvider dataProvider = null;
-	private MediaPlayer mp;
+	private MyPlayer dataProvider = null;
 	private SeekBar pro_bar;
 	private TextView songCurrentDurationLabel;
 	private TextView songNameLabel;
@@ -165,7 +123,7 @@ public abstract class MainPlayerFragment extends Fragment {
 	 * Update textView, SongName, Artist Name,... (get data from provider)
 	 */
 	private void updateCurrentSongInfoToView() {
-		if (dataProvider.getCurrentSong() == null) {
+		if (!dataProvider.isReady()) {
 			return;
 		}
 		// update total time label
@@ -177,7 +135,7 @@ public abstract class MainPlayerFragment extends Fragment {
 		// update artist label
 		artistLabel
 				.setText(dataProvider.getCurrentSong().getArtist().getName());
-		songIndex.setText(dataProvider.getPLayedCount() + "/"
+		songIndex.setText(dataProvider.getCurrentIndex()+1 + "/"
 				+ dataProvider.getTotalCount());
 	}
 
@@ -187,15 +145,11 @@ public abstract class MainPlayerFragment extends Fragment {
 	 */
 	private void loadSavedState() {
 		// Step 1:load song info
-		mp = dataProvider.getMediaPlayer();// very importance
-		if (mp == null) {
-			return;// fail here
-		}
-
+		dataProvider = ((MyMainPLayerDataProvider)getActivity()).getDataProvider();
 		updateCurrentSongInfoToView();
 		// Step2: load current seekbar position (update immedialy if isPlaying)
 		// create new instance of Propressbar Asynctask
-		if(dataProvider.getCurrentSong()!=null)
+		if(dataProvider.isReady())
 		{
 			task = initNewProgressTask(task);
 			task.execute();
@@ -203,21 +157,21 @@ public abstract class MainPlayerFragment extends Fragment {
 		// Step 3:load current pause/play
 		// load PLay/pause state
 		try {
-			setPlayButton(btn_play, !mp.isPlaying());
+			setPlayButton(btn_play, !dataProvider.isPlaying());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// load shuffle state
-		setShuffleButton(btn_shuffle, dataProvider.getShuffle());
+		setShuffleButton(btn_shuffle, dataProvider.getShuffleMode());
 		// load repeat state
-		setRepeatButton(btn_repeat, dataProvider.getRepeat());
+		setRepeatButton(btn_repeat, dataProvider.getRepeatMode());
 
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		dataProvider = (MyMainPLayerDataProvider) activity;
+		dataProvider = ((MyMainPLayerDataProvider)activity).getDataProvider();
 	}
 
 	@Override
@@ -250,7 +204,7 @@ public abstract class MainPlayerFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				Boolean isPlaying = mp.isPlaying();
+				Boolean isPlaying = dataProvider.isPlaying();
 				if (isPlaying) {
 					pauseMediaPLayer();
 				} else {
@@ -291,15 +245,15 @@ public abstract class MainPlayerFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				dataProvider
-						.setRepeat(switchRepeatButtonNextState((ImageButton) v));
+						.setRepeatMode(switchRepeatButtonNextState((ImageButton) v));
 			}
 		});
 		btn_shuffle.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				dataProvider.setShuffle(setShuffleButton((ImageButton) v,
-						!dataProvider.getShuffle()));
+				dataProvider.setShuffleMode(setShuffleButton((ImageButton) v,
+						!dataProvider.getShuffleMode()));
 			}
 		});
 		// Listeners control seekbar when click on
@@ -321,7 +275,7 @@ public abstract class MainPlayerFragment extends Fragment {
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
 				// mHandler.removeCallbacks(mUpdateTimeTask);
-				int totalDuration = mp.getDuration();
+				int totalDuration = dataProvider.getDuration();
 				int currentPosition = (int) ((((double) seekBar.getProgress()) / 100) * totalDuration);
 				if (currentPosition >= totalDuration) {
 					currentPosition = totalDuration - 1;
@@ -331,7 +285,7 @@ public abstract class MainPlayerFragment extends Fragment {
 		});
 
 		// set listener for finish player
-		mp.setOnCompletionListener(new OnCompletionListener() {
+		dataProvider.getMediaPlayer().setOnCompletionListener(new OnCompletionListener() {
 
 			@Override
 			public void onCompletion(MediaPlayer mp) {
@@ -423,7 +377,7 @@ public abstract class MainPlayerFragment extends Fragment {
 	}
 
 	private void nextAndPlayMediaPlayer() {
-		if (mp == null) {
+		if (!dataProvider.isReady()) {
 			return;
 		}
 		destroyProgressTask(task);
@@ -438,7 +392,7 @@ public abstract class MainPlayerFragment extends Fragment {
 	}
 
 	private void prevAndPlayMediaPlayer() {
-		if (mp == null) {
+		if (!dataProvider.isReady()) {
 			return;
 		}
 		destroyProgressTask(task);
@@ -453,13 +407,13 @@ public abstract class MainPlayerFragment extends Fragment {
 	}
 
 	private void pauseMediaPLayer() {
-		if (mp == null || dataProvider.getCurrentSong() == null) {
+		if (!dataProvider.isReady()) {
 			return;
 		}
 		destroyProgressTask(task);
 		try {
-			if (mp.isPlaying()) {
-				mp.pause();
+			if (dataProvider.isPlaying()) {
+				dataProvider.Pause();
 				setPlayButton(btn_play, true);
 			}
 		} catch (Exception e) {
@@ -468,11 +422,11 @@ public abstract class MainPlayerFragment extends Fragment {
 	}
 
 	private void playMediaPLayer() {
-		if (mp == null || dataProvider.getCurrentSong() == null) {
+		if (!dataProvider.isReady()) {
 			return;
 		}
 		try {
-			mp.start();
+			dataProvider.Play();
 			/*
 			 * update view
 			 */
@@ -495,12 +449,12 @@ public abstract class MainPlayerFragment extends Fragment {
 	 *            milisec
 	 */
 	protected void seekMediaPlayer(int currentPosition) {
-		if (mp == null || dataProvider.getCurrentSong()==null) {
+		if (!dataProvider.isReady()) {
 			return;
 		}
 
 		// forward or backward to certain seconds
-		mp.seekTo(currentPosition);
+		dataProvider.seekTo(currentPosition);
 		// update timer progress again
 		// kim: su dung theo code mau
 		// updateProgressBar();
