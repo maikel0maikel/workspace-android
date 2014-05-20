@@ -28,6 +28,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
@@ -88,8 +89,9 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR);
 		setContentView(R.layout.main_layout);
-		//
+		
 		//load language
 		loadLanguage();
 		// Step 1:prepare DB
