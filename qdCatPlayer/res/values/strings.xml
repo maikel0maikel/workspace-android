@@ -32,7 +32,7 @@
 	<!-- Khu vuc Main Activity  -->
 	<string name="activity_exit_title">Confirm</string>
 	<string name="activity_exit_message">Are you sure ?</string>
-	<string name="activity_restart_message">Language will change next app start, restart now ?</string>
+	<string name="activity_restart_message">Language will be applied in next app start!</string>
 	<string name="activity_exit_positive">OK</string>
 	<string name="activity_exit_negative">Cancel</string>
 </resources>

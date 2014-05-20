@@ -16,11 +16,7 @@
         <item >vi_VN</item>
         <item >en_US</item>
     </string-array>
-    <array name="imageValues">
-		<item>@drawable/ic_launcher</item>
-		<item>@drawable/ic_launcher</item>
-		<item>@drawable/ic_launcher</item>
-	</array>
+    
     <string-array name="library_item_id_array">
         <item >ALLSONGS_ITEM</item>
         <item >ALBUMS_ITEM</item>
@@ -35,6 +31,13 @@
         <item >Thư mục</item>
         <item >Hàng đợi</item>
     </string-array>
+    <string-array name="library_item_icon_array">
+        <item>@drawable/all_song_icon</item>
+        <item>@drawable/album_icon</item>
+        <item>@drawable/artist_icon</item>
+        <item>@drawable/folder_icon</item>
+        <item>@drawable/enqueue_icon</item>
+    </string-array>
     <string-array name="library_ctx_songs_id_array">
         <item >ADD_TO_ENQUEUE</item>
         <item >EDIT_TAG</item>
@@ -42,6 +45,13 @@
     <string-array name="library_ctx_songs_value_array">
         <item >Thêm vào hàng đợi</item>
         <item >Chỉnh sửa TAG nhạc</item>
+    </string-array>
+    
+    <string-array name="library_ctx_folders_id_array">
+        <item >ADD_TO_ENQUEUE</item>
+    </string-array>
+    <string-array name="library_ctx_folders_value_array">
+        <item >Thêm vào hàng đợi</item>
     </string-array>
     
 </resources>

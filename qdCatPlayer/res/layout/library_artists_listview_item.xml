@@ -7,22 +7,36 @@
     android:background="@string/library_item_selector"
     >
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:gravity="center_vertical"
         >
-		
-        <TextView
-            android:id="@+id/artist_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Default"
-            android:textSize="18sp"
-            android:textColor="@color/library_textColor"
-            />
-        
+
+    	<ImageView
+    	    android:id="@+id/artist_icon"
+    	    android:layout_width="40dp"
+    	    android:layout_height="40dp"
+    	    android:src="@drawable/artist_icon" />
+	    <LinearLayout
+	        android:orientation="vertical"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        
+	        android:gravity="center_vertical"
+	        >
+			
+	        <TextView
+	            android:id="@+id/artist_name"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="Default"
+	            android:textSize="18sp"
+	            android:textColor="@color/library_textColor"
+	            />
+	        
+	    </LinearLayout>
     </LinearLayout>
     
     <LinearLayout

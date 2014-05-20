@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.qdcatplayer.main.R;
@@ -28,22 +29,33 @@ public class MyLibraryFoldersFragment extends ListFragment {
 	public interface MyLibraryFolderItemClickListener {
 		public void onLibraryFolderItemClick(MyFolder current,
 				ArrayList<MyFolder> folders);
+		public void onLibraryFolderItemLongClick(MyFolder current,
+				ArrayList<MyFolder> folders);
 	}
 
 	private class MyLibraryFoldersAdapter extends ArrayAdapter<MyFolder> {
 		private class ViewHolder {
 			private MyFolder folder = null;
 			private TextView tv_name = null;
+			private ImageView img = null;
+			public ImageView getImg() {
+				return img;
+			}
+
+			public void setImg(ImageView img) {
+				this.img = img;
+			}
+
 			private TextView tv_absPath = null;
 			private TextView tv_totalSongs = null;
 
 			public ViewHolder(MyFolder folder, TextView tv_name,
-					TextView tv_absPath, TextView tv_totalSongs) {
+					TextView tv_absPath, TextView tv_totalSongs, ImageView img) {
 				this.tv_name = tv_name;
 				this.tv_absPath = tv_absPath;
 				this.tv_totalSongs = tv_totalSongs;
 				this.folder = folder;
-
+				this.img=img;
 			}
 
 			public MyFolder getFolder() {
@@ -97,6 +109,7 @@ public class MyLibraryFoldersFragment extends ListFragment {
 			TextView tv_absPath;
 			TextView tv_totalSongs;
 			ViewHolder holder;
+			ImageView img;
 			MyFolder folder = folders.get(position);
 			if (convertView == null) {
 				/*
@@ -116,25 +129,40 @@ public class MyLibraryFoldersFragment extends ListFragment {
 						mListener.onLibraryFolderItemClick(current, folders);
 					}
 				});
+				convertView.setOnLongClickListener(new View.OnLongClickListener() {
+					
+					@Override
+					public boolean onLongClick(View v) {
+						ViewHolder holder = (ViewHolder) v.getTag();
+						MyFolder current = holder.getFolder();
+						mListener.onLibraryFolderItemLongClick(current, folders);
+						return true;
+					}
+				});
+				
 				tv_name = (TextView) convertView.findViewById(R.id.folder_name);
+				img = (ImageView) convertView.findViewById(R.id.folder_icon);
 				tv_absPath = (TextView) convertView
 						.findViewById(R.id.folder_absPath);
 				tv_totalSongs = (TextView) convertView
 						.findViewById(R.id.folder_totalSongs);
 
 				holder = new ViewHolder(folder, tv_name, tv_absPath,
-						tv_totalSongs);
+						tv_totalSongs, img);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 				tv_name = holder.getTv_name();
 				tv_absPath = holder.getTv_absPath();
 				tv_totalSongs = holder.getTv_totalSongs();
+				img=holder.getImg();
 				holder.setFolder(folder);
 			}
 			tv_name.setText(folder.getFolderName());
 			tv_totalSongs.setText(folder.getAllRecursiveSongs().size()
 					+ " [songs]");
 			tv_absPath.setText(folder.getAbsPath());
+			//img.setImageResource(R.drawable.folder_icon);
+			
 			convertView.setTag(holder);
 			return convertView;
 		}
@@ -165,6 +193,12 @@ public class MyLibraryFoldersFragment extends ListFragment {
 					public void onLibraryFolderItemClick(MyFolder current,
 							ArrayList<MyFolder> folders_) {
 						mListener.onLibraryFolderItemClick(current, folders_);
+					}
+
+					@Override
+					public void onLibraryFolderItemLongClick(MyFolder current,
+							ArrayList<MyFolder> folders) {
+						mListener.onLibraryFolderItemLongClick(current, folders);
 					}
 
 				});

@@ -28,6 +28,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
@@ -59,6 +60,7 @@ import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickLis
 import com.qdcatplayer.main.GUI._MyLibaryDataProvider;
 import com.qdcatplayer.main.GUI.CtxDialog.EditTagDialog;
 import com.qdcatplayer.main.GUI.CtxDialog.EditTagDialog.EditDialogListener;
+import com.qdcatplayer.main.GUI.CtxDialog.MyLibraryFoldersCtxDialog;
 import com.qdcatplayer.main.GUI.CtxDialog.MyLibrarySongsCtxDialog;
 import com.qdcatplayer.main.Setting.FolderChooserPreference;
 import com.qdcatplayer.main.Setting.SettingsActivity;
@@ -87,7 +89,9 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR);
 		setContentView(R.layout.main_layout);
+		
 		//load language
 		loadLanguage();
 		// Step 1:prepare DB
@@ -234,7 +238,6 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		// move enqueue to PL list
 		PL.setSongsList(LI._enqueue);
 	}
-
 	/**
 	 * =============================================================== Khu vuc
 	 * cua Library
@@ -440,7 +443,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		        public void onClick(DialogInterface dialog, int which) {
 		            // Do nothing but close the dialog
 		            dialog.dismiss();
-		            restart();
+		            //restart();
 		        }
 
 		    });
@@ -858,5 +861,27 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	@Override
 	public MyPlayer getDataProvider() {
 		return PL;
+	}
+	
+	private MyLibraryFoldersCtxDialog folders_ctx_dialog=null;
+	@Override
+	public void onLibraryFolderItemLongClick(MyFolder current,
+			ArrayList<MyFolder> folders) {
+		folders_ctx_dialog = new MyLibraryFoldersCtxDialog(this, current,
+				new MyLibraryFoldersCtxDialog.MyLibraryFoldersCtxItemListener() {
+
+					@Override
+					public void OnLibraryFoldersCtxClick_ADD_TO_ENQUEUE(MyFolder obj) {
+						Log.w("qd", "add to enqueue clicked"
+								+ getClass().getName());
+						for(MySong item:obj.getChildSongs())
+						{
+							addToSongList(item);
+						}
+						folders_ctx_dialog.dismiss();
+					}
+				});
+		folders_ctx_dialog.setTitle("Context dialog");
+		folders_ctx_dialog.show();
 	}
 }
