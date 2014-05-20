@@ -11,7 +11,6 @@ public final class R {
     public static final class array {
         public static final int example_entries=0x7f050000;
         public static final int example_values=0x7f050001;
-        public static final int imageValues=0x7f05000b;
         public static final int language_entries=0x7f050002;
         public static final int language_values=0x7f050003;
         public static final int library_ctx_folders_id_array=0x7f050009;
@@ -231,21 +230,9 @@ public final class R {
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
-
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
          */
         public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
- Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f090001;
     }
