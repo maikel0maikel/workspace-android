@@ -34,6 +34,9 @@
 	            android:text="Default"
 	            android:textSize="18sp"
 	            android:textColor="@color/library_textColor"
+	            android:ellipsize="end"
+            	android:maxEms="10"
+				android:maxLines="1"
 	            />
 	        
 	    </LinearLayout>
