@@ -88,6 +88,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_layout);
+		//
 		//load language
 		loadLanguage();
 		// Step 1:prepare DB
