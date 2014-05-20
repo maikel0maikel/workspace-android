@@ -131,8 +131,10 @@ public abstract class MainPlayerFragment extends Fragment {
 				.milliSecondsToTimer(dataProvider.getCurrentSong()
 						.getDuration()));
 		// update song name label
+		songNameLabel.setSelected(true);
 		songNameLabel.setText(dataProvider.getCurrentSong().getTitle());
 		// update artist label
+		artistLabel.setSelected(true);
 		artistLabel
 				.setText(dataProvider.getCurrentSong().getArtist().getName());
 		songIndex.setText(dataProvider.getCurrentIndex()+1 + "/"

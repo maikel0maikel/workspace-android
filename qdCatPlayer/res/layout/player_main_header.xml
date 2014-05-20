@@ -13,7 +13,16 @@
         android:gravity="center_horizontal"
         android:text="Artist"
         android:textColor="@android:color/white"
-        android:textSize="20dp" />
+        android:textSize="20dp" 
+	    android:lines="1"
+	    android:ellipsize="marquee"
+	    android:marqueeRepeatLimit="marquee_forever"
+	    android:fadingEdge="horizontal"
+	    android:scrollHorizontally="true"
+	    android:singleLine="true" 
+	    android:focusableInTouchMode="true"
+	    android:focusable="true"
+        />
 
     <TextView
         android:id="@+id/textView_SongName"
@@ -22,6 +31,15 @@
         android:gravity="center_horizontal"
         android:textSize="27dp"
         android:text="Song name"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+	      android:lines="1"
+	    android:ellipsize="marquee"
+	    android:fadingEdge="horizontal"
+	    android:marqueeRepeatLimit="marquee_forever"
+	    android:scrollHorizontally="true"
+	    android:singleLine="true" 
+	    android:focusableInTouchMode="true"
+	    android:focusable="true"
+      />
 
 </LinearLayout>
