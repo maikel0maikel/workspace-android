@@ -2,9 +2,11 @@ package com.qdcatplayer.main.GUI;
 
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,7 +104,8 @@ public class MyLibraryListFragment extends ListFragment {
 			}
 			// set value
 			tv.setText(items[position]);
-
+			img.setImageResource(icons.getResourceId(position, 0));
+			
 			convertView.setTag(holder);
 			return convertView;
 		}
@@ -116,16 +119,18 @@ public class MyLibraryListFragment extends ListFragment {
 	public HashMap<String, String> map = null;
 	private MyLibraryClickListener mListener = null;
 	public String[] values = null;
-
+	private TypedArray icons = null;
 	public MyLibraryListFragment() {
 
 	}
 
+	
 	private void loadResource() {
 		ids = getResources().getStringArray(R.array.library_item_id_array);
 		values = getResources()
 				.getStringArray(R.array.library_item_value_array);
-
+		icons = getResources().obtainTypedArray(R.array.library_item_icon_array);
+		
 		map = new HashMap<String, String>();
 		for (int i = 0; i < ids.length; i++) {
 			map.put(ids[i], values[i]);

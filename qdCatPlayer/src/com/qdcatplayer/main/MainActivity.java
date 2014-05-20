@@ -59,6 +59,7 @@ import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickLis
 import com.qdcatplayer.main.GUI._MyLibaryDataProvider;
 import com.qdcatplayer.main.GUI.CtxDialog.EditTagDialog;
 import com.qdcatplayer.main.GUI.CtxDialog.EditTagDialog.EditDialogListener;
+import com.qdcatplayer.main.GUI.CtxDialog.MyLibraryFoldersCtxDialog;
 import com.qdcatplayer.main.GUI.CtxDialog.MyLibrarySongsCtxDialog;
 import com.qdcatplayer.main.Setting.FolderChooserPreference;
 import com.qdcatplayer.main.Setting.SettingsActivity;
@@ -235,7 +236,6 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		// move enqueue to PL list
 		PL.setSongsList(LI._enqueue);
 	}
-
 	/**
 	 * =============================================================== Khu vuc
 	 * cua Library
@@ -859,5 +859,27 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	@Override
 	public MyPlayer getDataProvider() {
 		return PL;
+	}
+	
+	private MyLibraryFoldersCtxDialog folders_ctx_dialog=null;
+	@Override
+	public void onLibraryFolderItemLongClick(MyFolder current,
+			ArrayList<MyFolder> folders) {
+		folders_ctx_dialog = new MyLibraryFoldersCtxDialog(this, current,
+				new MyLibraryFoldersCtxDialog.MyLibraryFoldersCtxItemListener() {
+
+					@Override
+					public void OnLibraryFoldersCtxClick_ADD_TO_ENQUEUE(MyFolder obj) {
+						Log.w("qd", "add to enqueue clicked"
+								+ getClass().getName());
+						for(MySong item:obj.getChildSongs())
+						{
+							addToSongList(item);
+						}
+						folders_ctx_dialog.dismiss();
+					}
+				});
+		folders_ctx_dialog.setTitle("Context dialog");
+		folders_ctx_dialog.show();
 	}
 }
