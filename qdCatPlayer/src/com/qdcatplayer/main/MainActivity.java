@@ -131,12 +131,12 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			if (tab.getText().equals("main_player")) {
 				// Step 2
-				callMainPlayerFragment(false);
+				callMainPlayerFragment(true);
 				// khong can dang ky listener khi choi xong
 				// ben trong fragment no tu dang ky roi
 
 			} else if (tab.getText().equals("library")) {
-				callLibraryListFragment(false);
+				callLibraryListFragment(true);
 				// vi khi thoat fragment main player thi mat listener
 				// begin: register listener for update next song auto
 				PL.getMediaPlayer()
@@ -151,7 +151,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 				// end
 
 			} else if (tab.getText().equals("list")) {
-				callLibraryEnqueueFragment(false, LI._enqueue);
+				callLibraryEnqueueFragment(true, LI._enqueue);
 				// vi khi thoat fragment main player thi mat listener
 				// begin: register listener for update next song auto
 				PL.getMediaPlayer()
@@ -872,9 +872,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 					@Override
 					public void OnLibraryFoldersCtxClick_ADD_TO_ENQUEUE(MyFolder obj) {
-						Log.w("qd", "add to enqueue clicked"
-								+ getClass().getName());
-						for(MySong item:obj.getChildSongs())
+						for(MySong item:obj.getAllRecursiveSongs())
 						{
 							addToSongList(item);
 						}

@@ -26,7 +26,7 @@ public class MyPlayer {
 		if(r_tmp==null) r_tmp = new Random();
 		if(mediaPlayer==null) mediaPlayer = new MediaPlayer();
 		setCurrentSong(current);
-		setSongsList(list);
+		setSongsList(list==null?new ArrayList<MySong>():list);
 		playedList = new HashMap<Integer, MySong>();
 		playedStack = new Stack<MySong>();
 		if(isReady())
