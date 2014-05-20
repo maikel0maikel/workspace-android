@@ -471,6 +471,12 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 			actionBar.selectTab(actionBar.getTabAt(0));
 			// reset all cached member related to DB
 			resetLibraryDBState();
+			
+			//STOP music
+			PL.Stop();
+			//reset player
+			PL.setNew(null, null);
+			Toast.makeText(this, "DB Changed!", 1000).show();
 		}
 		return;
 	}
@@ -616,6 +622,9 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId()==R.id.action_settings)
 		{
+			//switch to Library first: to prevent BUG
+			callLibraryListFragment(true);
+			
 			Intent setting = new Intent(this, SettingsActivity.class);
 			startActivityForResult(setting, 1);
 		}
