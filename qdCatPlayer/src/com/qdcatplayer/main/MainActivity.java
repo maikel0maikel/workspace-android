@@ -441,7 +441,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		        public void onClick(DialogInterface dialog, int which) {
 		            // Do nothing but close the dialog
 		            dialog.dismiss();
-		            restart();
+		            //restart();
 		        }
 
 		    });
