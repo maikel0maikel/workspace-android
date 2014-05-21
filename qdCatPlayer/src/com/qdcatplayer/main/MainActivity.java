@@ -124,7 +124,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 		@Override
 		public void onTabReselected(Tab tab, FragmentTransaction arg1) {
-
+			Log.w("qd","aloha");
 		}
 
 		@Override
@@ -196,34 +196,6 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		// switch tab
 		actionBar.selectTab(actionBar.getTabAt(1));
 	}
-
-	/*
-	 * private void getSongsFromFolderId() { MyFolder fd=new MyFolder();
-	 * fd.setId(5); MyFolderDAO dao=new MyFolderDAO(getApplicationContext(),
-	 * null); dao.setSource(MySource.DB_SOURCE); fd.setDao(dao); fd.load();
-	 * ArrayList<MySong> ss=fd.getAllRecursiveSongs(); for(MySong tmp:ss) {
-	 * if(!tmp.isOnDisk()) { Log.w("qd", tmp.getPath().getAbsPath()); } } }
-	 */
-	/*
-	 * private void Tracking() { MyFolderChanges tracker = new
-	 * MyFolderChanges("/sdcard/music/hay", new MyFileChangesInterface() {
-	 * 
-	 * @Override public void onFinish(MyFolderChanges obj) { Log.w("qd",
-	 * "Finish tracking on asynctask, md5="+obj.getMd5()); } });
-	 * tracker.start(); }
-	 */
-	/*
-	 * private void LoadToDB() { //Declare music folder MyFolder fd=new
-	 * MyFolder("/sdcard/music"); //Init new MyFolderDAO for working with
-	 * MyFolder Entity MyFolderDAO dao = new
-	 * MyFolderDAO(getApplicationContext(), null);
-	 * dao.setSource(MySource.DISK_SOURCE); //Assign DAO to Entity (so far,
-	 * Entity will pass //related-DAO through any deep level FK reference)
-	 * fd.setDao(dao); //Get all songs belong to this fd Folder recursively
-	 * ArrayList<MySong> ss = fd.getAllRecursiveSongs(); //Fetch each song from
-	 * result for(MySong item:ss) { //call insert on current Entity
-	 * item.insert();//F_Entity will auto insert and keep references } }
-	 */
 
 
 	/**
@@ -778,7 +750,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		LI._playListsAll=null;
 		LI._songsAll=null;
 		
-		LI._enqueue = null;
+		LI._enqueue = new ArrayList<MySong>();//importance
 		
 		if (LI._gDAOs != null) {
 			LI._gDAOs.release();
