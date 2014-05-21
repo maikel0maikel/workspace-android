@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:padding="0dp"
     tools:context=".MainActivity"
     android:background="@android:color/black"
@@ -16,7 +16,7 @@
         android:layout_margin="0dp"
         android:orientation="vertical" >
         <include
-		   android:layout_width="fill_parent"
+		   android:layout_width="match_parent"
 		   android:layout_height="0dp"
 		   android:layout_weight=".15"
 		   android:layout_margin="0dp"
@@ -32,8 +32,10 @@
 
         <include
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.45"
             android:layout_margin="0dp"
+            
             layout="@layout/player_main_midle_song" />
         
 <!--         <include -->
@@ -46,7 +48,8 @@
     
         <include
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
             android:layout_margin="0dp"
             layout="@layout/player_main_duration_seekbar" />
 

@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:background="@android:color/black"
 >
-
     <TextView
         android:id="@+id/textview_Artist"
         android:layout_width="match_parent"
@@ -13,7 +12,6 @@
         android:gravity="center_horizontal"
         android:text="Artist"
         android:textColor="@android:color/white"
-        android:textSize="20dp" 
 	    android:lines="1"
 	    android:ellipsize="marquee"
 	    android:marqueeRepeatLimit="marquee_forever"
@@ -26,13 +24,13 @@
 
     <TextView
         android:id="@+id/textView_SongName"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textSize="27dp"
         android:text="Song name"
         android:textColor="@android:color/white"
-	      android:lines="1"
+	    android:lines="1"
 	    android:ellipsize="marquee"
 	    android:fadingEdge="horizontal"
 	    android:marqueeRepeatLimit="marquee_forever"
