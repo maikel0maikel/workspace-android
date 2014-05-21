@@ -124,19 +124,15 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 		@Override
 		public void onTabReselected(Tab tab, FragmentTransaction arg1) {
-			Log.w("qd","aloha");
-		}
-
-		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			if (tab.getText().equals("main_player")) {
 				// Step 2
 				callMainPlayerFragment(true);
 				// khong can dang ky listener khi choi xong
 				// ben trong fragment no tu dang ky roi
-
+				//actionBar.selectTab(actionBar.getTabAt(1));
 			} else if (tab.getText().equals("library")) {
 				callLibraryListFragment(true);
+				//actionBar.selectTab(actionBar.getTabAt(0));
 				// vi khi thoat fragment main player thi mat listener
 				// begin: register listener for update next song auto
 				PL.getMediaPlayer()
@@ -152,6 +148,49 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 			} else if (tab.getText().equals("list")) {
 				callLibraryEnqueueFragment(true, LI._enqueue);
+				//actionBar.selectTab(actionBar.getTabAt(2));
+				// vi khi thoat fragment main player thi mat listener
+				// begin: register listener for update next song auto
+				PL.getMediaPlayer()
+						.setOnCompletionListener(new OnCompletionListener() {
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								if (PL.requestNextSong()) {
+									PL.Play();
+								}
+							}
+						});
+				// end
+			}
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			if (tab.getText().equals("main_player")) {
+				// Step 2
+				callMainPlayerFragment(true);
+				// khong can dang ky listener khi choi xong
+				// ben trong fragment no tu dang ky roi
+				//actionBar.selectTab(actionBar.getTabAt(1));
+			} else if (tab.getText().equals("library")) {
+				callLibraryListFragment(true);
+				//actionBar.selectTab(actionBar.getTabAt(0));
+				// vi khi thoat fragment main player thi mat listener
+				// begin: register listener for update next song auto
+				PL.getMediaPlayer()
+						.setOnCompletionListener(new OnCompletionListener() {
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								if (PL.requestNextSong()) {
+									PL.Play();
+								}
+							}
+						});
+				// end
+
+			} else if (tab.getText().equals("list")) {
+				callLibraryEnqueueFragment(true, LI._enqueue);
+				//actionBar.selectTab(actionBar.getTabAt(2));
 				// vi khi thoat fragment main player thi mat listener
 				// begin: register listener for update next song auto
 				PL.getMediaPlayer()
@@ -194,7 +233,10 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		}
 		frt.commit();
 		// switch tab
-		actionBar.selectTab(actionBar.getTabAt(1));
+		if(actionBar.getSelectedNavigationIndex()!=1)
+		{
+			actionBar.selectTab(actionBar.getTabAt(1));
+		}
 	}
 
 
@@ -304,7 +346,10 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		}
 		ft.commit();
 		// switch tab
-		actionBar.selectTab(actionBar.getTabAt(0));
+		if(actionBar.getSelectedNavigationIndex()!=0)
+		{
+			actionBar.selectTab(actionBar.getTabAt(0));
+		}
 	}
 
 	/**
@@ -370,7 +415,10 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		}
 		ft.commit();
 		// switch tab
-		actionBar.selectTab(actionBar.getTabAt(2));// layout can error
+		if(actionBar.getSelectedNavigationIndex()!=2)
+		{
+			actionBar.selectTab(actionBar.getTabAt(2));
+		}
 	}
 
 	@Override
