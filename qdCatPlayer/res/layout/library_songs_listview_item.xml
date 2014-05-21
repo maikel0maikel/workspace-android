@@ -34,6 +34,9 @@
             android:text="Default"
             android:textSize="18sp"
             android:textColor="@color/library_textColor"
+             android:ellipsize="end"
+            android:maxEms="10"
+			android:maxLines="1"
             />
 
         <TextView
@@ -42,6 +45,9 @@
             android:layout_height="wrap_content"
             android:text="Default"
             android:textColor="@color/library_textColor"
+            android:ellipsize="end"
+            android:maxEms="7"
+			android:maxLines="1"
             />
         
     </LinearLayout>
@@ -70,6 +76,9 @@
             android:text="Default" 
             android:layout_gravity="right"
             android:textColor="@color/library_textColor"
+            android:ellipsize="end"
+            android:maxEms="7"
+			android:maxLines="1"
             />
         
     </LinearLayout>

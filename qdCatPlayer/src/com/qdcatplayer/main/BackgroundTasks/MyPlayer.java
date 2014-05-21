@@ -26,7 +26,7 @@ public class MyPlayer {
 		if(r_tmp==null) r_tmp = new Random();
 		if(mediaPlayer==null) mediaPlayer = new MediaPlayer();
 		setCurrentSong(current);
-		setSongsList(list);
+		setSongsList(list==null?new ArrayList<MySong>():list);
 		playedList = new HashMap<Integer, MySong>();
 		playedStack = new Stack<MySong>();
 		if(isReady())
@@ -149,12 +149,12 @@ public class MyPlayer {
 			if (getShuffleMode()) {
 				if (getPlayedList().size() >= getSongsList().size()) {
 					getPlayedList().clear();
-					// playedStack.clear(); to reduce memory
+					playedStack.clear();// to reduce memory
 				}
 
 				while (true) {
 					index = r_tmp.nextInt(getSongsList().size());
-					if (getPlayedList().containsKey(index)) {
+					if (!getPlayedList().containsKey(index)) {
 						break;
 					}
 				}
@@ -180,16 +180,31 @@ public class MyPlayer {
 		{
 			return false;
 		}
-		
+		Integer index = getCurrentIndex();
 		if (getRepeatMode() == 1) {
 			
-		} else if (getPlayedStack().size() >= 2) {
-			getPlayedList()
-					.remove(getPlayedStack().pop());
-				setCurrentSong(getPlayedStack().lastElement());
-		} else if(getPlayedStack().size() >= 1)
+		} else if(getRepeatMode()==0 || getRepeatMode()==2)
 		{
-			setCurrentSong(getPlayedStack().lastElement());
+			if(getShuffleMode())
+			{
+				if (getPlayedStack().size() >= 2) {
+					getPlayedList()
+							.remove(getPlayedStack().pop());
+						setCurrentSong(getPlayedStack().lastElement());
+				} else if(getPlayedStack().size() >= 1)
+				{
+					setCurrentSong(getPlayedStack().lastElement());
+				}
+			}
+			else
+			{
+				index--;
+				if(index<0)
+				{
+					index=0;
+				}
+				setCurrentSong(getSongsList().get(index));
+			}
 		}
 		else
 		{
@@ -222,6 +237,10 @@ public class MyPlayer {
 	}
 	public void setShuffleMode(Boolean shuffleMode) {
 		this.shuffleMode = shuffleMode;
+		if(this.shuffleMode==false)
+		{
+			playedList.clear();//importance
+		}
 	}
 	public Integer getRepeatMode() {
 		return repeatMode;

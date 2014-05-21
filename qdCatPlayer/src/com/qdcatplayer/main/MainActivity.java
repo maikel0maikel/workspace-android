@@ -124,19 +124,15 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 		@Override
 		public void onTabReselected(Tab tab, FragmentTransaction arg1) {
-
-		}
-
-		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			if (tab.getText().equals("main_player")) {
 				// Step 2
-				callMainPlayerFragment(false);
+				callMainPlayerFragment(true);
 				// khong can dang ky listener khi choi xong
 				// ben trong fragment no tu dang ky roi
-
+				//actionBar.selectTab(actionBar.getTabAt(1));
 			} else if (tab.getText().equals("library")) {
-				callLibraryListFragment(false);
+				callLibraryListFragment(true);
+				//actionBar.selectTab(actionBar.getTabAt(0));
 				// vi khi thoat fragment main player thi mat listener
 				// begin: register listener for update next song auto
 				PL.getMediaPlayer()
@@ -151,7 +147,50 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 				// end
 
 			} else if (tab.getText().equals("list")) {
-				callLibraryEnqueueFragment(false, LI._enqueue);
+				callLibraryEnqueueFragment(true, LI._enqueue);
+				//actionBar.selectTab(actionBar.getTabAt(2));
+				// vi khi thoat fragment main player thi mat listener
+				// begin: register listener for update next song auto
+				PL.getMediaPlayer()
+						.setOnCompletionListener(new OnCompletionListener() {
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								if (PL.requestNextSong()) {
+									PL.Play();
+								}
+							}
+						});
+				// end
+			}
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			if (tab.getText().equals("main_player")) {
+				// Step 2
+				callMainPlayerFragment(true);
+				// khong can dang ky listener khi choi xong
+				// ben trong fragment no tu dang ky roi
+				//actionBar.selectTab(actionBar.getTabAt(1));
+			} else if (tab.getText().equals("library")) {
+				callLibraryListFragment(true);
+				//actionBar.selectTab(actionBar.getTabAt(0));
+				// vi khi thoat fragment main player thi mat listener
+				// begin: register listener for update next song auto
+				PL.getMediaPlayer()
+						.setOnCompletionListener(new OnCompletionListener() {
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								if (PL.requestNextSong()) {
+									PL.Play();
+								}
+							}
+						});
+				// end
+
+			} else if (tab.getText().equals("list")) {
+				callLibraryEnqueueFragment(true, LI._enqueue);
+				//actionBar.selectTab(actionBar.getTabAt(2));
 				// vi khi thoat fragment main player thi mat listener
 				// begin: register listener for update next song auto
 				PL.getMediaPlayer()
@@ -184,6 +223,8 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	 * } }
 	 */
 	private void callMainPlayerFragment(Boolean addToBackStack) {
+		clearFragment();
+		
 		MainPlayerFragment fm = new MainPlayerFragment() {
 		};
 		FragmentTransaction frt = getFragmentManager().beginTransaction();
@@ -194,36 +235,11 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		}
 		frt.commit();
 		// switch tab
-		actionBar.selectTab(actionBar.getTabAt(1));
+		if(actionBar.getSelectedNavigationIndex()!=1)
+		{
+			actionBar.selectTab(actionBar.getTabAt(1));
+		}
 	}
-
-	/*
-	 * private void getSongsFromFolderId() { MyFolder fd=new MyFolder();
-	 * fd.setId(5); MyFolderDAO dao=new MyFolderDAO(getApplicationContext(),
-	 * null); dao.setSource(MySource.DB_SOURCE); fd.setDao(dao); fd.load();
-	 * ArrayList<MySong> ss=fd.getAllRecursiveSongs(); for(MySong tmp:ss) {
-	 * if(!tmp.isOnDisk()) { Log.w("qd", tmp.getPath().getAbsPath()); } } }
-	 */
-	/*
-	 * private void Tracking() { MyFolderChanges tracker = new
-	 * MyFolderChanges("/sdcard/music/hay", new MyFileChangesInterface() {
-	 * 
-	 * @Override public void onFinish(MyFolderChanges obj) { Log.w("qd",
-	 * "Finish tracking on asynctask, md5="+obj.getMd5()); } });
-	 * tracker.start(); }
-	 */
-	/*
-	 * private void LoadToDB() { //Declare music folder MyFolder fd=new
-	 * MyFolder("/sdcard/music"); //Init new MyFolderDAO for working with
-	 * MyFolder Entity MyFolderDAO dao = new
-	 * MyFolderDAO(getApplicationContext(), null);
-	 * dao.setSource(MySource.DISK_SOURCE); //Assign DAO to Entity (so far,
-	 * Entity will pass //related-DAO through any deep level FK reference)
-	 * fd.setDao(dao); //Get all songs belong to this fd Folder recursively
-	 * ArrayList<MySong> ss = fd.getAllRecursiveSongs(); //Fetch each song from
-	 * result for(MySong item:ss) { //call insert on current Entity
-	 * item.insert();//F_Entity will auto insert and keep references } }
-	 */
 
 
 	/**
@@ -321,6 +337,9 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	}
 
 	private void callLibraryListFragment(Boolean addToBackStack) {
+		//clear Fragment first
+		clearFragment();
+		//
 		MyLibraryListFragment mFragment = new MyLibraryListFragment();
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(layout_container, mFragment);
@@ -332,8 +351,23 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		}
 		ft.commit();
 		// switch tab
-		actionBar.selectTab(actionBar.getTabAt(0));
+		if(actionBar.getSelectedNavigationIndex()!=0)
+		{
+			actionBar.selectTab(actionBar.getTabAt(0));
+		}
+		
 	}
+
+	private void clearFragment() {
+		getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		/*
+		FragmentManager fm = getFragmentManager();
+		for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+		    fm.popBackStack();
+		}
+		*/
+	}
+
 
 	/**
 	 * 
@@ -382,6 +416,8 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 	private void callLibraryEnqueueFragment(Boolean addToBackStack,
 			ArrayList<MySong> playLists) {
+		clearFragment();
+		
 		MyLibraryEnqueueFragment mFragment = new MyLibraryEnqueueFragment();
 		// khong nen dung bundle.serialize de pass data, khi saveinstance rat de
 		// bi loi
@@ -398,7 +434,10 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		}
 		ft.commit();
 		// switch tab
-		actionBar.selectTab(actionBar.getTabAt(2));// layout can error
+		if(actionBar.getSelectedNavigationIndex()!=2)
+		{
+			actionBar.selectTab(actionBar.getTabAt(2));
+		}
 	}
 
 	@Override
@@ -471,6 +510,12 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 			actionBar.selectTab(actionBar.getTabAt(0));
 			// reset all cached member related to DB
 			resetLibraryDBState();
+			
+			//STOP music
+			PL.Stop();
+			//reset player
+			PL.setNew(null, null);
+			Toast.makeText(this, "DB Changed!", 1000).show();
 		}
 		return;
 	}
@@ -616,6 +661,9 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId()==R.id.action_settings)
 		{
+			//switch to Library first: to prevent BUG
+			callLibraryListFragment(true);
+			
 			Intent setting = new Intent(this, SettingsActivity.class);
 			startActivityForResult(setting, 1);
 		}
@@ -769,7 +817,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		LI._playListsAll=null;
 		LI._songsAll=null;
 		
-		LI._enqueue = null;
+		LI._enqueue = new ArrayList<MySong>();//importance
 		
 		if (LI._gDAOs != null) {
 			LI._gDAOs.release();
@@ -872,9 +920,7 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 					@Override
 					public void OnLibraryFoldersCtxClick_ADD_TO_ENQUEUE(MyFolder obj) {
-						Log.w("qd", "add to enqueue clicked"
-								+ getClass().getName());
-						for(MySong item:obj.getChildSongs())
+						for(MySong item:obj.getAllRecursiveSongs())
 						{
 							addToSongList(item);
 						}
