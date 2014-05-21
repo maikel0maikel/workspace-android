@@ -223,6 +223,8 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	 * } }
 	 */
 	private void callMainPlayerFragment(Boolean addToBackStack) {
+		clearFragment();
+		
 		MainPlayerFragment fm = new MainPlayerFragment() {
 		};
 		FragmentTransaction frt = getFragmentManager().beginTransaction();
@@ -335,6 +337,9 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 	}
 
 	private void callLibraryListFragment(Boolean addToBackStack) {
+		//clear Fragment first
+		clearFragment();
+		//
 		MyLibraryListFragment mFragment = new MyLibraryListFragment();
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(layout_container, mFragment);
@@ -350,7 +355,19 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 		{
 			actionBar.selectTab(actionBar.getTabAt(0));
 		}
+		
 	}
+
+	private void clearFragment() {
+		getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		/*
+		FragmentManager fm = getFragmentManager();
+		for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+		    fm.popBackStack();
+		}
+		*/
+	}
+
 
 	/**
 	 * 
@@ -399,6 +416,8 @@ MyLibraryClickListener, MyLibrarySongItemClickListener,
 
 	private void callLibraryEnqueueFragment(Boolean addToBackStack,
 			ArrayList<MySong> playLists) {
+		clearFragment();
+		
 		MyLibraryEnqueueFragment mFragment = new MyLibraryEnqueueFragment();
 		// khong nen dung bundle.serialize de pass data, khi saveinstance rat de
 		// bi loi
