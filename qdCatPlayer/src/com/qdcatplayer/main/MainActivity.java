@@ -1,14 +1,7 @@
 package com.qdcatplayer.main;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Random;
-import java.util.Stack;
-
-import org.apache.http.util.LangUtils;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -22,7 +15,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -35,7 +27,6 @@ import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
 import com.qdcatplayer.main.DAOs.GlobalDAO;
 import com.qdcatplayer.main.DAOs.MySongDAO;
 import com.qdcatplayer.main.DAOs.MySource;
-import com.qdcatplayer.main.DAOs._GlobalDAOInterface;
 import com.qdcatplayer.main.DBHelper.MyDBManager;
 import com.qdcatplayer.main.Entities.MyAlbum;
 import com.qdcatplayer.main.Entities.MyArtist;

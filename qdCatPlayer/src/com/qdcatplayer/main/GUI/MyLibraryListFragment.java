@@ -2,7 +2,6 @@ package com.qdcatplayer.main.GUI;
 
 import java.util.HashMap;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;

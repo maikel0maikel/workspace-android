@@ -3,7 +3,6 @@ package com.qdcatplayer.main.Setting;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
 

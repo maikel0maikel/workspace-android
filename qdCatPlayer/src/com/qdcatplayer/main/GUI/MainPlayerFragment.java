@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
-import com.qdcatplayer.main.Entities.MySong;
 import com.qdcatplayer.main.Libraries.PlayerUtilities;
 
 public abstract class MainPlayerFragment extends Fragment {

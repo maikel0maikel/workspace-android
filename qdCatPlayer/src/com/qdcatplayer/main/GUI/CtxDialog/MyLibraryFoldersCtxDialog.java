@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.Entities.MyFolder;
-import com.qdcatplayer.main.Entities.MySong;
 
 public class MyLibraryFoldersCtxDialog extends Dialog {
 	private String[] values = null;

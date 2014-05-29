@@ -1,16 +1,13 @@
 package com.qdcatplayer.main.Setting;
 
 import java.util.List;
-import java.util.Locale;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.qdcatplayer.main.R;
 

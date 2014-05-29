@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.SelectArg;
 import com.qdcatplayer.main.Entities.MyFolder;
 import com.qdcatplayer.main.Entities.MyPath;
 import com.qdcatplayer.main.Libraries.MyFileHelper;

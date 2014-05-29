@@ -1,7 +1,5 @@
 package com.qdcatplayer.main.Libraries;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public class MyStringHelper {
 	/**

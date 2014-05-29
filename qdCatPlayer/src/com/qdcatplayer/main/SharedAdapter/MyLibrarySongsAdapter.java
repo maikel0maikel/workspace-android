@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.qdcatplayer.main.R;
 import com.qdcatplayer.main.BackgroundTasks.MyPlayer;
 import com.qdcatplayer.main.Entities.MySong;
-import com.qdcatplayer.main.GUI.MainPlayerFragment.MyMainPLayerDataProvider;
 import com.qdcatplayer.main.GUI.MyLibrarySongsFragment.MyLibrarySongItemClickListener;
 import com.qdcatplayer.main.Libraries.PlayerUtilities;
 
